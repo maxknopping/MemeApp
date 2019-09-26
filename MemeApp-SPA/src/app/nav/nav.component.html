@@ -3,14 +3,14 @@
       <a class="navbar-brand" href="#">Meme App</a>
 
       <ul *ngIf="loggedIn()" class="navbar-nav mr-auto">
-        <li class="nav-item active">
-          <a class="nav-link" href="#">Feed <span class="sr-only">(current)</span></a>
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link" [routerLink]="[ '/feed']">Feed</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Featured</a>
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link" [routerLink]="[ '/featured']">Featured</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Messages</a>
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link" [routerLink]="[ '/messages']">Messages</a>
         </li>
       </ul>
   
@@ -20,9 +20,9 @@
           </a>
   
           <div class="dropdown-menu" *dropdownMenu>
-            <a class="dropdown-item" href="#"><i class="fa fa-user"></i>Edit Profile</a>
+            <a class="dropdown-item" href="#"><i class="fa fa-user mr-1"></i>Edit Profile</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" (click)="logOut()"><i class="fa fa-sign-out"></i>Log Out</a>
+            <a class="dropdown-item" href="#" (click)="logOut()"><i class="fa fa-sign-out mr-1"></i>Log Out</a>
           </div>
         </div>
   
