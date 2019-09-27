@@ -1,20 +1,16 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using MemeApp.API.Models;
 
-namespace MemeApp.API.Models
+namespace MemeApp.API.Dtos
 {
-    public class User
+    public class UserForDetailedDto
     {
         public int Id { get; set; }
 
         public string Username { get; set; }
 
-        public byte[] PasswordHash { get; set; }
-
-        public byte[] PasswordSalt {get; set; }
-
-        public string Gender { get; set; }
+        public int Age { get; set; }
 
         public DateTime DateOfBirth { get; set; }
 
@@ -26,6 +22,8 @@ namespace MemeApp.API.Models
 
         public string Bio { get; set; }
 
-        public IList<Post> Posts { get; set; }
+        public string PhotoUrl { get; set; }
+
+        public IList<PostForDetailedDto> Posts { get; set; }
     }
 }
