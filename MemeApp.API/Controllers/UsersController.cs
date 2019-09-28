@@ -41,5 +41,15 @@ namespace MemeApp.API.Controllers
 
             return Ok(userToReturn);
         }
+
+        [HttpGet("{id}/feed")]
+        public async Task<IActionResult> GetFeed(int id)
+        {
+            var user = await repo.GetUser(id);
+
+            var posts = repo.GetFeed(user);
+
+            return Ok(posts.Result);
+        }
     }
 }

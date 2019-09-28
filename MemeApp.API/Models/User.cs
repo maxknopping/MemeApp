@@ -27,5 +27,7 @@ namespace MemeApp.API.Models
         public string Bio { get; set; }
 
         public IList<Post> Posts { get; set; }
+
+        public IList<Followee> Following { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MemeApp.API.Dtos;
 using MemeApp.API.Models;
 
 namespace MemeApp.API.Data
@@ -14,6 +15,8 @@ namespace MemeApp.API.Data
          Task<IEnumerable<User>> GetUsers();
 
          Task<User> GetUser(int id);
+
+         Task<IList<PostForDetailedDto>> GetFeed(User user);
 
 
 
