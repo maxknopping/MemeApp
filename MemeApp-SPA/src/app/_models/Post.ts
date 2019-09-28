@@ -3,5 +3,5 @@ export interface Post {
     url: string;
     caption: string;
     isProfilePicture: boolean;
-    
+    username: string;  
 }

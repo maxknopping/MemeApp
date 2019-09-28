@@ -42,10 +42,10 @@ namespace MemeApp.API.Controllers
             return Ok(userToReturn);
         }
 
-        [HttpGet("{id}/feed")]
-        public async Task<IActionResult> GetFeed(int id)
+        [HttpGet("feed/{username}")]
+        public async Task<IActionResult> GetFeed(string username)
         {
-            var user = await repo.GetUser(id);
+            var user = await repo.GetUser(username);
 
             var posts = repo.GetFeed(user);
 

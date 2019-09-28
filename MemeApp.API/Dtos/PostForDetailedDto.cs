@@ -20,5 +20,7 @@ namespace MemeApp.API.Dtos
 
         public DateTime Created { get; set; }
 
+        public string Username { get; set; }
+
     }
 }

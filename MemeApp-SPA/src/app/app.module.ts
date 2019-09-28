@@ -10,11 +10,13 @@ import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
 import { ErrorInterceptorProvider } from './_services/error.interceptor';
 import { BsDropdownModule } from 'ngx-bootstrap';
-import { FeedComponent } from './feed/feed.component';
+import { FeedComponent } from './Posts/feed/feed.component';
 import { FeaturedComponent } from './featured/featured.component';
 import { MessagesComponent } from './messages/messages.component';
 import { RouterModule } from '@angular/router';
 import { appRoutes } from './routes';
+import { UserService } from './_services/User.service';
+import { PostCardComponent } from './Posts/Post-Card/Post-Card.component';
 
 @NgModule({
    declarations: [
@@ -24,7 +26,8 @@ import { appRoutes } from './routes';
       RegisterComponent,
       FeedComponent,
       FeaturedComponent,
-      MessagesComponent
+      MessagesComponent,
+      PostCardComponent
    ],
    imports: [
       HttpClientModule,
@@ -35,7 +38,8 @@ import { appRoutes } from './routes';
    ],
    providers: [
       AuthService,
-      ErrorInterceptorProvider
+      ErrorInterceptorProvider,
+      UserService
    ],
    bootstrap: [
       AppComponent

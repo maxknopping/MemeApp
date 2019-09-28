@@ -1,6 +1,6 @@
 import {Routes} from '@angular/router';
 import { HomeComponent } from './home/home.component';
-import { FeedComponent } from './feed/feed.component';
+import { FeedComponent } from './Posts/feed/feed.component';
 import { FeaturedComponent } from './featured/featured.component';
 import { MessagesComponent } from './messages/messages.component';
 import { AuthGuard } from './_guards/auth.guard';
