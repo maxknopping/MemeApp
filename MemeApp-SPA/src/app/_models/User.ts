@@ -1,4 +1,5 @@
 import { Post } from './Post';
+import { Followee } from './Followee';
 
 export interface User {
     id: number;
@@ -10,4 +11,5 @@ export interface User {
     photoUrl: string;
     bio?: string;
     posts: Post[];
+    followers: Followee[];
 }

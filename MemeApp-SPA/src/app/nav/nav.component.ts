@@ -10,14 +10,15 @@ import { Router } from '@angular/router';
 })
 export class NavComponent implements OnInit {
   model: any = {};
-
+  username;
   constructor(
     public authService: AuthService,
     private alertify: AlertifyService,
     private router: Router
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
   login() {
     this.authService.login(this.model).subscribe(
@@ -30,6 +31,8 @@ export class NavComponent implements OnInit {
         this.router.navigate(['/feed']);
       }
     );
+    this.username = localStorage.getItem('username');
+
   }
 
   loggedIn() {

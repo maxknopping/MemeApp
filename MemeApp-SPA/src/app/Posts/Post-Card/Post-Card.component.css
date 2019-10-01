@@ -1,3 +1,44 @@
 p {
-    color: rgb(255, 51, 0);
+    color: crimson;
 }
+
+.card-img-wrapper {
+    position: relative;
+
+}
+
+.member-icons {
+    position: absolute;
+    bottom: -50%;
+    left: 0;
+    right: 0;
+    margin-right: auto;
+    margin-left: auto;
+    opacity: 0;
+
+}
+
+.card-img-wrapper:hover .member-icons {
+    bottom: 0;
+    opacity: .5;
+
+}
+
+.like-button {
+    cursor: pointer;
+    size: scale(10);
+    border: 0px;
+    color: crimson;
+    background-color: transparent;
+}
+
+.like-button:hover {
+    background: transparent
+}
+
+.like-button:active {
+    
+}
+
+
+

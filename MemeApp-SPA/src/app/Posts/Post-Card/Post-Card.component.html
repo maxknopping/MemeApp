@@ -1,11 +1,21 @@
-<div class="card mb-4">
-  <ul class="list-group list-group-flush">
-    <li style="color: rgb(255, 51, 0)" class="list-group-item title text-left">
+<div class="card mb-4 bg-dark">
+  <ul class="list-group list-group-flush bg-dark">
+    <li class="list-group-item title text-left bg-dark text-light">
         <i class="fa fa-user mr-1"></i>{{post.username}}
     </li>
-    <img class="card-img-top" src="{{post.url}}" alt="{{post.caption}}">
-    <li class="list-group-item">
-      <p style="color: rgb(0, 0, 0)"><i class="fa fa-user title text-left mr-1" color="black"></i>{{post.username}}</p> {{post.caption}}
+    <div class="card-img-wrapper">
+      <img class="card-img-top"  src="{{post.url}}" alt="{{post.caption}}">
+    </div>
+    <li class="list-group-item bg-dark text-light">
+      <p>
+        <button class="like-button" style="border-color: transparent" *ngIf="!liked" (click)="like()"><i class="fa fa-heart-o like-icon mr-2"></i>{{post.likes}} Likes</button>
+        <button class="like-button" *ngIf="liked" (click)="like()"><i class="fa fa-heart like-icon mr-2"></i>{{post.likes}} Likes</button>
+        <button class="like-button"><i class="fa fa-envelope like-icon"></i></button>
+        <p>
+          <button class="like-button" [routerLink]="[ '/profile/', post.username]">{{post.username}}
+          <span class="ml-2" style="color: white">{{post.caption}}</span></button>
+        </p>
+
     </li>
   </ul>
 </div>

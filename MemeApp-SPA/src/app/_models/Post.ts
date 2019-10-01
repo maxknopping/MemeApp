@@ -1,7 +1,10 @@
+import { User } from './User';
+
 export interface Post {
     id: number;
     url: string;
     caption: string;
     isProfilePicture: boolean;
-    username: string;  
+    username: string;
+    likes: number;
 }

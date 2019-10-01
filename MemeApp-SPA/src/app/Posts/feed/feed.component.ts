@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Post } from '../../_models/Post';
 import { UserService } from '../../_services/User.service';
 import { AlertifyService } from '../../_services/alertify.service';
+import { ActivatedRouteSnapshot, ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-feed',
@@ -11,10 +12,12 @@ import { AlertifyService } from '../../_services/alertify.service';
 export class FeedComponent implements OnInit {
   posts: Post[];
 
-  constructor(private user: UserService, private alertify: AlertifyService) { }
+  constructor(private user: UserService, private route: ActivatedRoute, private alertify: AlertifyService) { }
 
   ngOnInit() {
-    this.loadPosts();
+    this.route.data.subscribe(data => {
+      this.posts = data['posts'];
+    })
   }
 
   loadPosts() {

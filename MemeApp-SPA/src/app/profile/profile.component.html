@@ -1,0 +1,53 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-sm-3">
+      <img class="card-img-top profile-picture" src="{{posts[0]?.url}}">
+      <div class="card-body">
+      </div>
+    </div>
+    <div class="col-sm-6 text-center">
+      <div class="username-wrapper">
+          <h1>{{user?.username}}</h1>
+      </div>
+      <div class="button-wrapper">
+        <button *ngIf="!isMyProfile" class="follow-button">FOLLOW</button>
+        <button *ngIf="isMyProfile" class="edit-button bg-dark">EDIT PROFILE</button>
+      </div>
+      <div>
+        <h3 class="bio-text text-center">{{user?.bio}}</h3>
+        <h6>{{user?.followers?.length}}0 Followers</h6>
+      </div>
+      </div>
+    </div>
+  </div>
+  <div class="tab-panel">
+      <tabset justified="true" class="member-tabset"> 
+          <tab heading="" id="tab1"><ng-template tabHeading><i style="color: bg-dark" class="fa fa-th fa-2x"></i></ng-template>
+            <div class="post-container">
+                <div class="row row-wrapper">
+                  <div *ngFor="let post of posts" class="col-sm-4">
+                    <img class="card-img" src="{{posts[0]?.url}}">
+                  </div>
+                  <div *ngFor="let post of posts" class="col-sm-4">
+                      <img class="card-img" src="{{posts[0]?.url}}">
+                  </div>
+                  <div *ngFor="let post of posts" class="col-sm-4">
+                        <img class="card-img" src="{{posts[0]?.url}}">
+                  </div>
+                </div>
+              </div>
+          </tab>
+          <tab heading=""><ng-template tabHeading><i style="color: bg-dark" class="far fa-square fa-2x"></i></ng-template>
+            <div class="container">
+                <div *ngFor="let post of posts" class="row">
+                  <div class = "col-sm-3"></div>
+                  <div class="col-sm-6">
+                      <app-Post-Card [post]="post"></app-Post-Card>
+                  </div>
+                  <div class = "col-sm-3"></div>
+                </div> 
+              </div>
+          </tab>
+      </tabset>
+  </div>
+  

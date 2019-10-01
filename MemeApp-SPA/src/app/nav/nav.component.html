@@ -20,7 +20,7 @@
           </a>
   
           <div class="dropdown-menu" *dropdownMenu>
-            <a class="dropdown-item" href="#"><i class="fa fa-user mr-1"></i>Edit Profile</a>
+            <a class="dropdown-item" [routerLink]="[ '/profile/', authService.decodedToken?.unique_name]" href="#"><i class="fa fa-user mr-1"></i>My Profile</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="#" (click)="logOut()"><i class="fa fa-sign-out mr-1"></i>Log Out</a>
           </div>

@@ -5,11 +5,6 @@ import { Observable } from 'rxjs';
 import { User } from '../_models/User';
 import { Post } from '../_models/Post';
 
-const httpOptions = {
-  headers: new HttpHeaders({
-    'Authorization': 'Bearer' + ' ' + localStorage.getItem('token')
-  })
-};
 
 
 @Injectable({
@@ -21,15 +16,23 @@ export class UserService {
   constructor(private http: HttpClient) { }
 
   getUsers(): Observable<User[]> {
-    return this.http.get<User[]>(this.baseUrl, httpOptions);
+    return this.http.get<User[]>(this.baseUrl);
   }
 
-  getUser(id): Observable<User[]> {
-    return this.http.get<User[]>(this.baseUrl + '/' +id, httpOptions);
+  getUser(id: number): Observable<User> {
+    return this.http.get<User>(this.baseUrl + '/' + id);
+  }
+
+  getUserByUsername(username: string): Observable<User> {
+    return this.http.get<User>(this.baseUrl + '/username/' + username);
   }
 
   getFeed(username): Observable<Post[]> {
-    return this.http.get<Post[]>(this.baseUrl + '/feed/' + username, httpOptions);
+    return this.http.get<Post[]>(this.baseUrl + '/feed/' + username);
   } 
 
+  like(username, userWhoLiked, postId, unLike): Observable<Post> {
+    return this.http.post<Post>(this.baseUrl + '/post/like/' + username + '/' + userWhoLiked + '/' + postId + '/' + unLike, {});
+  }
+ 
 }

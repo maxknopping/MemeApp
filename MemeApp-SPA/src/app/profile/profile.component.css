@@ -1,0 +1,49 @@
+.profile-picture {
+    border-radius: 50%;
+    height:250px;
+    width:250px;
+}
+
+.username-wrapper {
+    padding-top: 25px;
+    padding-bottom: 10px;
+}
+
+.follow-button {
+    -webkit-appearance: none;
+    width: 50%;
+    height: 70px;
+    background-color: #4BB73f;
+    color: white;
+    font-size: 30px;
+    border-radius: 10px;
+    font-family: Nunito Sans;
+    letter-spacing: 4px;
+}
+
+.edit-button {
+    -webkit-appearance: none;
+    width: 50%;
+    height: 70px;
+    color: white;
+    font-size: 30px;
+    border-radius: 10px;
+    font-family: Nunito Sans;
+    letter-spacing: 4px;
+}
+
+.grid-icon {
+    size: ;
+}
+
+.button-wrapper {
+    padding-bottom: 20px;
+}
+
+.row-wrapper {
+    padding-left: 25px;
+}
+
+.post-container {
+    padding-top: 10px
+}

@@ -9,7 +9,7 @@ import { AuthService } from './_services/auth.service';
 import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
 import { ErrorInterceptorProvider } from './_services/error.interceptor';
-import { BsDropdownModule } from 'ngx-bootstrap';
+import { BsDropdownModule, TabsModule } from 'ngx-bootstrap';
 import { FeedComponent } from './Posts/feed/feed.component';
 import { FeaturedComponent } from './featured/featured.component';
 import { MessagesComponent } from './messages/messages.component';
@@ -17,6 +17,14 @@ import { RouterModule } from '@angular/router';
 import { appRoutes } from './routes';
 import { UserService } from './_services/User.service';
 import { PostCardComponent } from './Posts/Post-Card/Post-Card.component';
+import { JwtModule } from '@auth0/angular-jwt';
+import { ProfileComponent } from './profile/profile.component';
+import { ProfileResolver } from './_resolvers/profile.resolver';
+import { FeedResolver } from './_resolvers/feed.resolver';
+
+export function tokenGetter() {
+   return localStorage.getItem('token');
+}
 
 @NgModule({
    declarations: [
@@ -27,19 +35,30 @@ import { PostCardComponent } from './Posts/Post-Card/Post-Card.component';
       FeedComponent,
       FeaturedComponent,
       MessagesComponent,
-      PostCardComponent
+      PostCardComponent,
+      ProfileComponent
    ],
    imports: [
       HttpClientModule,
       BrowserModule,
       FormsModule,
       BsDropdownModule.forRoot(),
-      RouterModule.forRoot(appRoutes)
+      TabsModule.forRoot(),
+      RouterModule.forRoot(appRoutes),
+      JwtModule.forRoot({
+         config: {
+            tokenGetter,
+            whitelistedDomains: ['localhost:5000'],
+            blacklistedRoutes: ['localhost:5000/api/auth']
+         }
+      })
    ],
    providers: [
       AuthService,
       ErrorInterceptorProvider,
-      UserService
+      UserService,
+      ProfileResolver,
+      FeedResolver
    ],
    bootstrap: [
       AppComponent

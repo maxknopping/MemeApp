@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using MemeApp.API.Data;
 using MemeApp.API.Dtos;
+using MemeApp.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -42,6 +43,16 @@ namespace MemeApp.API.Controllers
             return Ok(userToReturn);
         }
 
+        [HttpGet("username/{username}")]
+        public async Task<IActionResult> GetUserByString(string username)
+        {
+            var user = await repo.GetUser(username);
+
+            var userToReturn = mapper.Map<UserForDetailedDto>(user);
+
+            return Ok(userToReturn);
+        }
+
         [HttpGet("feed/{username}")]
         public async Task<IActionResult> GetFeed(string username)
         {
@@ -51,5 +62,36 @@ namespace MemeApp.API.Controllers
 
             return Ok(posts.Result);
         }
+
+        [HttpPost("/post/like")]
+        public async Task<IActionResult> LikePost(string username,string userWhoLiked, 
+            int postId, bool unLike) {
+            var user = await repo.GetUser(username);
+            var userLiker = await repo.GetUser(userWhoLiked);
+            Post postToReturn = new Post();
+            foreach(var post in user.Posts) {
+                if(post.Id == postId) {
+                    if (unLike) {
+                        post.Likes --;
+                    } else {
+                        post.Likes++;
+                    }
+                    postToReturn = post;
+                    var liker = new Liker {
+                        Username = userWhoLiked,
+                        LikerId = userLiker.Id,
+                        Post = post,
+                        PostId = postId
+                    };
+                    post.Likers.Add(liker);
+                }
+            }
+            await repo.SaveAll();
+
+            var postDto = mapper.Map<PostForDetailedDto>(postToReturn);
+
+            return Ok(postDto);
+        }
+
     }
 }
