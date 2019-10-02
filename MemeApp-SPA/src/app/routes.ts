@@ -7,6 +7,9 @@ import { AuthGuard } from './_guards/auth.guard';
 import { ProfileComponent } from './profile/profile.component';
 import { ProfileResolver } from './_resolvers/profile.resolver';
 import { FeedResolver } from './_resolvers/feed.resolver';
+import { ProfileEditComponent } from './profile-edit/profile-edit.component';
+import { ProfileEditResolver } from './_resolvers/profile-edit.resolver';
+import { PreventUnsavedChanges } from './_guards/preventUnsavedChanges.guard';
 
 export const appRoutes: Routes = [
     {path: '', component: HomeComponent},
@@ -18,6 +21,8 @@ export const appRoutes: Routes = [
             {path: 'feed', component: FeedComponent, canActivate: [AuthGuard], resolve: {posts: FeedResolver}},
             {path: 'featured', component: FeaturedComponent},
             {path: 'profile/:username', component: ProfileComponent, resolve: {user: ProfileResolver}},
+            {path: 'edit/profile', component: ProfileEditComponent, resolve: {user: ProfileEditResolver},
+                canDeactivate: [PreventUnsavedChanges]},
             {path: 'messages', component: MessagesComponent},
         ] 
     },

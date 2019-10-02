@@ -34,5 +34,9 @@ export class UserService {
   like(username, userWhoLiked, postId, unLike): Observable<Post> {
     return this.http.post<Post>(this.baseUrl + '/post/like/' + username + '/' + userWhoLiked + '/' + postId + '/' + unLike, {});
   }
+
+  updateUser(id: number, user: User) {
+    return this.http.put(this.baseUrl + '/' + id, user);
+  }
  
 }

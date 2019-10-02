@@ -8,7 +8,7 @@
     padding-top: 25px;
     padding-bottom: 10px;
 }
-
+ 
 .follow-button {
     -webkit-appearance: none;
     width: 50%;
@@ -21,6 +21,19 @@
     letter-spacing: 4px;
 }
 
+.following-button {
+    -webkit-appearance: none;
+    width: 50%;
+    height: 70px;
+    background-color: white;
+    color: black;
+    font-size: 30px;
+    border-radius: 10px;
+    font-family: Nunito Sans;
+    letter-spacing: 4px;
+    border-width: 2px;
+}
+
 .edit-button {
     -webkit-appearance: none;
     width: 50%;
@@ -30,10 +43,6 @@
     border-radius: 10px;
     font-family: Nunito Sans;
     letter-spacing: 4px;
-}
-
-.grid-icon {
-    size: ;
 }
 
 .button-wrapper {

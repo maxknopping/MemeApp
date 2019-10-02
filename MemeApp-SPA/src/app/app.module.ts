@@ -21,6 +21,9 @@ import { JwtModule } from '@auth0/angular-jwt';
 import { ProfileComponent } from './profile/profile.component';
 import { ProfileResolver } from './_resolvers/profile.resolver';
 import { FeedResolver } from './_resolvers/feed.resolver';
+import { ProfileEditComponent } from './profile-edit/profile-edit.component';
+import { ProfileEditResolver } from './_resolvers/profile-edit.resolver';
+import { PreventUnsavedChanges } from './_guards/preventUnsavedChanges.guard';
 
 export function tokenGetter() {
    return localStorage.getItem('token');
@@ -36,7 +39,8 @@ export function tokenGetter() {
       FeaturedComponent,
       MessagesComponent,
       PostCardComponent,
-      ProfileComponent
+      ProfileComponent,
+      ProfileEditComponent
    ],
    imports: [
       HttpClientModule,
@@ -47,9 +51,9 @@ export function tokenGetter() {
       RouterModule.forRoot(appRoutes),
       JwtModule.forRoot({
          config: {
-            tokenGetter,
+            tokenGetter: tokenGetter,
             whitelistedDomains: ['localhost:5000'],
-            blacklistedRoutes: ['localhost:5000/api/auth']
+            blacklistedRoutes: ['localhost: 5000/api/auth']
          }
       })
    ],
@@ -58,7 +62,9 @@ export function tokenGetter() {
       ErrorInterceptorProvider,
       UserService,
       ProfileResolver,
-      FeedResolver
+      FeedResolver,
+      ProfileEditResolver,
+      PreventUnsavedChanges
    ],
    bootstrap: [
       AppComponent

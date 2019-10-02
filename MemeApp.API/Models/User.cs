@@ -16,6 +16,8 @@ namespace MemeApp.API.Models
 
         public string Gender { get; set; }
 
+        public string PhotoUrl { get; set; }
+
         public DateTime DateOfBirth { get; set; }
 
         public string KnownAs { get; set; }

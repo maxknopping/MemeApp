@@ -4,6 +4,8 @@ import { UserService } from '../_services/User.service';
 import { AlertifyService } from '../_services/alertify.service';
 import { ActivatedRoute } from '@angular/router';
 import { Post } from '../_models/Post';
+import { Followee } from '../_models/Followee';
+import { AuthService } from '../_services/auth.service';
 
 @Component({
   selector: 'app-profile',
@@ -15,14 +17,16 @@ export class ProfileComponent implements OnInit {
   posts: Post[];
   following = false;
   isMyProfile = false;
+  followers = 0;
 
-  constructor(private userService: UserService, private alertify: AlertifyService, private route: ActivatedRoute) { }
+  constructor(private userService: UserService, private authService: AuthService,
+              private alertify: AlertifyService, private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.route.data.subscribe(data => {
       this.user = data['user'];
       this.posts = this.user.posts;
-      if (this.user.username === localStorage.getItem('username')) {
+      if (this.user.username === this.authService.decodedToken.unique_name) {
         this.isMyProfile = true;
       }
     });
@@ -38,6 +42,18 @@ export class ProfileComponent implements OnInit {
     }, error => {
       this.alertify.error(error);
     });
+  }
+
+  follow() {
+    //query api for adding a follower, get back new user object with updated follower list
+    if (this.following) {
+      this.followers--;
+    }
+    else {
+      this.followers++;
+    }
+
+    this.following = !this.following;
   }
 
 }

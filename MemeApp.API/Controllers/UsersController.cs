@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using MemeApp.API.Data;
@@ -63,7 +65,24 @@ namespace MemeApp.API.Controllers
             return Ok(posts.Result);
         }
 
-        [HttpPost("/post/like")]
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateUser(int id, UserForEditDto userForEdit) {
+            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
+                return Unauthorized();
+            }
+
+            var userFromRepo = await repo.GetUser(id);
+
+            mapper.Map(userForEdit, userFromRepo);
+
+            if (await repo.SaveAll()) {
+                return NoContent();
+            }
+
+            throw new Exception($"Updating user {id} failed on save.");
+        }
+
+        [HttpPost("post/like")]
         public async Task<IActionResult> LikePost(string username,string userWhoLiked, 
             int postId, bool unLike) {
             var user = await repo.GetUser(username);

@@ -10,12 +10,13 @@
           <h1>{{user?.username}}</h1>
       </div>
       <div class="button-wrapper">
-        <button *ngIf="!isMyProfile" class="follow-button">FOLLOW</button>
-        <button *ngIf="isMyProfile" class="edit-button bg-dark">EDIT PROFILE</button>
+        <button *ngIf="!isMyProfile && !following" (click)="follow()" class="follow-button">FOLLOW</button>
+        <button *ngIf="!isMyProfile && following" (click)="follow()" class="following-button">FOLLOWING</button>
+        <button *ngIf="isMyProfile" class="edit-button bg-dark" [routerLink]="[ '/edit/profile' ]">EDIT PROFILE</button>
       </div>
       <div>
         <h3 class="bio-text text-center">{{user?.bio}}</h3>
-        <h6>{{user?.followers?.length}}0 Followers</h6>
+        <h6>{{followers}} Followers</h6>
       </div>
       </div>
     </div>

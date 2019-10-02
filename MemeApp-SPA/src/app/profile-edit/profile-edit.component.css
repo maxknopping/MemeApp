@@ -1,0 +1,27 @@
+.profile-picture {
+    border-radius: 50%;
+    height:250px;
+    width:250px;
+    padding-bottom: 10px;
+}
+
+.change-prof-pic {
+    cursor: pointer;
+}
+
+.save-button {
+    -webkit-appearance: none;
+    width: 40%;
+    height: 50px;
+    background-color: #4BB73f;
+    color: white;
+    font-size: 20px;
+    border-radius: 10px;
+    font-family: Nunito Sans;
+    letter-spacing: 2px;
+}
+
+.alert-info {
+    border-radius: 6px;
+}
+
