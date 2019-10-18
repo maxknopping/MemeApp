@@ -1,16 +1,24 @@
 <div class="card mb-4 bg-dark">
   <ul class="list-group list-group-flush bg-dark">
     <li class="list-group-item title text-left bg-dark text-light">
-        <i class="fa fa-user mr-1"></i>{{post.username}}
+      <button class="like-button" [routerLink]="[ '/profile/', post.username]" style="color: white"><i class="fa fa-user mr-1"></i>{{post.username}}</button>
+
     </li>
     <div class="card-img-wrapper">
       <img class="card-img-top"  src="{{post.url}}" alt="{{post.caption}}">
     </div>
     <li class="list-group-item bg-dark text-light">
-      <p>
-        <button class="like-button" style="border-color: transparent" *ngIf="!liked" (click)="like()"><i class="fa fa-heart-o like-icon mr-2"></i>{{post.likes}} Likes</button>
-        <button class="like-button" *ngIf="liked" (click)="like()"><i class="fa fa-heart like-icon mr-2"></i>{{post.likes}} Likes</button>
-        <button class="like-button"><i class="fa fa-envelope like-icon"></i></button>
+        <div class="btn-group" dropdown [dropup]="true" placement="top right">
+          <button class="like-button" style="border-color: transparent" *ngIf="!liked" (click)="like()"><i class="fa fa-heart-o like-icon mr-2"></i>{{post.likes}} Likes</button>
+          <button class="like-button" *ngIf="liked" (click)="like()"><i class="fa fa-heart like-icon mr-2"></i>{{post.likes}} Likes</button>
+          <button class="like-button"><i class="fa fa-envelope like-icon"></i></button>
+          <button type="button" class="dropup" dropdownToggle>
+            <i class="fa fa-ellipsis-h ellipse-icon"></i>
+          </button>
+          <ul class="dropdown-menu mb-3" [ngClass]="{'dropdown-menu-right': true}" role="menu"  *dropdownMenu>
+            <li *ngIf="myPost" role="menuitem"><a class="dropdown-item" (click)="deletePost(post.id)">Delete Post</a></li>
+          </ul>
+        </div>
         <p>
           <button class="like-button" [routerLink]="[ '/profile/', post.username]">{{post.username}}
           <span class="ml-2" style="color: white">{{post.caption}}</span></button>

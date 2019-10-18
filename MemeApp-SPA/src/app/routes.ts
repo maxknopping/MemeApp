@@ -10,6 +10,7 @@ import { FeedResolver } from './_resolvers/feed.resolver';
 import { ProfileEditComponent } from './profile-edit/profile-edit.component';
 import { ProfileEditResolver } from './_resolvers/profile-edit.resolver';
 import { PreventUnsavedChanges } from './_guards/preventUnsavedChanges.guard';
+import { UploadPostComponent } from './Posts/uploadPost/uploadPost.component';
 
 export const appRoutes: Routes = [
     {path: '', component: HomeComponent},
@@ -24,6 +25,7 @@ export const appRoutes: Routes = [
             {path: 'edit/profile', component: ProfileEditComponent, resolve: {user: ProfileEditResolver},
                 canDeactivate: [PreventUnsavedChanges]},
             {path: 'messages', component: MessagesComponent},
+            {path: 'upload', component: UploadPostComponent},
         ] 
     },
     {path: '**', redirectTo: '', pathMatch: 'full'}

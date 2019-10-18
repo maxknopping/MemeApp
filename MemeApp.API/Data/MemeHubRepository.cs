@@ -76,5 +76,11 @@ namespace MemeApp.API.Data
         {
             return x.Created.CompareTo(y.Created);
         }
+
+        public async Task<Post> GetPost(int id) {
+            var post = await context.Posts.FirstOrDefaultAsync(p => p.Id == id);
+
+            return post;
+        }
     }
 }

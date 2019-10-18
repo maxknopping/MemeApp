@@ -4,7 +4,7 @@ import {HttpClientModule} from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { HttpClient } from 'selenium-webdriver/http';
 import { NavComponent } from './nav/nav.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from './_services/auth.service';
 import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
@@ -24,6 +24,8 @@ import { FeedResolver } from './_resolvers/feed.resolver';
 import { ProfileEditComponent } from './profile-edit/profile-edit.component';
 import { ProfileEditResolver } from './_resolvers/profile-edit.resolver';
 import { PreventUnsavedChanges } from './_guards/preventUnsavedChanges.guard';
+import { UploadPostComponent } from './Posts/uploadPost/uploadPost.component';
+import { FileUploadModule } from 'ng2-file-upload';
 
 export function tokenGetter() {
    return localStorage.getItem('token');
@@ -40,15 +42,18 @@ export function tokenGetter() {
       MessagesComponent,
       PostCardComponent,
       ProfileComponent,
-      ProfileEditComponent
+      ProfileEditComponent,
+      UploadPostComponent
    ],
    imports: [
       HttpClientModule,
       BrowserModule,
       FormsModule,
+      ReactiveFormsModule,
       BsDropdownModule.forRoot(),
       TabsModule.forRoot(),
       RouterModule.forRoot(appRoutes),
+      FileUploadModule,
       JwtModule.forRoot({
          config: {
             tokenGetter: tokenGetter,

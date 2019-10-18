@@ -60,3 +60,9 @@
 .card-container {
     padding-top: 10px;
 }
+
+.grid-image {
+    padding-bottom: 30px;
+    width: 100%;
+    height: 100%;
+}

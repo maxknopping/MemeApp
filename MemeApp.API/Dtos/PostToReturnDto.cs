@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using MemeApp.API.Models;
 
-namespace MemeApp.API.Models
+namespace MemeApp.API.Dtos
 {
-    public class Post
+    public class PostToReturnDto
     {
         public int Id { get; set; }
 
@@ -15,19 +16,12 @@ namespace MemeApp.API.Models
 
         public int Likes { get; set; }
 
-        public bool IsProfilePicture { get; set; }
+        public IList<Liker> Likers { get; set; }
 
-        public string PublicId { get; set; }
+        public bool IsProfilePicture { get; set; }
 
         public DateTime Created { get; set; }
 
-        public User User { get; set; }
-
-        public IList<Liker> Likers {get; set; }
-
-        public int UserId { get; set; }
-
-
-        
+        public string PublicId { get; set; }
     }
 }

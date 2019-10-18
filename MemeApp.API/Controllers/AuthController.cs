@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using MemeApp.API.Data;
 using MemeApp.API.Dtos;
 using MemeApp.API.Models;
@@ -18,8 +19,10 @@ namespace MemeApp.API.Controllers
     {
         private readonly IAuthRepository _repo;
         private readonly IConfiguration _configuration;
-        public AuthController(IAuthRepository repo, IConfiguration _configuration)
+        private readonly IMapper mapper;
+        public AuthController(IAuthRepository repo, IConfiguration _configuration, IMapper mapper)
         {
+            this.mapper = mapper;
             this._configuration = _configuration;
             this._repo = repo;
 
@@ -67,7 +70,7 @@ namespace MemeApp.API.Controllers
 
             var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
-            var tokenDescriptor = new SecurityTokenDescriptor 
+            var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.Now.AddDays(1),
@@ -77,8 +80,13 @@ namespace MemeApp.API.Controllers
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
-            return Ok(new {
-                token = tokenHandler.WriteToken(token)
+            var user = mapper.Map<UserForListDto>(userFromRepo);
+
+            return Ok(new
+            {
+                token = tokenHandler.WriteToken(token),
+                user
+
             });
 
         }

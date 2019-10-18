@@ -1,0 +1,52 @@
+<div class="row row-wrapper">
+  <div class="col-sm-6 caption-wrapper">
+      <div class="text-left">
+        <h4>Caption</h4>
+        <textarea name="bio" rows="4" class="form-control" [(ngModel)]="post.caption"></textarea>
+        <div class="post-wrapper">
+            <button (click)="postPhoto()" [routerLink]="[ '/feed' ]" class="post-button">POST</button>
+        </div>
+      </div>
+
+  </div>
+  <div class="col-sm-6 text-center">
+    <input class="photo-input" ng2FileSelect [uploader]="uploader" id="file" #fileInput type="file" for="photo" accept='image/*'/>
+    <div class=label-wrapper>
+        <label class="input-label" for="file">CHOOSE A PHOTO</label>
+    </div> 
+    <table class="table">
+      <thead>
+        <tr>
+          <th width="50%">Name</th>
+          <th>Size</th>
+          <th>Progress</th>
+          <th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let item of uploader.queue">
+                    <td><strong>{{ item?.file?.name }}</strong></td>
+                    <td *ngIf="uploader.options.isHTML5" nowrap>{{ item?.file?.size/1024/1024 | number:'.2' }} MB</td>
+                    <td *ngIf="uploader.options.isHTML5">
+                        <div class="progress" style="margin-bottom: 0;">
+                            <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': item.progress + '%' }"></div>
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <span *ngIf="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
+                        <span *ngIf="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
+                        <span *ngIf="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+    <div *ngFor="let item of uploader.queue">
+        <button type="button" class="btn btn-danger btn-xs"
+                (click)="removePhoto(item)">
+            <span class="glyphicon glyphicon-trash"></span> Remove
+        </button>
+    </div>
+    <img *ngIf="imgURL" class="card-img-top photo" id="photo" [src]="imgURL" alt="Your Image" />
+  </div>
+</div>
+

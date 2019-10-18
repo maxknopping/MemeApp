@@ -10,11 +10,16 @@
           <a class="nav-link" [routerLink]="[ '/featured']">Featured</a>
         </li>
         <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" [routerLink]="[ '/messages']">Messages</a>
+          <a class="nav-link" [routerLink]="[ '/upload']">Upload</a>
         </li>
       </ul>
   
+
       <div *ngIf="loggedIn()" class="dropdown" dropdown>
+          <span class="mr-2"></span>
+          <span>
+            <img src="{{authService.currentUser.photoUrl}}" alt="">
+          </span>
           <a class="dropdown-toggle text-light" dropdownToggle>
             {{authService.decodedToken?.unique_name | titlecase}}
           </a>

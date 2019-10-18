@@ -1,0 +1,52 @@
+.photo{
+    max-width:360px;
+  }
+
+ .photo-input{
+    width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+.row-wrapper {
+    padding-top: 30px;
+}
+
+.input-label {
+    cursor: pointer;
+    width: 40%;
+    background-color: #3399ff;
+    color: white;
+    font-size: 20px;
+    border-radius: 5px;
+    font-family: Nunito Sans;
+    letter-spacing: 2px;
+}
+
+.row-wrapper {
+    padding-left: 30px;
+}
+
+.label-wrapper {
+    width: 100%;
+}
+
+.post-button {
+    -webkit-appearance: none;
+    width: 40%;
+    height: 50px;
+    background-color: #4BB73f;
+    color: white;
+    font-size: 20px;
+    border-radius: 10px;
+    font-family: Nunito Sans;
+    letter-spacing: 2px;
+    padding-top: 15px;
+}
+
+.post-wrapper {
+    padding-top: 15px;
+}

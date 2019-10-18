@@ -11,7 +11,7 @@ import { Post } from '../_models/Post';
   providedIn: 'root'
 })
 export class UserService {
-  baseUrl = environment.apiUrl + "/api/users";
+  baseUrl = environment.apiUrl + '/api/users';
 
   constructor(private http: HttpClient) { }
 
@@ -37,6 +37,10 @@ export class UserService {
 
   updateUser(id: number, user: User) {
     return this.http.put(this.baseUrl + '/' + id, user);
+  }
+
+  deletePost(userId: number, postId: number) {
+    return this.http.delete(this.baseUrl + '/' + userId + '/posts/' + postId);
   }
  
 }

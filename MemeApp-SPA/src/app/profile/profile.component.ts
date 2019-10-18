@@ -25,6 +25,7 @@ export class ProfileComponent implements OnInit {
   ngOnInit() {
     this.route.data.subscribe(data => {
       this.user = data['user'];
+      console.log(this.user);
       this.posts = this.user.posts;
       if (this.user.username === this.authService.decodedToken.unique_name) {
         this.isMyProfile = true;
@@ -48,12 +49,22 @@ export class ProfileComponent implements OnInit {
     //query api for adding a follower, get back new user object with updated follower list
     if (this.following) {
       this.followers--;
-    }
-    else {
+    } else {
       this.followers++;
     }
 
     this.following = !this.following;
+  }
+
+  deletePost(id) {
+    this.alertify.confirm('Are you sure you want to delete this post?', () => {
+      this.userService.deletePost(this.authService.decodedToken.nameid, id).subscribe(() => {
+        this.posts.splice(this.posts.findIndex(p => p.id === id), 1);
+        this.alertify.success('Post has been deleted');
+      }, error => {
+        this.alertify.error('Failed to delete the post');
+      });
+    });
   }
 
 }

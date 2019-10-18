@@ -40,5 +40,21 @@ p {
     
 }
 
+.dropup {
+    -webkit-appearance: none;
+    background-color: transparent;
+    cursor: pointer;
+    color: crimson;
+    border: 0px;
+}
+
+
+.dropdown-menu-right {
+    right: 0 !important;
+    left: auto !important; 
+}
+
+
+
 
 

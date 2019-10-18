@@ -12,6 +12,7 @@
     "Bio": "Dolore nisi eiusmod ut irure ullamco nulla dolore est sit tempor quis.",
     "City": "Efland",
     "Country": "Burundi",
+    "PhotoUrl": "https://randomuser.me/api/portraits/women/3.jpg",
     "Posts": [
       {
         "url": "https://randomuser.me/api/portraits/women/3.jpg",
@@ -56,6 +57,7 @@
     "Bio": "Nisi eu amet et tempor eu magna.",
     "City": "Deseret",
     "Country": "Mongolia",
+    "PhotoUrl": "https://randomuser.me/api/portraits/women/49.jpg",
     "Posts": [
       {
         "url": "https://randomuser.me/api/portraits/women/49.jpg",
@@ -77,6 +79,7 @@
     "Bio": "Fugiat consequat elit velit ullamco nisi qui cillum.",
     "City": "Hannasville",
     "Country": "Poland",
+    "PhotoUrl": "https://randomuser.me/api/portraits/women/24.jpg",
     "Posts": [
       {
         "url": "https://randomuser.me/api/portraits/women/24.jpg",
@@ -98,6 +101,7 @@
     "Bio": "In dolor ex laboris ad sint.",
     "City": "Sutton",
     "Country": "Bouvet Island",
+    "PhotoUrl": "https://randomuser.me/api/portraits/women/74.jpg",
     "Posts": [
       {
         "url": "https://randomuser.me/api/portraits/women/74.jpg",
@@ -119,6 +123,7 @@
     "Bio": "Cillum duis veniam quis eu enim consequat reprehenderit occaecat pariatur minim ipsum.",
     "City": "Bayview",
     "Country": "Zambia",
+    "PhotoUrl": "https://randomuser.me/api/portraits/women/33.jpg",
     "Posts": [
       {
         "url": "https://randomuser.me/api/portraits/women/33.jpg",
@@ -140,6 +145,7 @@
     "Bio": "Lorem aute Lorem voluptate mollit.",
     "City": "Davenport",
     "Country": "Tuvalu",
+    "PhotoUrl": "https://randomuser.me/api/portraits/men/90.jpg",
     "Posts": [
       {
         "url": "https://randomuser.me/api/portraits/men/90.jpg",

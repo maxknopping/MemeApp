@@ -1,7 +1,7 @@
 <div class="container mt-4">
   <div class="row">
     <div class="col-sm-3">
-      <img class="card-img-top profile-picture" src="{{posts[0]?.url}}">
+      <img class="card-img-top profile-picture" src="{{user?.photoUrl}}">
       <div class="card-body">
       </div>
     </div>
@@ -27,13 +27,7 @@
             <div class="post-container">
                 <div class="row row-wrapper">
                   <div *ngFor="let post of posts" class="col-sm-4">
-                    <img class="card-img" src="{{posts[0]?.url}}">
-                  </div>
-                  <div *ngFor="let post of posts" class="col-sm-4">
-                      <img class="card-img" src="{{posts[0]?.url}}">
-                  </div>
-                  <div *ngFor="let post of posts" class="col-sm-4">
-                        <img class="card-img" src="{{posts[0]?.url}}">
+                    <img class="card-img grid-image" src="{{post.url}}">
                   </div>
                 </div>
               </div>
@@ -43,7 +37,7 @@
                 <div *ngFor="let post of posts" class="row">
                   <div class = "col-sm-3"></div>
                   <div class="col-sm-6">
-                      <app-Post-Card [post]="post"></app-Post-Card>
+                      <app-Post-Card [post]="post" (delete)="deletePost($event)"></app-Post-Card>
                   </div>
                   <div class = "col-sm-3"></div>
                 </div> 

@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 import { Resolve, Router, ActivatedRouteSnapshot } from '@angular/router';
 import { User } from '../_models/User';
 import { UserService } from '../_services/User.service';
@@ -10,7 +10,7 @@ import { AuthService } from '../_services/auth.service';
 
 @Injectable()
 export class FeedResolver implements Resolve<Post[]> {
-    constructor(private userService: UserService, private authService: AuthService, 
+    constructor(private userService: UserService, private authService: AuthService,
                 private router: Router, private alertify: AlertifyService) {
 
     }

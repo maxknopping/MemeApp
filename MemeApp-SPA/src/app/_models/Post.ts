@@ -7,4 +7,5 @@ export interface Post {
     isProfilePicture: boolean;
     username: string;
     likes: number;
+    dateAdded: Date;
 }

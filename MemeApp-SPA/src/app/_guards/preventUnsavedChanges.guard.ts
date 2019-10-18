@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 import { CanDeactivate } from '@angular/router';
 import { ProfileEditComponent } from '../profile-edit/profile-edit.component';
 

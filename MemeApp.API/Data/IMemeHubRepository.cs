@@ -20,6 +20,8 @@ namespace MemeApp.API.Data
 
          Task<IList<PostForDetailedDto>> GetFeed(User user);
 
+         Task<Post> GetPost(int id);
+
 
 
     }
