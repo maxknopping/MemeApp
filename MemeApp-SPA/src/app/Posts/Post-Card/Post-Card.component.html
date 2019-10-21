@@ -1,7 +1,8 @@
 <div class="card mb-4 bg-dark">
   <ul class="list-group list-group-flush bg-dark">
     <li class="list-group-item title text-left bg-dark text-light">
-      <button class="like-button" [routerLink]="[ '/profile/', post.username]" style="color: white"><i class="fa fa-user mr-1"></i>{{post.username}}</button>
+      <button class="like-button" [routerLink]="[ '/profile/', post.username]" style="color: white">
+        <img class="profile-picture mr-2" src="{{'../../../assets/user.png'}}" alt="">{{post.username}}</button>
 
     </li>
     <div class="card-img-wrapper">

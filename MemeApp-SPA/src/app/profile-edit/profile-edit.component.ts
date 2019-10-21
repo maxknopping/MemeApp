@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../_models/User';
 import { Post } from '../_models/Post';
 import { AlertifyService } from '../_services/alertify.service';
@@ -35,7 +35,8 @@ export class ProfileEditComponent implements OnInit {
   }
 
   constructor(private route: ActivatedRoute, private alertify: AlertifyService, private userService: UserService,
-              private authService: AuthService, private sanitizer: DomSanitizer, private http: HttpClient) { }
+              private authService: AuthService, private router: Router,
+              private sanitizer: DomSanitizer, private http: HttpClient) { }
 
   ngOnInit() {
     this.route.data.subscribe(data => {
@@ -59,6 +60,7 @@ export class ProfileEditComponent implements OnInit {
       this.alertify.success('Profile updated');
       this.editForm.reset(this.user);
       this.authService.decodedToken.unique_name = this.user.username;
+      this.router.navigate([ '/profile/', this.authService.decodedToken.unique_name]);
     }, error => {
       this.alertify.error(error);
     });
@@ -101,6 +103,9 @@ export class ProfileEditComponent implements OnInit {
         this.user = newUser;
         if (this.editForm.dirty) {
           this.updateUser();
+        } else {
+          this.alertify.success('Profile updated');
+          this.router.navigate([ '/profile/', this.authService.decodedToken.unique_name]);
         }
       }
     }

@@ -54,6 +54,12 @@ p {
     left: auto !important; 
 }
 
+.profile-picture {
+    max-height: 30px;
+    max-width: 30px;
+    border-radius: 50%;
+}
+
 
 
 
