@@ -8,4 +8,5 @@ export interface Post {
     username: string;
     likes: number;
     dateAdded: Date;
+    profilePictureUrl: string;
 }

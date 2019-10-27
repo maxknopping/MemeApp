@@ -108,7 +108,7 @@ export class ProfileEditComponent implements OnInit {
           this.router.navigate([ '/profile/', this.authService.decodedToken.unique_name]);
         }
       }
-    }
+    };
   }
 
 

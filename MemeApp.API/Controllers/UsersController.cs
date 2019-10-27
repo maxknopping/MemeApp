@@ -5,12 +5,14 @@ using System.Threading.Tasks;
 using AutoMapper;
 using MemeApp.API.Data;
 using MemeApp.API.Dtos;
+using MemeApp.API.Helpers;
 using MemeApp.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MemeApp.API.Controllers
 {
+    [ServiceFilter(typeof(LogUserActivity))]
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]

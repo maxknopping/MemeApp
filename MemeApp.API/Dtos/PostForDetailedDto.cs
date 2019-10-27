@@ -24,5 +24,7 @@ namespace MemeApp.API.Dtos
 
         public string Username { get; set; }
 
+        public string ProfilePictureUrl { get; set; }
+
     }
 }

@@ -41,6 +41,7 @@ namespace MemeApp.API
                     opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
                 });
             services.AddCors();
+            services.AddScoped<LogUserActivity>();
             services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
             services.AddAutoMapper(typeof(MemeHubRepository).Assembly);
             services.AddScoped<IAuthRepository, AuthRepository>();

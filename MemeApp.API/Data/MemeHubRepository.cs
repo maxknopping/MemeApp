@@ -62,6 +62,7 @@ namespace MemeApp.API.Data
                 foreach (var Post in fullAccount.Posts)
                 {
                     var postDto = mapper.Map<PostForDetailedDto>(Post);
+                    postDto.ProfilePictureUrl = fullAccount.PhotoUrl;
                     allPosts.Add(postDto);
 
                 }
