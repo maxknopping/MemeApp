@@ -17,7 +17,7 @@ export class FeedResolver implements Resolve<Post[]> {
 
     resolve(route: ActivatedRouteSnapshot): Observable<Post[]> {
         const username = this.authService.decodedToken.unique_name;
-        return this.userService.getFeed(username).pipe(
+        return this.userService.getFeed(username, 0).pipe(
             catchError(error => {
                 this.alertify.error('Problem retreiving data');
                 this.router.navigate(['/home']);

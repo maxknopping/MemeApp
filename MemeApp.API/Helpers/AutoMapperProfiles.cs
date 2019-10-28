@@ -12,7 +12,8 @@ namespace MemeApp.API.Helpers
                 .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.DateOfBirth.CalculateAge()));
             CreateMap<User, UserForDetailedDto>().ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.DateOfBirth.CalculateAge()));
             CreateMap<Post, PostForDetailedDto>().ForMember(dest => dest.Username, opt => opt
-                .MapFrom(src => src.User.Username));
+                .MapFrom(src => src.User.Username)).ForMember(dest => dest.ProfilePictureUrl, opt => opt
+                .MapFrom(src => src.User.PhotoUrl));
             CreateMap<UserForEditDto, User>();
             CreateMap<Post, PostToReturnDto>();
             CreateMap<PostForCreationDto, Post>();

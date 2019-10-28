@@ -18,7 +18,7 @@ namespace MemeApp.API.Data
 
          Task<User> GetUser(string username);
 
-         Task<IList<PostForDetailedDto>> GetFeed(User user);
+         Task<PostForDetailedDto> GetFeed(User user, int index);
 
          Task<Post> GetPost(int id);
 

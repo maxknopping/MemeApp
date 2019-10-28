@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { User } from '../_models/User';
 import { Post } from '../_models/Post';
+import { Liker } from '../_models/Liker';
 
 
 
@@ -27,8 +28,8 @@ export class UserService {
     return this.http.get<User>(this.baseUrl + '/username/' + username);
   }
 
-  getFeed(username): Observable<Post[]> {
-    return this.http.get<Post[]>(this.baseUrl + '/feed/' + username);
+  getFeed(username, index): Observable<Post> {
+    return this.http.get<Post>(this.baseUrl + '/feed/' + username + `/${index}`);
   } 
 
   like(username, userWhoLiked, postId, unLike): Observable<Post> {
@@ -41,6 +42,17 @@ export class UserService {
 
   deletePost(userId: number, postId: number) {
     return this.http.delete(this.baseUrl + '/' + userId + '/posts/' + postId);
+  }
+
+  likePost(post: Post, userId: number, username: string) {
+    post.likes++;
+    const liker: Liker = {
+      username: username,
+      postId: post.id,
+      likerId: userId
+    };
+    post.likers.push(liker);
+    return this.http.put(`${this.baseUrl}/${userId}/posts/${post.id}`, post);
   }
  
 }

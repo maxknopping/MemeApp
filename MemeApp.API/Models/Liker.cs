@@ -4,12 +4,10 @@ namespace MemeApp.API.Models
     {
         public int Id { get; set; }
 
-        public string Username { get; set; }
-
-        public int LikerId { get; set; }
-
-        public Post Post { get; set; }
+        public int Username{get; set; }
 
         public int PostId { get; set; }
+
+        public int LikerId { get; set; }
     }
 }

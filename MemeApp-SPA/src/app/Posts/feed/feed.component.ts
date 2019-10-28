@@ -10,23 +10,33 @@ import { ActivatedRouteSnapshot, ActivatedRoute, Router } from '@angular/router'
   styleUrls: ['./feed.component.css']
 })
 export class FeedComponent implements OnInit {
-  posts: Post[];
+  posts: Post[] =  [];
+  index: number;
 
   constructor(private user: UserService, private route: ActivatedRoute, private alertify: AlertifyService) { }
 
   ngOnInit() {
-    this.route.data.subscribe(data => {
-      this.posts = data['posts'];
-    })
+    this.index = 0;
+    this.loadPosts();
+    window.addEventListener('scroll', this.scroll, true); //third parameter
+  }
+
+  ngOnDestroy() {
+    window.removeEventListener('scroll', this.scroll, true);
   }
 
   loadPosts() {
     const username = localStorage.getItem('username');
-    this.user.getFeed(username).subscribe((posts: Post[]) => {
-      this.posts = posts;
+    this.user.getFeed(username, this.index).subscribe((post: Post) => {
+      this.posts.push(post);
+      this.index++;
     }, error => {
-      this.alertify.error(error);
     });
   }
 
+  scroll = (): void => {
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+      this.loadPosts();
+    }
+  }
 }

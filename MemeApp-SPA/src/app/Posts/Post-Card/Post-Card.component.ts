@@ -29,7 +29,7 @@ export class PostCardComponent implements OnInit {
   like() {
     this.liked = !this.liked;
     if (this.liked === true) {
-      this.post.likes ++;
+      this.post.likes++;
     } else {
       this.post.likes --;
     }

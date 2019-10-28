@@ -37,7 +37,6 @@ namespace MemeApp.API.Data
         public async Task<User> GetUser(string username)
         {
             var user = await context.Users.Include(p => p.Posts).Include(p => p.Following).FirstOrDefaultAsync(x => x.Username == username);
-
             return user;
         }
 
@@ -53,7 +52,7 @@ namespace MemeApp.API.Data
             return await context.SaveChangesAsync() > 0;
         }
 
-        public async Task<IList<PostForDetailedDto>> GetFeed(User user)
+        public async Task<PostForDetailedDto> GetFeed(User user, int index)
         {
             var allPosts = new List<PostForDetailedDto>();
             foreach (var account in user.Following)
@@ -62,25 +61,23 @@ namespace MemeApp.API.Data
                 foreach (var Post in fullAccount.Posts)
                 {
                     var postDto = mapper.Map<PostForDetailedDto>(Post);
-                    postDto.ProfilePictureUrl = fullAccount.PhotoUrl;
                     allPosts.Add(postDto);
 
                 }
             }
             allPosts.Sort(SortPostsByDate);
-            var feed = allPosts;
+            var feed = allPosts[index];
 
             return feed;
         }
 
         public int SortPostsByDate(PostForDetailedDto x, PostForDetailedDto y)
         {
-            return x.Created.CompareTo(y.Created);
+            return y.Created.CompareTo(x.Created);
         }
 
         public async Task<Post> GetPost(int id) {
             var post = await context.Posts.FirstOrDefaultAsync(p => p.Id == id);
-
             return post;
         }
     }

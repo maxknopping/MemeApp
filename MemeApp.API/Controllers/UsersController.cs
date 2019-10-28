@@ -57,14 +57,19 @@ namespace MemeApp.API.Controllers
             return Ok(userToReturn);
         }
 
-        [HttpGet("feed/{username}")]
-        public async Task<IActionResult> GetFeed(string username)
+        [HttpGet("feed/{username}/{index}")]
+        public async Task<IActionResult> GetFeed(string username, int index)
         {
-            var user = await repo.GetUser(username);
+            try {
+                var user = await repo.GetUser(username);
 
-            var posts = repo.GetFeed(user);
+                var post = repo.GetFeed(user, index);
 
-            return Ok(posts.Result);
+                return Ok(post.Result);
+            } catch {
+                return BadRequest();
+            }
+
         }
 
         [HttpPut("{id}")]
@@ -84,35 +89,6 @@ namespace MemeApp.API.Controllers
             throw new Exception($"Updating user {id} failed on save.");
         }
 
-        [HttpPost("post/like")]
-        public async Task<IActionResult> LikePost(string username,string userWhoLiked, 
-            int postId, bool unLike) {
-            var user = await repo.GetUser(username);
-            var userLiker = await repo.GetUser(userWhoLiked);
-            Post postToReturn = new Post();
-            foreach(var post in user.Posts) {
-                if(post.Id == postId) {
-                    if (unLike) {
-                        post.Likes --;
-                    } else {
-                        post.Likes++;
-                    }
-                    postToReturn = post;
-                    var liker = new Liker {
-                        Username = userWhoLiked,
-                        LikerId = userLiker.Id,
-                        Post = post,
-                        PostId = postId
-                    };
-                    post.Likers.Add(liker);
-                }
-            }
-            await repo.SaveAll();
-
-            var postDto = mapper.Map<PostForDetailedDto>(postToReturn);
-
-            return Ok(postDto);
-        }
 
     }
 }

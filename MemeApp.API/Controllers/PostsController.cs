@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -44,7 +45,7 @@ namespace MemeApp.API.Controllers
         [HttpGet("{id}", Name = "GetPost")]
         public async Task<IActionResult> GetPost(int id) {
             var photo = await repo.GetPost(id);
-            var photoToReturn = mapper.Map<PostToReturnDto>(photo);
+            var photoToReturn = mapper.Map<PostForDetailedDto>(photo);
 
             return Ok(photoToReturn);
         }
@@ -150,11 +151,11 @@ namespace MemeApp.API.Controllers
             postForCreation.PublicId = uploadResult.PublicId;
 
             var post = mapper.Map<Post>(postForCreation);
-
+            post.Created = DateTime.Now;
             userFromRepo.Posts.Add(post);
 
             if (await repo.SaveAll()) {
-                var postToReturn = mapper.Map<PostToReturnDto>(post);
+                var postToReturn = mapper.Map<PostForDetailedDto>(post);
                 return CreatedAtRoute("GetPost", new {id = post.Id}, postToReturn);
             }
 

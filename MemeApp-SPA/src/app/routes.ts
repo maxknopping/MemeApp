@@ -19,7 +19,7 @@ export const appRoutes: Routes = [
         runGuardsAndResolvers: 'always',
         canActivate: [AuthGuard],
         children: [
-            {path: 'feed', component: FeedComponent, canActivate: [AuthGuard], resolve: {posts: FeedResolver}},
+            {path: 'feed', component: FeedComponent, canActivate: [AuthGuard]},
             {path: 'featured', component: FeaturedComponent},
             {path: 'profile/:username', component: ProfileComponent, resolve: {user: ProfileResolver}},
             {path: 'edit/profile', component: ProfileEditComponent, resolve: {user: ProfileEditResolver},
