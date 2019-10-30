@@ -11,6 +11,11 @@ import { ProfileEditComponent } from './profile-edit/profile-edit.component';
 import { ProfileEditResolver } from './_resolvers/profile-edit.resolver';
 import { PreventUnsavedChanges } from './_guards/preventUnsavedChanges.guard';
 import { UploadPostComponent } from './Posts/uploadPost/uploadPost.component';
+import { FollowerListComponent } from './listFollowers/FollowerList.component';
+import { FollowerListResolver } from './_resolvers/followerList.resolver';
+import { FollowerListGuard } from './_guards/followerList.guard';
+import { FollowingListComponent } from './followingList/followingList.component';
+import { FollowingListResolver } from './_resolvers/followingList.resolver';
 
 export const appRoutes: Routes = [
     {path: '', component: HomeComponent},
@@ -26,7 +31,9 @@ export const appRoutes: Routes = [
                 canDeactivate: [PreventUnsavedChanges]},
             {path: 'messages', component: MessagesComponent},
             {path: 'upload', component: UploadPostComponent},
-        ] 
+            {path: 'followers/:username', component: FollowerListComponent, resolve: {users: FollowerListResolver}},
+            {path: 'following/:username', component: FollowingListComponent, resolve: {users: FollowingListResolver}},
+        ]
     },
     {path: '**', redirectTo: '', pathMatch: 'full'}
 ];

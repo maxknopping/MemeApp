@@ -97,7 +97,8 @@ export class ProfileEditComponent implements OnInit {
           photoUrl: res.photoUrl,
           bio: res.bio,
           posts: res.posts,
-          followers: res.followers
+          followers: res.followers,
+          following: res.following
         };
         this.authService.currentUser.photoUrl = newUser.photoUrl;
         this.user = newUser;

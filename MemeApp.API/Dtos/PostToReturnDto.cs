@@ -16,8 +16,6 @@ namespace MemeApp.API.Dtos
 
         public int Likes { get; set; }
 
-        public IList<Liker> Likers { get; set; }
-
         public bool IsProfilePicture { get; set; }
 
         public DateTime Created { get; set; }

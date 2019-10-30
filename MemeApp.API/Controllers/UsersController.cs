@@ -72,6 +72,42 @@ namespace MemeApp.API.Controllers
 
         }
 
+        [HttpGet("followers/{username}")]
+        public async Task<IActionResult> GetFollowers(string username)
+        {
+
+            var user = await repo.GetUser(username);
+
+            var followers = new List<UserForDetailedDto>();
+            foreach (var follow in user.Followers)
+            {
+                var follower = await repo.GetUser(follow.FollowerId);
+                var userToReturn = mapper.Map<UserForDetailedDto>(follower);
+                followers.Add(userToReturn);
+            }
+
+            return Ok(followers);
+
+        }
+
+        [HttpGet("following/{username}")]
+        public async Task<IActionResult> GetFollowing(string username)
+        {
+
+            var user = await repo.GetUser(username);
+
+            var following = new List<UserForDetailedDto>();
+            foreach (var follow in user.Following)
+            {
+                var followee = await repo.GetUser(follow.FolloweeId);
+                var userToReturn = mapper.Map<UserForDetailedDto>(followee);
+                following.Add(userToReturn);
+            }
+
+            return Ok(following);
+
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(int id, UserForEditDto userForEdit) {
             if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
@@ -87,6 +123,69 @@ namespace MemeApp.API.Controllers
             }
 
             throw new Exception($"Updating user {id} failed on save.");
+        }
+
+        [HttpPost("{id}/follow/{recipientId}")]
+        public async Task<IActionResult> FollowUser(int id, int recipientId) {
+            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
+                return Unauthorized();
+            }
+            var follow = await repo.GetFollow(id, recipientId);
+
+            if (follow != null) {
+                //unfollow
+                return BadRequest("You already follow this user");
+            }
+
+            var recipient = await repo.GetUser(recipientId);
+            if (recipient == null) {
+                return NotFound();
+            }
+
+            var follower = await repo.GetUser(id);
+            
+            follow = new Follow {
+                FollowerId = id,
+                FolloweeId = recipientId,
+                Followee = recipient,
+                Follower = follower
+            };
+
+            repo.Add<Follow>(follow);
+
+            if (await repo.SaveAll()) {
+                return Ok();
+            }
+
+            return BadRequest("failed to follow user");
+            
+        }
+
+        [HttpPost("{id}/unfollow/{recipientId}")]
+        public async Task<IActionResult> UnfollowUser(int id, int recipientId) {
+            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
+                return Unauthorized();
+            }
+            var follow = await repo.GetFollow(id, recipientId);
+
+            if (follow == null) {
+                //unfollow
+                return BadRequest("You don't follow this user");
+            }
+
+            var recipient = await repo.GetUser(recipientId);
+            if (recipient == null) {
+                return NotFound();
+            }
+
+            repo.Delete(follow);
+
+            if (await repo.SaveAll()) {
+                return Ok();
+            }
+
+            return BadRequest("failed to follow user");
+            
         }
 
 

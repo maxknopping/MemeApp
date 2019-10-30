@@ -23,8 +23,6 @@ namespace MemeApp.API.Models
 
         public User User { get; set; }
 
-        public IList<Liker> Likers {get; set; }
-
         public int UserId { get; set; }
 
 

@@ -14,7 +14,7 @@ namespace MemeApp.API.Data
         }
         public async Task<User> Login(string username, string password)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.Username.ToLower() == username);
+            var user = await _context.Users.Include(p => p.Followers).Include(p => p.Following).FirstOrDefaultAsync(x => x.Username.ToLower() == username);
 
             if (user == null)
                 return null;

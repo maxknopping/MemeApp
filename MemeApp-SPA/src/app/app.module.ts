@@ -28,6 +28,10 @@ import { UploadPostComponent } from './Posts/uploadPost/uploadPost.component';
 import { FileUploadModule } from 'ng2-file-upload';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {TimeAgoPipe} from 'time-ago-pipe';
+import { FollowerListResolver } from './_resolvers/followerList.resolver';
+import { FollowerListComponent } from './listFollowers/FollowerList.component';
+import { FollowingListComponent } from './followingList/followingList.component';
+import { FollowingListResolver } from './_resolvers/followingList.resolver';
 
 export function tokenGetter() {
    return localStorage.getItem('token');
@@ -46,7 +50,9 @@ export function tokenGetter() {
       ProfileComponent,
       ProfileEditComponent,
       UploadPostComponent,
-      TimeAgoPipe
+      TimeAgoPipe,
+      FollowerListComponent,
+      FollowingListComponent
    ],
    imports: [
       HttpClientModule,
@@ -59,13 +65,12 @@ export function tokenGetter() {
       FileUploadModule,
       BsDatepickerModule.forRoot(),
       BrowserAnimationsModule,
-      JwtModule.forRoot({
-         config: {
-            tokenGetter: tokenGetter,
-            whitelistedDomains: ['localhost:5000'],
-            blacklistedRoutes: ['localhost: 5000/api/auth']
+      JwtModule.forRoot({config: {
+         tokenGetter: tokenGetter,
+         whitelistedDomains: ['localhost:5000'],
+         blacklistedRoutes: ['localhost:5000/api/auth']
          }
-      })
+      }),
    ],
    providers: [
       AuthService,
@@ -74,7 +79,9 @@ export function tokenGetter() {
       ProfileResolver,
       FeedResolver,
       ProfileEditResolver,
-      PreventUnsavedChanges
+      PreventUnsavedChanges,
+      FollowerListResolver,
+      FollowingListResolver
    ],
    bootstrap: [
       AppComponent

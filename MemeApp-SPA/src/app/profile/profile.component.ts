@@ -1,12 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Injectable } from '@angular/core';
 import { User } from '../_models/User';
 import { UserService } from '../_services/User.service';
 import { AlertifyService } from '../_services/alertify.service';
 import { ActivatedRoute } from '@angular/router';
 import { Post } from '../_models/Post';
-import { Followee } from '../_models/Followee';
+import { Follow } from '../_models/Follow';
 import { AuthService } from '../_services/auth.service';
 
+@Injectable({
+  providedIn: 'root'
+})
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
@@ -25,11 +28,17 @@ export class ProfileComponent implements OnInit {
   ngOnInit() {
     this.route.data.subscribe(data => {
       this.user = data['user'];
+      this.followers = this.user.followers.length;
       console.log(this.user);
       this.posts = this.user.posts;
       if (this.user.username === this.authService.decodedToken.unique_name) {
         this.isMyProfile = true;
       }
+      this.user.followers.forEach(follow => {
+        if (follow.followerId == this.authService.decodedToken.nameid) {
+          this.following = true;
+        }
+      });
     });
   }
 
@@ -45,15 +54,18 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  follow() {
-    //query api for adding a follower, get back new user object with updated follower list
-    if (this.following) {
-      this.followers--;
-    } else {
+  follow(id: number) {
+    this.userService.followUser(this.authService.decodedToken.nameid, id).subscribe(() => {
+      this.following = true;
       this.followers++;
-    }
+    });
+  }
 
-    this.following = !this.following;
+  unfollow(id: number) {
+    this.userService.unfollowUser(this.authService.decodedToken.nameid, id).subscribe(() => {
+      this.following = false;
+      this.followers--;
+    });
   }
 
   deletePost(id) {

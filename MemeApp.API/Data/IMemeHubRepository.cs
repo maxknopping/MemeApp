@@ -22,6 +22,8 @@ namespace MemeApp.API.Data
 
          Task<Post> GetPost(int id);
 
+         Task<Follow> GetFollow(int userId, int recipientId);
+
 
 
     }

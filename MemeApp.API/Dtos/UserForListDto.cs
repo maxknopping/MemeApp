@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using MemeApp.API.Models;
 
 namespace MemeApp.API.Dtos
 {
@@ -19,5 +21,9 @@ namespace MemeApp.API.Dtos
         public DateTime LastActive { get; set; }
 
         public string PhotoUrl { get; set; }
+
+        public IList<Follow> Followers { get; set; }
+
+        public IList<Follow> Following { get; set; }
     }
 }

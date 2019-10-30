@@ -12,6 +12,5 @@ namespace MemeApp.API.Dtos
 
          public int Likes { get; set; }
 
-         public IList<Liker> Likers {get; set; }
     }
 }

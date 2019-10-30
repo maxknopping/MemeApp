@@ -36,38 +36,17 @@ namespace MemeApp.API.Migrations
                     b.ToTable("Comment");
                 });
 
-            modelBuilder.Entity("MemeApp.API.Models.Followee", b =>
+            modelBuilder.Entity("MemeApp.API.Models.Follow", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("FollowerId");
 
-                    b.Property<int>("UserId");
+                    b.Property<int>("FolloweeId");
 
-                    b.Property<string>("Username");
+                    b.HasKey("FollowerId", "FolloweeId");
 
-                    b.HasKey("Id");
+                    b.HasIndex("FolloweeId");
 
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Followee");
-                });
-
-            modelBuilder.Entity("MemeApp.API.Models.Liker", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("LikerId");
-
-                    b.Property<int>("PostId");
-
-                    b.Property<string>("Username");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PostId");
-
-                    b.ToTable("Liker");
+                    b.ToTable("Follows");
                 });
 
             modelBuilder.Entity("MemeApp.API.Models.Post", b =>
@@ -148,20 +127,17 @@ namespace MemeApp.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("MemeApp.API.Models.Followee", b =>
+            modelBuilder.Entity("MemeApp.API.Models.Follow", b =>
                 {
-                    b.HasOne("MemeApp.API.Models.User", "User")
-                        .WithMany("Following")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
+                    b.HasOne("MemeApp.API.Models.User", "Followee")
+                        .WithMany("Followers")
+                        .HasForeignKey("FolloweeId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity("MemeApp.API.Models.Liker", b =>
-                {
-                    b.HasOne("MemeApp.API.Models.Post", "Post")
-                        .WithMany("Likers")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                    b.HasOne("MemeApp.API.Models.User", "Follower")
+                        .WithMany("Following")
+                        .HasForeignKey("FollowerId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("MemeApp.API.Models.Post", b =>

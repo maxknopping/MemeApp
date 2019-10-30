@@ -19,6 +19,7 @@ namespace MemeApp.API.Helpers
             CreateMap<PostForCreationDto, Post>();
             CreateMap<PostForUpdateDto, Post>();
             CreateMap<UserForRegisterDto, User>();
+            CreateMap<Follow, FollowForDetailedDto>();
 
         }
     }

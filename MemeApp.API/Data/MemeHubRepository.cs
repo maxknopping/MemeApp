@@ -29,20 +29,33 @@ namespace MemeApp.API.Data
 
         public async Task<User> GetUser(int id)
         {
-            var user = await context.Users.Include(p => p.Posts).Include(p => p.Following).FirstOrDefaultAsync(x => x.Id == id);
+            var user = await context.Users
+                .Include(p => p.Posts)
+                .Include(p => p.Following)
+                .Include(p => p.Followers)
+                .FirstOrDefaultAsync(x => x.Id == id);
 
             return user;
         }
 
         public async Task<User> GetUser(string username)
         {
-            var user = await context.Users.Include(p => p.Posts).Include(p => p.Following).FirstOrDefaultAsync(x => x.Username == username);
+            var user = await context.Users
+                .Include(p => p.Posts)
+                .Include(p => p.Following)
+                .Include(p => p.Followers)
+                .FirstOrDefaultAsync(x => x.Username == username);
+
             return user;
         }
 
         public async Task<IEnumerable<User>> GetUsers()
         {
-            var users = await context.Users.Include(p => p.Posts).Include(p => p.Following).ToListAsync();
+            var users = await context.Users
+                .Include(p => p.Posts)
+                .Include(p => p.Following)
+                .Include(p => p.Followers)
+                .ToListAsync();
 
             return users;
         }
@@ -57,7 +70,7 @@ namespace MemeApp.API.Data
             var allPosts = new List<PostForDetailedDto>();
             foreach (var account in user.Following)
             {
-                var fullAccount = await GetUser(account.Id);
+                var fullAccount = await GetUser(account.FolloweeId);
                 foreach (var Post in fullAccount.Posts)
                 {
                     var postDto = mapper.Map<PostForDetailedDto>(Post);
@@ -80,5 +93,12 @@ namespace MemeApp.API.Data
             var post = await context.Posts.FirstOrDefaultAsync(p => p.Id == id);
             return post;
         }
+
+        public async Task<Follow> GetFollow(int userId, int recipientId)
+        {
+            return await context.Follows
+                .FirstOrDefaultAsync(u => u.FollowerId == userId && u.FolloweeId == recipientId);
+        }
+
     }
 }

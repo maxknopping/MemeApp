@@ -10,12 +10,6 @@ namespace MemeApp.API.Migrations
                 name: "PhotoUrl",
                 table: "Users",
                 nullable: true);
-
-            migrationBuilder.AddColumn<int>(
-                name: "LikerId",
-                table: "Liker",
-                nullable: false,
-                defaultValue: 0);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -23,10 +17,6 @@ namespace MemeApp.API.Migrations
             migrationBuilder.DropColumn(
                 name: "PhotoUrl",
                 table: "Users");
-
-            migrationBuilder.DropColumn(
-                name: "LikerId",
-                table: "Liker");
         }
     }
 }

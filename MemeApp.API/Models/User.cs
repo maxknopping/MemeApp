@@ -28,10 +28,12 @@ namespace MemeApp.API.Models
 
         public DateTime LastActive { get; set; }
 
+        public IList<Follow> Followers { get; set; }
+
+        public IList<Follow> Following { get; set; }
+
         public string Bio { get; set; }
 
         public IList<Post> Posts { get; set; }
-
-        public IList<Followee> Following { get; set; }
     }
 }

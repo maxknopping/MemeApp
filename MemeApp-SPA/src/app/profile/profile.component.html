@@ -10,13 +10,23 @@
           <h1>{{user?.username}}</h1>
       </div>
       <div class="button-wrapper">
-        <button *ngIf="!isMyProfile && !following" (click)="follow()" class="follow-button">FOLLOW</button>
-        <button *ngIf="!isMyProfile && following" (click)="follow()" class="following-button">FOLLOWING</button>
+        <button *ngIf="!isMyProfile && !following" (click)="follow(user.id)" class="follow-button">FOLLOW</button>
+        <button *ngIf="!isMyProfile && following" (click)="unfollow(user.id)" class="following-button">FOLLOWING</button>
         <button *ngIf="isMyProfile" class="edit-button bg-dark" [routerLink]="[ '/edit/profile' ]">EDIT PROFILE</button>
       </div>
       <div>
         <h3 class="bio-text text-center">{{user?.bio}}</h3>
-        <h6>{{followers}} Followers</h6>
+          <h6>{{followers}}
+            <a *ngIf="followers > 0" [routerLink]="[ '/followers/', user.username ]">
+                Followers
+            </a>
+            <span *ngIf="followers === 0">Followers</span>
+            | {{user.following.length}}
+            <a *ngIf="user.following.length > 0" [routerLink]="[ '/following/', user.username ]">
+                Following
+            </a>
+            <span *ngIf="user.following.length === 0">Following</span>
+          </h6>
       </div>
       </div>
     </div>

@@ -30,10 +30,6 @@ export class UserService {
 
   getFeed(username, index): Observable<Post> {
     return this.http.get<Post>(this.baseUrl + '/feed/' + username + `/${index}`);
-  } 
-
-  like(username, userWhoLiked, postId, unLike): Observable<Post> {
-    return this.http.post<Post>(this.baseUrl + '/post/like/' + username + '/' + userWhoLiked + '/' + postId + '/' + unLike, {});
   }
 
   updateUser(id: number, user: User) {
@@ -44,15 +40,20 @@ export class UserService {
     return this.http.delete(this.baseUrl + '/' + userId + '/posts/' + postId);
   }
 
-  likePost(post: Post, userId: number, username: string) {
-    post.likes++;
-    const liker: Liker = {
-      username: username,
-      postId: post.id,
-      likerId: userId
-    };
-    post.likers.push(liker);
-    return this.http.put(`${this.baseUrl}/${userId}/posts/${post.id}`, post);
+  followUser(id: number, recipientId: number) {
+    return this.http.post(`${this.baseUrl}/${id}/follow/${recipientId}`, {});
+  }
+
+  unfollowUser(id: number, recipientId: number) {
+    return this.http.post(`${this.baseUrl}/${id}/unfollow/${recipientId}`, {});
+  }
+
+  getFollowers(username: string) {
+    return this.http.get(`${this.baseUrl}/followers/${username}`);
+  }
+
+getFollowing(username: string) {
+    return this.http.get(`${this.baseUrl}/following/${username}`);
   }
  
 }

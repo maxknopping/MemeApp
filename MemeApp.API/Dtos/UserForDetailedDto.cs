@@ -25,5 +25,11 @@ namespace MemeApp.API.Dtos
         public string PhotoUrl { get; set; }
 
         public IList<PostForDetailedDto> Posts { get; set; }
+
+        public IList<FollowForDetailedDto> Followers {get; set; }
+
+        public IList<FollowForDetailedDto> Following { get; set; }
+
+
     }
 }
