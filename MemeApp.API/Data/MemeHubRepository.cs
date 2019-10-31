@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using MemeApp.API.Dtos;
@@ -41,10 +42,16 @@ namespace MemeApp.API.Data
         public async Task<User> GetUser(string username)
         {
             var user = await context.Users
-                .Include(p => p.Posts)
                 .Include(p => p.Following)
                 .Include(p => p.Followers)
                 .FirstOrDefaultAsync(x => x.Username == username);
+            
+            var posts = context.Posts
+                .Include(p => p.LikeList).AsQueryable();
+
+            posts = posts.Where(p => p.UserId == user.Id);
+
+            user.Posts = posts.AsEnumerable().ToList();
 
             return user;
         }
@@ -73,7 +80,8 @@ namespace MemeApp.API.Data
                 var fullAccount = await GetUser(account.FolloweeId);
                 foreach (var Post in fullAccount.Posts)
                 {
-                    var postDto = mapper.Map<PostForDetailedDto>(Post);
+                    var fullPost = await GetPost(Post.Id);
+                    var postDto = mapper.Map<PostForDetailedDto>(fullPost);
                     allPosts.Add(postDto);
 
                 }
@@ -90,7 +98,7 @@ namespace MemeApp.API.Data
         }
 
         public async Task<Post> GetPost(int id) {
-            var post = await context.Posts.FirstOrDefaultAsync(p => p.Id == id);
+            var post = await context.Posts.Include(p => p.LikeList).FirstOrDefaultAsync(p => p.Id == id);
             return post;
         }
 
@@ -100,5 +108,9 @@ namespace MemeApp.API.Data
                 .FirstOrDefaultAsync(u => u.FollowerId == userId && u.FolloweeId == recipientId);
         }
 
+        public async Task<Like> GetLike(int userId, int postId)
+        {
+            return await context.Likes.FirstOrDefaultAsync(u => u.LikerId == userId && u.PostId == postId);
+        }
     }
 }

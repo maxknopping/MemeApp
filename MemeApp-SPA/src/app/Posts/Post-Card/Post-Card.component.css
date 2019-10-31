@@ -60,6 +60,29 @@ p {
     border-radius: 50%;
 }
 
+a:link {
+    color: crimson;
+    background-color: transparent;
+    text-decoration: none;
+  }
+  
+  a:visited {
+    color: crimson;
+    background-color: transparent;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    color: crimson;
+    background-color: transparent;
+    text-decoration: none;
+  }
+  
+  a:active {
+    color: crimson;
+    background-color: transparent;
+    text-decoration: none;
+  }
 
 
 

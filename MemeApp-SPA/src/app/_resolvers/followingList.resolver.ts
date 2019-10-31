@@ -13,12 +13,31 @@ export class FollowingListResolver implements Resolve<User[]> {
     }
 
     resolve(route: ActivatedRouteSnapshot): Observable<User[]> {
-        return this.userService.getFollowing(route.params['username']).pipe(
-            catchError(error => {
-                this.alertify.error('Problem retreiving data');
-                this.router.navigate(['/feed']);
-                return of(null);
-            })
-        );
+        if (route.params['type'] === 'following')
+        { 
+            return this.userService.getFollowing(route.params['username']).pipe(
+                catchError(error => {
+                    this.alertify.error('Problem retreiving data');
+                    this.router.navigate(['/feed']);
+                    return of(null);
+                })
+            );
+        } else if (route.params['type'] === 'followers') {
+            return this.userService.getFollowers(route.params['username']).pipe(
+                catchError(error => {
+                    this.alertify.error('Problem retreiving data');
+                    this.router.navigate(['/feed']);
+                    return of(null);
+                })
+            );
+        } else if (route.params['type'] === 'likers') {
+            return this.userService.getLikers(route.params['username']).pipe(
+                catchError(error => {
+                    this.alertify.error('Problem retreiving data');
+                    this.router.navigate(['/feed']);
+                    return of(null);
+                })
+            );
+        }
     }
 }

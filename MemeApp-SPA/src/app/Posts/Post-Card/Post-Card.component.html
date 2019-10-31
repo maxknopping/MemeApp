@@ -10,8 +10,13 @@
     </div>
     <li class="list-group-item bg-dark text-light">
         <div class="btn-group" dropdown [dropup]="true" placement="top right">
-          <button class="like-button" style="border-color: transparent" *ngIf="!liked" (click)="like()"><i class="fa fa-heart-o like-icon mr-2"></i>{{post.likes}} Likes</button>
-          <button class="like-button" *ngIf="liked" (click)="like()"><i class="fa fa-heart like-icon mr-2"></i>{{post.likes}} Likes</button>
+          <button class="like-button" style="border-color: transparent" *ngIf="!liked" (click)="like()"><i class="fa fa-heart-o like-icon"></i></button>
+          <button class="like-button" *ngIf="liked" (click)="unlike()"><i class="fa fa-heart like-icon"></i></button> 
+          {{likes}} 
+          <a class="ml-1" *ngIf="likes > 0" [routerLink]="[ '/list/', post.id, 'likers' ]">
+            Likes
+          </a>
+          <span class="ml-1" *ngIf="likes === 0">Likes</span>
           <button class="like-button"><i class="fa fa-envelope like-icon"></i></button>
           <button type="button" class="dropup" dropdownToggle>
             <i class="fa fa-ellipsis-h ellipse-icon"></i>

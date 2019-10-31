@@ -15,6 +15,8 @@ namespace MemeApp.API.Dtos
         public IList<Comment> Comments {get; set; }
 
         public int Likes { get; set; }
+        
+        public IList<LikeDto> LikeList { get; set; }
 
         public bool IsProfilePicture { get; set; }
 

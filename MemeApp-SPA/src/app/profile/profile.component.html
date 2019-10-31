@@ -17,12 +17,12 @@
       <div>
         <h3 class="bio-text text-center">{{user?.bio}}</h3>
           <h6>{{followers}}
-            <a *ngIf="followers > 0" [routerLink]="[ '/followers/', user.username ]">
+            <a *ngIf="followers > 0" [routerLink]="[ '/list/', user.username, 'followers' ]">
                 Followers
             </a>
             <span *ngIf="followers === 0">Followers</span>
             | {{user.following.length}}
-            <a *ngIf="user.following.length > 0" [routerLink]="[ '/following/', user.username ]">
+            <a *ngIf="user.following.length > 0" [routerLink]="[ '/list/', user.username, 'following' ]">
                 Following
             </a>
             <span *ngIf="user.following.length === 0">Following</span>

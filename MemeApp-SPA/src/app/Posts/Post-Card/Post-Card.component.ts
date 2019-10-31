@@ -15,6 +15,7 @@ export class PostCardComponent implements OnInit {
   @Output() delete = new EventEmitter();
   liked = false;
   myPost = false;
+  likes;
 
   constructor(private user: UserService, private alertify: AlertifyService, private authService: AuthService) { }
 
@@ -23,16 +24,28 @@ export class PostCardComponent implements OnInit {
     if (user.username === this.post.username) {
       this.myPost = true;
     }
-    console.log(this.myPost);
+    console.log(this.post);
+    this.likes = this.post.likeList.length;
+    this.post.likeList.forEach(element => {
+      if (element.likerId == this.authService.decodedToken.nameid) {
+        this.liked = true;
+      }
+    });
+    console.log(this.post);
   }
 
   like() {
-    this.liked = !this.liked;
-    if (this.liked === true) {
-      this.post.likes++;
-    } else {
-      this.post.likes --;
-    }
+    this.user.likePost(this.authService.decodedToken.nameid, this.post.id).subscribe(() => {
+      this.liked = true;
+      this.likes++;
+    });
+  }
+
+  unlike() {
+    this.user.unLikePost(this.authService.decodedToken.nameid, this.post.id).subscribe(() => {
+      this.liked = false;
+      this.likes--;
+    });
   }
 
   deletePost(id: number) {

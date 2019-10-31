@@ -4,7 +4,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { User } from '../_models/User';
 import { Post } from '../_models/Post';
-import { Liker } from '../_models/Liker';
 
 
 
@@ -52,8 +51,20 @@ export class UserService {
     return this.http.get(`${this.baseUrl}/followers/${username}`);
   }
 
-getFollowing(username: string) {
+  getFollowing(username: string) {
     return this.http.get(`${this.baseUrl}/following/${username}`);
+  }
+
+  likePost(id: number, recipientId: number) {
+    return this.http.post(`${this.baseUrl}/${id}/like/${recipientId}`, {});
+  }
+
+  unLikePost(id: number, recipientId: number) {
+    return this.http.post(`${this.baseUrl}/${id}/unlike/${recipientId}`, {});
+  }
+
+  getLikers(postId) {
+    return this.http.get(`${this.baseUrl}/likers/${postId}`);
   }
  
 }

@@ -78,11 +78,11 @@ namespace MemeApp.API.Controllers
 
             var user = await repo.GetUser(username);
 
-            var followers = new List<UserForDetailedDto>();
+            var followers = new List<UserForListDto>();
             foreach (var follow in user.Followers)
             {
                 var follower = await repo.GetUser(follow.FollowerId);
-                var userToReturn = mapper.Map<UserForDetailedDto>(follower);
+                var userToReturn = mapper.Map<UserForListDto>(follower);
                 followers.Add(userToReturn);
             }
 
@@ -96,11 +96,11 @@ namespace MemeApp.API.Controllers
 
             var user = await repo.GetUser(username);
 
-            var following = new List<UserForDetailedDto>();
+            var following = new List<UserForListDto>();
             foreach (var follow in user.Following)
             {
                 var followee = await repo.GetUser(follow.FolloweeId);
-                var userToReturn = mapper.Map<UserForDetailedDto>(followee);
+                var userToReturn = mapper.Map<UserForListDto>(followee);
                 following.Add(userToReturn);
             }
 
@@ -187,6 +187,88 @@ namespace MemeApp.API.Controllers
             return BadRequest("failed to follow user");
             
         }
+
+        [HttpPost("{id}/like/{recipientId}")]
+        public async Task<IActionResult> LikePost(int id, int recipientId) {
+            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
+                return Unauthorized();
+            }
+            var like = await repo.GetLike(id, recipientId);
+
+            if (like != null) {
+                //unfollow
+                return BadRequest("You already like this post");
+            }
+
+            var recipient = await repo.GetPost(recipientId);
+            if (recipient == null) {
+                return NotFound();
+            }
+
+            var user = await repo.GetUser(id);
+            
+            like = new Like {
+                LikerId = id,
+                PostId = recipientId,
+                Post = recipient,
+                Liker = user
+            };
+
+            repo.Add<Like>(like);
+
+            if (await repo.SaveAll()) {
+                return Ok();
+            }
+
+            return BadRequest("failed to like post");
+            
+        }
+
+        [HttpPost("{id}/unlike/{recipientId}")]
+        public async Task<IActionResult> UnikePost(int id, int recipientId) {
+            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
+                return Unauthorized();
+            }
+            var like = await repo.GetLike(id, recipientId);
+
+            if (like == null) {
+                //follow
+                return BadRequest("You don't already like this post");
+            }
+
+            var recipient = await repo.GetPost(recipientId);
+            if (recipient == null) {
+                return NotFound();
+            }
+
+            repo.Delete<Like>(like);
+
+            if (await repo.SaveAll()) {
+                return Ok();
+            }
+
+            return BadRequest("failed to like post");
+            
+        }
+
+        [HttpGet("likers/{postId}")]
+        public async Task<IActionResult> GetLikers(int postId)
+        {
+
+            var post = await repo.GetPost(postId);
+
+            var likers = new List<UserForListDto>();
+            foreach (var like in post.LikeList)
+            {
+                var liker = await repo.GetUser(like.LikerId);
+                var userToReturn = mapper.Map<UserForListDto>(liker);
+                likers.Add(userToReturn);
+            }
+
+            return Ok(likers);
+
+        }
+
 
 
     }

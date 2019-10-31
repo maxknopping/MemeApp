@@ -31,8 +31,7 @@ export const appRoutes: Routes = [
                 canDeactivate: [PreventUnsavedChanges]},
             {path: 'messages', component: MessagesComponent},
             {path: 'upload', component: UploadPostComponent},
-            {path: 'followers/:username', component: FollowerListComponent, resolve: {users: FollowerListResolver}},
-            {path: 'following/:username', component: FollowingListComponent, resolve: {users: FollowingListResolver}},
+            {path: 'list/:username/:type', component: FollowingListComponent, resolve: {users: FollowingListResolver}},
         ]
     },
     {path: '**', redirectTo: '', pathMatch: 'full'}

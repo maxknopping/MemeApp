@@ -31,5 +31,6 @@ namespace MemeApp.API.Dtos
         public IList<FollowForDetailedDto> Following { get; set; }
 
 
+
     }
 }

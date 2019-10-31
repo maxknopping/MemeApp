@@ -15,6 +15,8 @@ namespace MemeApp.API.Models
 
         public int Likes { get; set; }
 
+        public IList<Like> LikeList { get; set; }
+
         public bool IsProfilePicture { get; set; }
 
         public string PublicId { get; set; }

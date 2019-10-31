@@ -24,6 +24,8 @@ namespace MemeApp.API.Data
 
          Task<Follow> GetFollow(int userId, int recipientId);
 
+         Task<Like> GetLike(int userId, int postId);
+
 
 
     }
