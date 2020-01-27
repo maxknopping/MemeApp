@@ -21,6 +21,8 @@ namespace MemeApp.API.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int>("CommenterId");
+
                     b.Property<DateTime>("Created");
 
                     b.Property<int>("Likes");
@@ -33,7 +35,24 @@ namespace MemeApp.API.Migrations
 
                     b.HasIndex("PostId");
 
-                    b.ToTable("Comment");
+                    b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("MemeApp.API.Models.CommentLike", b =>
+                {
+                    b.Property<int>("CommenterId");
+
+                    b.Property<int>("CommentId");
+
+                    b.Property<int>("PostId");
+
+                    b.HasKey("CommenterId", "CommentId");
+
+                    b.HasIndex("CommentId");
+
+                    b.HasIndex("PostId");
+
+                    b.ToTable("CommentLikes");
                 });
 
             modelBuilder.Entity("MemeApp.API.Models.Follow", b =>
@@ -136,6 +155,24 @@ namespace MemeApp.API.Migrations
                 {
                     b.HasOne("MemeApp.API.Models.Post", "Post")
                         .WithMany("Comments")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("MemeApp.API.Models.CommentLike", b =>
+                {
+                    b.HasOne("MemeApp.API.Models.Comment", "Comment")
+                        .WithMany("LikeList")
+                        .HasForeignKey("CommentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("MemeApp.API.Models.User", "Commenter")
+                        .WithMany()
+                        .HasForeignKey("CommenterId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("MemeApp.API.Models.Post", "Post")
+                        .WithMany()
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

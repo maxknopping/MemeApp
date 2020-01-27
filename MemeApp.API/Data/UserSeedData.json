@@ -23,24 +23,24 @@
     ],
     "Following": [
       {
-        "Id": 2,
-        "Username": "dorothy"
+        "FolloweeId": 2,
+        "FollowerId": 1
       },
       {
-        "Id": 3,
-        "Username": "reba"
+        "FolloweeId": 3,
+        "FollowerId": 1
       },
       {
-        "Id": 4,
-        "Username": "annmarie"
+        "FolloweeId": 4,
+        "FollowerId": 1
       },
       {
-        "Id": 5,
-        "Username": "ashley"
+        "FolloweeId": 5,
+        "FollowerId": 1
       },
       {
-        "Id": 6,
-        "Username": "roy"
+        "FolloweeId": 6,
+        "FollowerId": 1
       }
     ]
   },

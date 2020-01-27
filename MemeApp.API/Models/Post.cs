@@ -11,7 +11,7 @@ namespace MemeApp.API.Models
 
         public string Caption { get; set; }
 
-        public IList<Comment> Comments {get; set; }
+        public IList<Comment> Comments { get; set; }
 
         public int Likes { get; set; }
 

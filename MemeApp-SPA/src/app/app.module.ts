@@ -29,9 +29,11 @@ import { FileUploadModule } from 'ng2-file-upload';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {TimeAgoPipe} from 'time-ago-pipe';
 import { FollowerListResolver } from './_resolvers/followerList.resolver';
-import { FollowerListComponent } from './listFollowers/FollowerList.component';
 import { FollowingListComponent } from './followingList/followingList.component';
 import { FollowingListResolver } from './_resolvers/followingList.resolver';
+import { CommentListComponent } from './CommentList/CommentList.component';
+import { CommentListResolver } from './_resolvers/commentList.resolver';
+import { NgxCroppieModule } from 'ngx-croppie';
 
 export function tokenGetter() {
    return localStorage.getItem('token');
@@ -51,8 +53,8 @@ export function tokenGetter() {
       ProfileEditComponent,
       UploadPostComponent,
       TimeAgoPipe,
-      FollowerListComponent,
-      FollowingListComponent
+      FollowingListComponent,
+      CommentListComponent
    ],
    imports: [
       HttpClientModule,
@@ -65,14 +67,20 @@ export function tokenGetter() {
       FileUploadModule,
       BsDatepickerModule.forRoot(),
       BrowserAnimationsModule,
+      NgxCroppieModule,
       JwtModule.forRoot({
          config: {
             tokenGetter: tokenGetter,
             whitelistedDomains: ['localhost:5000'],
-            blacklistedRoutes: ['localhost:5000/api/auth']
-         }
-      }),
+            blacklistedRoutes: ['localhost:5000/api/auth/register']
+         }}),
    ],
+   //JwtModule.forRoot({
+   //   config: {
+   //      tokenGetter: tokenGetter,
+   //     whitelistedDomains: ['localhost:5000'],
+   //      blacklistedRoutes: ['localhost:5000/api/auth/register']
+   //   }}),
    providers: [
       AuthService,
       ErrorInterceptorProvider,
@@ -82,7 +90,8 @@ export function tokenGetter() {
       ProfileEditResolver,
       PreventUnsavedChanges,
       FollowerListResolver,
-      FollowingListResolver
+      FollowingListResolver,
+      CommentListResolver
    ],
    bootstrap: [
       AppComponent

@@ -1,0 +1,73 @@
+.profile-picture {
+    max-height: 50px;
+    max-width: 50px;
+    border-radius: 50%;
+}
+
+.title {
+    border: 0px;
+}
+
+.comment-and-username {
+    font-size: 16px;
+    color: black;
+}
+
+.like-button {
+    cursor: pointer;
+    size: scale(10);
+    border: 0px;
+    color: black;
+    background-color: transparent;
+}
+
+.like {
+    cursor: pointer;
+    size: scale(20m);
+    border: 0px;
+    color: crimson;
+    background-color: transparent;
+}
+
+.like-button:hover {
+    background: transparent
+}
+
+.right-align {
+    padding-top: 15px;
+    float: right;
+    vertical-align: middle;
+}
+
+.bottom-line {
+    padding-right: 30px;
+}
+
+.first-bottom-line {
+    padding-left: 65px;
+    padding-right: 30px;
+}
+
+a:link {
+    color: #919AA1;
+    background-color: transparent;
+    text-decoration: none;
+  }
+  
+  a:visited {
+    color: #919AA1;
+    background-color: transparent;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    color: #919AA1;
+    background-color: transparent;
+    text-decoration: none;
+  }
+  
+  a:active {
+    color: #919AA1;
+    background-color: transparent;
+    text-decoration: none;
+  }

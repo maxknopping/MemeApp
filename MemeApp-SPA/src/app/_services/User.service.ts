@@ -66,5 +66,30 @@ export class UserService {
   getLikers(postId) {
     return this.http.get(`${this.baseUrl}/likers/${postId}`);
   }
- 
+
+  getCommentLikers(commentId) {
+    return this.http.get(`${this.baseUrl}/commentLikers/${commentId}`);
+  }
+
+  sendComment(comment, postId, commenterId) {
+    commenterId = +commenterId;
+    return this.http.post(`${this.baseUrl}/comment`,
+    {
+      postId: postId,
+      text: comment,
+      commenterId: commenterId
+    });
+  }
+
+  getComments(postId) {
+    return this.http.get(`${this.baseUrl}/comments/${postId}`);
+  }
+
+  likeComment(commenterId, postId, commentId) {
+    return this.http.post(`${this.baseUrl}/${commenterId}/comment/like/${commentId}/${postId}`, {});
+  }
+
+  unlikeComment(commenterId, postId, commentId) {
+    return this.http.post(`${this.baseUrl}/${commenterId}/comment/unlike/${commentId}/${postId}`, {});
+  }
 }

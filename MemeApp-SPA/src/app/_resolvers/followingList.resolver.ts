@@ -38,6 +38,15 @@ export class FollowingListResolver implements Resolve<User[]> {
                     return of(null);
                 })
             );
+        } else if (route.params['type'] === 'commentLikers') {
+            return this.userService.getCommentLikers(route.params['username']).pipe(
+                catchError(error => {
+                    this.alertify.error('Problem retreiving data');
+                    this.router.navigate(['/feed']);
+                    return of(null);
+                })
+            );
         }
+
     }
 }

@@ -146,9 +146,7 @@ namespace MemeApp.API.Controllers
             
             follow = new Follow {
                 FollowerId = id,
-                FolloweeId = recipientId,
-                Followee = recipient,
-                Follower = follower
+                FolloweeId = recipientId
             };
 
             repo.Add<Follow>(follow);
@@ -269,6 +267,140 @@ namespace MemeApp.API.Controllers
 
         }
 
+        [HttpPost("comment")]
+        public async Task<IActionResult> PostComment(CommentForCreationDto comment) {
+            if (comment.CommenterId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
+                return Unauthorized();
+            }
+
+            var recipient = await repo.GetPost(comment.PostId);
+            if (recipient == null) {
+                return NotFound();
+            }
+
+            var fullComment = mapper.Map<Comment>(comment);
+            fullComment.Created = DateTime.Now;
+            recipient.Comments.Add(fullComment);
+
+            if(await repo.SaveAll()) {
+                return Ok();
+            }
+
+            return BadRequest("failed to make comment");
+
+        }
+
+        [HttpGet("comments/{postId}")]
+        public async Task<IActionResult> GetComments(int postId)
+        {
+
+            var post = repo.GetComments(postId);
+
+            var comments = new List<CommentForListDto>();
+            foreach (var comment in post)
+            {
+                var commenter = await repo.GetUser(comment.CommenterId);
+                var commentToReturn = mapper.Map<CommentForListDto>(comment);
+                var likes = new List<CommentLikeDto>();
+                foreach(var like in comment.LikeList) {
+                    var newLike = mapper.Map<CommentLikeDto>(like);
+                    likes.Add(newLike);
+                }
+                commentToReturn.LikeList = likes;
+                commentToReturn.PhotoUrl = commenter.PhotoUrl;
+                commentToReturn.Username = commenter.Username;
+                comments.Add(commentToReturn);
+            }
+
+            return Ok(comments);
+
+        }
+
+        [HttpPost("{id}/comment/like/{recipientId}/{postId}")]
+        public async Task<IActionResult> LikeComment(int id, int recipientId, int postId) {
+            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
+                return Unauthorized();
+            }
+            var like = await repo.GetCommentLike(id, recipientId);
+
+            if (like != null) {
+                //unfollow
+                return BadRequest("You already like this post");
+            }
+
+            var recipient = await repo.GetComment(recipientId);
+            var post = await repo.GetPost(postId);
+            if (recipient == null || post == null) {
+                return NotFound();
+            }
+
+            var user = await repo.GetUser(id);
+            
+            like = new CommentLike {
+                CommenterId = id,
+                CommentId = recipientId,
+                PostId = postId,
+                Post = post,
+                Comment = recipient,
+                Commenter = user
+            };
+
+            repo.Add<CommentLike>(like);
+
+            if (await repo.SaveAll()) {
+                return Ok();
+            }
+
+            return BadRequest("failed to like comment");
+            
+        }
+
+        [HttpPost("{id}/comment/unlike/{recipientId}/{postId}")]
+        public async Task<IActionResult> UnLikeComment(int id, int recipientId, int postId) {
+            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
+                return Unauthorized();
+            }
+            var like = await repo.GetCommentLike(id, recipientId);
+
+            if (like == null) {
+                //unfollow
+                return BadRequest("You don't already like this post");
+            }
+
+            var recipient = await repo.GetComment(recipientId);
+            var post = await repo.GetPost(postId);
+            if (recipient == null || post == null) {
+                return NotFound();
+            }
+
+
+            repo.Delete<CommentLike>(like);
+
+            if (await repo.SaveAll()) {
+                return Ok();
+            }
+
+            return BadRequest("failed to unlike comment");
+            
+        }
+
+        [HttpGet("commentLikers/{commentId}")]
+        public async Task<IActionResult> GetCommentLikers(int commentId)
+        {
+
+            var comment = await repo.GetComment(commentId);
+
+            var likers = new List<UserForListDto>();
+            foreach (var like in comment.LikeList)
+            {
+                var liker = await repo.GetUser(like.CommenterId);
+                var userToReturn = mapper.Map<UserForListDto>(liker);
+                likers.Add(userToReturn);
+            }
+
+            return Ok(likers);
+
+        }
 
 
     }

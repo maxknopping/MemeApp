@@ -21,6 +21,9 @@ namespace MemeApp.API.Helpers
             CreateMap<UserForRegisterDto, User>();
             CreateMap<Follow, FollowForDetailedDto>();
             CreateMap<Like, LikeDto>();
+            CreateMap<CommentForCreationDto, Comment>();
+            CreateMap<Comment, CommentForListDto>();
+            CreateMap<CommentLike, CommentLikeDto>();
 
         }
     }

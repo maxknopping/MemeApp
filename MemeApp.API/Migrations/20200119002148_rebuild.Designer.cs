@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MemeApp.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20190927012643_ExtendedUserClass")]
-    partial class ExtendedUserClass
+    [Migration("20200119002148_rebuild")]
+    partial class rebuild
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -22,6 +22,8 @@ namespace MemeApp.API.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<int>("CommenterId");
 
                     b.Property<DateTime>("Created");
 
@@ -35,7 +37,33 @@ namespace MemeApp.API.Migrations
 
                     b.HasIndex("PostId");
 
-                    b.ToTable("Comment");
+                    b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("MemeApp.API.Models.Follow", b =>
+                {
+                    b.Property<int>("FollowerId");
+
+                    b.Property<int>("FolloweeId");
+
+                    b.HasKey("FollowerId", "FolloweeId");
+
+                    b.HasIndex("FolloweeId");
+
+                    b.ToTable("Follows");
+                });
+
+            modelBuilder.Entity("MemeApp.API.Models.Like", b =>
+                {
+                    b.Property<int>("LikerId");
+
+                    b.Property<int>("PostId");
+
+                    b.HasKey("LikerId", "PostId");
+
+                    b.HasIndex("PostId");
+
+                    b.ToTable("Likes");
                 });
 
             modelBuilder.Entity("MemeApp.API.Models.Post", b =>
@@ -50,6 +78,8 @@ namespace MemeApp.API.Migrations
                     b.Property<bool>("IsProfilePicture");
 
                     b.Property<int>("Likes");
+
+                    b.Property<string>("PublicId");
 
                     b.Property<string>("Url");
 
@@ -83,6 +113,10 @@ namespace MemeApp.API.Migrations
 
                     b.Property<byte[]>("PasswordSalt");
 
+                    b.Property<string>("PhotoUrl");
+
+                    b.Property<string>("PublicIdForPhoto");
+
                     b.Property<string>("Username");
 
                     b.HasKey("Id");
@@ -107,7 +141,33 @@ namespace MemeApp.API.Migrations
                     b.HasOne("MemeApp.API.Models.Post", "Post")
                         .WithMany("Comments")
                         .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("MemeApp.API.Models.Follow", b =>
+                {
+                    b.HasOne("MemeApp.API.Models.User", "Followee")
+                        .WithMany("Followers")
+                        .HasForeignKey("FolloweeId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("MemeApp.API.Models.User", "Follower")
+                        .WithMany("Following")
+                        .HasForeignKey("FollowerId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("MemeApp.API.Models.Like", b =>
+                {
+                    b.HasOne("MemeApp.API.Models.User", "Liker")
+                        .WithMany()
+                        .HasForeignKey("LikerId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("MemeApp.API.Models.Post", "Post")
+                        .WithMany("LikeList")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("MemeApp.API.Models.Post", b =>

@@ -30,7 +30,22 @@
           <button class="like-button" [routerLink]="[ '/profile/', post.username]">{{post.username}}
           <span class="ml-2" style="color: white">{{post.caption}}</span></button>
         </p>
-
+        <div class="like-button">
+          <a class="ml-1" *ngIf="post.comments.length > 0" [routerLink]="[ '/comments/', post.id]">
+          View all {{post.comments.length}} Comments
+          </a>
+        </div>
+      <span class="created">{{post.created | timeAgo}}</span>
+    </li>
+    <li>
+      <form #commentForm="ngForm" id="commentForm" (ngSubmit)="sendComment()">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="Leave a comment..." [(ngModel)]="comment" name="comment">
+          <div class="input-group-append">
+            <input class="btn post-button" type="submit" value="Post">
+          </div>
+        </div>
+      </form>
     </li>
   </ul>
 </div>

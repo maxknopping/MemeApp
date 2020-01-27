@@ -1,0 +1,35 @@
+<div  class="row">
+    <div class = "col-sm-3"></div>
+    <div class="col-sm-6">
+        <div *ngFor="let comment of comments">
+            <li class="list-group-item title">
+                <img class="profile-picture mr-2" src="{{comment.photoUrl || '../../../assets/user.png'}}" alt="">
+                <span class="comment-and-username">
+                    <button class="like-button" [routerLink]="[ '/profile/', comment.username]">
+                    <strong>
+                        {{comment.username}}
+                    </strong></button>
+                    {{comment.text}}
+                </span>    
+                <div class="right-align">
+                    <button class="like" style="border-color: transparent" *ngIf="!comment.liked" (click)="like(comment)"><i class="fa fa-heart-o like-icon"></i></button>
+                    <button class="like" *ngIf="comment.liked"><i class="fa fa-heart like-icon" (click)="unlike(comment)"></i></button>
+                </div>
+                <div style="clear: both;"></div>
+                <p>
+                 <span class="first-bottom-line">
+                        {{comment.created | timeAgo}}
+                 </span>
+                 <span class="bottom-line" *ngIf="comment.likes > 0">
+                     <a [routerLink]="[ '/list/', comment.id, 'commentLikers' ]">
+                            {{comment.likes}} Likes
+                     </a>
+                 </span>
+                 <span class="bottom-line">
+                     Reply
+                 </span>
+                </p>
+            </li>
+        </div>
+    </div>
+    <div class = "col-sm-3"></div>

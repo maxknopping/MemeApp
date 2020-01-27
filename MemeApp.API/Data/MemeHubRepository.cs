@@ -30,11 +30,17 @@ namespace MemeApp.API.Data
 
         public async Task<User> GetUser(int id)
         {
-            var user = await context.Users
-                .Include(p => p.Posts)
+           var user = await context.Users
                 .Include(p => p.Following)
                 .Include(p => p.Followers)
                 .FirstOrDefaultAsync(x => x.Id == id);
+            
+            var posts = context.Posts
+                .Include(p => p.LikeList).Include(p => p.Comments).AsQueryable();
+
+            posts = posts.Where(p => p.UserId == user.Id);
+
+            user.Posts = posts.AsEnumerable().ToList();
 
             return user;
         }
@@ -47,7 +53,7 @@ namespace MemeApp.API.Data
                 .FirstOrDefaultAsync(x => x.Username == username);
             
             var posts = context.Posts
-                .Include(p => p.LikeList).AsQueryable();
+                .Include(p => p.LikeList).Include(p => p.Comments).AsQueryable();
 
             posts = posts.Where(p => p.UserId == user.Id);
 
@@ -98,7 +104,7 @@ namespace MemeApp.API.Data
         }
 
         public async Task<Post> GetPost(int id) {
-            var post = await context.Posts.Include(p => p.LikeList).FirstOrDefaultAsync(p => p.Id == id);
+            var post = await context.Posts.Include(p => p.LikeList).Include(p => p.Comments).FirstOrDefaultAsync(p => p.Id == id);
             return post;
         }
 
@@ -111,6 +117,23 @@ namespace MemeApp.API.Data
         public async Task<Like> GetLike(int userId, int postId)
         {
             return await context.Likes.FirstOrDefaultAsync(u => u.LikerId == userId && u.PostId == postId);
+        }
+
+        public IEnumerable<Comment> GetComments(int postId)
+        {
+            return context.Comments.Where(c => c.PostId == postId).Include(c => c.LikeList);
+        }
+
+        public async Task<CommentLike> GetCommentLike(int userId, int commentId)
+        {
+            return await context.CommentLikes
+                .FirstOrDefaultAsync(u => u.CommenterId == userId && u.CommentId == commentId);
+        }
+
+        public async Task<Comment> GetComment(int commentId)
+        {
+            var comment = await context.Comments.Include(p => p.LikeList).FirstOrDefaultAsync(p => p.Id == commentId);
+            return comment;
         }
     }
 }

@@ -1,5 +1,6 @@
 import { User } from './User';
 import { Like } from './Like';
+import { Comment} from './Comment';
 
 export interface Post {
     id: number;
@@ -9,6 +10,7 @@ export interface Post {
     username: string;
     likes: number;
     likeList: Like[];
-    dateAdded: Date;
+    comments: Comment[];
+    created: Date;
     profilePictureUrl: string;
 }

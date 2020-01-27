@@ -1,9 +1,11 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { Post } from 'src/app/_models/Post';
 import { UserService } from 'src/app/_services/User.service';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { AuthService } from 'src/app/_services/auth.service';
 import { User } from 'src/app/_models/User';
+import { NgForm } from '@angular/forms';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-Post-Card',
@@ -13,11 +15,14 @@ import { User } from 'src/app/_models/User';
 export class PostCardComponent implements OnInit {
   @Input() post: Post;
   @Output() delete = new EventEmitter();
+  @ViewChild('editForm', {static: true}) commentForm: NgForm;
   liked = false;
   myPost = false;
   likes;
+  comment;
 
-  constructor(private user: UserService, private alertify: AlertifyService, private authService: AuthService) { }
+  constructor(private user: UserService, private alertify: AlertifyService, private authService: AuthService,
+              private router: Router) { }
 
   ngOnInit() {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -32,6 +37,7 @@ export class PostCardComponent implements OnInit {
       }
     });
     console.log(this.post);
+    this.comment = '';
   }
 
   like() {
@@ -50,6 +56,12 @@ export class PostCardComponent implements OnInit {
 
   deletePost(id: number) {
     this.delete.emit(id);
+  }
+
+  sendComment() {
+    this.user.sendComment(this.comment, this.post.id, this.authService.decodedToken.nameid).subscribe(() => {
+      this.router.navigate(['/comments', this.post.id]);
+    });
   }
 
 

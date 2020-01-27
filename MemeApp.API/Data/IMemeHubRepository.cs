@@ -26,6 +26,14 @@ namespace MemeApp.API.Data
 
          Task<Like> GetLike(int userId, int postId);
 
+         IEnumerable<Comment> GetComments(int postId);
+
+         Task<Comment> GetComment(int commentId);
+
+         Task<CommentLike> GetCommentLike(int userId, int commentId);
+
+
+
 
 
     }
