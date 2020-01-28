@@ -26,6 +26,11 @@
     letter-spacing: 2px;
 }
 
+.btn-info {
+    width: 40%;
+    font-size: 20px;
+}
+
 .row-wrapper {
     padding-left: 30px;
 }
@@ -53,4 +58,9 @@
 
 .ngx-croppie {
     padding-top: 20px;
+}
+
+.preview {
+    width: 400px;
+    height: 400px;
 }

@@ -1,0 +1,10 @@
+.invalid {
+    color: crimson;
+    float: inline-block;
+    font-size: small;
+}
+
+.btn-success {
+    width: 25%;
+    font-size: 20px;
+}

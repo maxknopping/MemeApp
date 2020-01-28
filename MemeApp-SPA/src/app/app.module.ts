@@ -9,7 +9,7 @@ import { AuthService } from './_services/auth.service';
 import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
 import { ErrorInterceptorProvider } from './_services/error.interceptor';
-import { BsDropdownModule, TabsModule, BsDatepickerModule } from 'ngx-bootstrap';
+import { BsDropdownModule, TabsModule, BsDatepickerModule, ModalModule } from 'ngx-bootstrap';
 import { FeedComponent } from './Posts/feed/feed.component';
 import { FeaturedComponent } from './featured/featured.component';
 import { MessagesComponent } from './messages/messages.component';
@@ -34,6 +34,8 @@ import { FollowingListResolver } from './_resolvers/followingList.resolver';
 import { CommentListComponent } from './CommentList/CommentList.component';
 import { CommentListResolver } from './_resolvers/commentList.resolver';
 import { NgxCroppieModule } from 'ngx-croppie';
+import { CroppingModalComponent } from './Posts/CroppingModal/CroppingModal.component';
+import { CustomImageFormControlComponent } from './Posts/CustomImageFormControl/CustomImageFormControl.component';
 
 export function tokenGetter() {
    return localStorage.getItem('token');
@@ -54,7 +56,9 @@ export function tokenGetter() {
       UploadPostComponent,
       TimeAgoPipe,
       FollowingListComponent,
-      CommentListComponent
+      CommentListComponent,
+      CroppingModalComponent,
+      CustomImageFormControlComponent
    ],
    imports: [
       HttpClientModule,
@@ -74,6 +78,7 @@ export function tokenGetter() {
             whitelistedDomains: ['localhost:5000'],
             blacklistedRoutes: ['localhost:5000/api/auth/register']
          }}),
+      ModalModule.forRoot()
    ],
    //JwtModule.forRoot({
    //   config: {
@@ -95,6 +100,9 @@ export function tokenGetter() {
    ],
    bootstrap: [
       AppComponent
+   ],
+   entryComponents: [
+      CroppingModalComponent
    ]
 })
 export class AppModule { }

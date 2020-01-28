@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, HostListener, Input, forwardR
 import { Post } from 'src/app/_models/Post';
 import { PostCardComponent } from '../Post-Card/Post-Card.component';
 import { AuthService } from 'src/app/_services/auth.service';
-import { FileUploader } from 'ng2-file-upload';
+import { FileUploader, FileItem } from 'ng2-file-upload';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -11,6 +11,8 @@ import * as Croppie from 'node_modules/croppie/croppie.js';
 import { CroppieOptions } from 'croppie';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { NgxCroppieComponent } from 'ngx-croppie';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap';
+import { CroppingModalComponent } from '../CroppingModal/CroppingModal.component';
 
 @Component({
   selector: 'app-uploadPost',
@@ -22,7 +24,8 @@ import { NgxCroppieComponent } from 'ngx-croppie';
     multi: true
   }]
 })
-export class UploadPostComponent implements OnInit, OnChanges, ControlValueAccessor  {
+export class UploadPostComponent implements OnInit  {
+  bsModalRef: BsModalRef;
   @Input()
   public imgCropToHeight = '400';
 
@@ -39,7 +42,7 @@ export class UploadPostComponent implements OnInit, OnChanges, ControlValueAcces
   croppieImage;
 
   public imagePath;
-  imgURL: any;
+  imgURL;
   public message: string;
   post = {
     id: 0,
@@ -49,7 +52,8 @@ export class UploadPostComponent implements OnInit, OnChanges, ControlValueAcces
   uploader: FileUploader;
   baseURL = environment.apiUrl;
 
-  constructor(private authService: AuthService, private http: HttpClient, private sanitizer: DomSanitizer) { }
+  constructor(private authService: AuthService, private http: HttpClient, private sanitizer: DomSanitizer,
+              private modalService: BsModalService) { }
 
   ngOnInit() {
     this.initializeUploader();
@@ -61,17 +65,16 @@ export class UploadPostComponent implements OnInit, OnChanges, ControlValueAcces
       url: this.baseURL + '/api/users/' + this.authService.decodedToken.nameid + '/posts',
       authToken: 'Bearer ' + localStorage.getItem('token'),
       isHTML5: true,
-      allowedFileType: ['image'],
       removeAfterUpload: true,
       autoUpload: false,
       maxFileSize: 10 * 1024 * 1024
     });
     this.uploader.onAfterAddingFile = (file) => {
-      this.imgURL = (window.URL) ? this.sanitizer.
-        bypassSecurityTrustUrl(window.URL.createObjectURL(file._file)) :
-        this.sanitizer.bypassSecurityTrustUrl((window as any).webkitURL.createObjectURL(file._file));
+      //this.imgURL = (window.URL) ? this.sanitizer.
+      //  bypassSecurityTrustUrl(window.URL.createObjectURL(file._file)) :
+      //  this.sanitizer.bypassSecurityTrustUrl((window as any).webkitURL.createObjectURL(file._file));
       file.withCredentials = false;
-      console.log(this.imgURL);
+      //console.log(this.imgURL);
     };
 
     this.uploader.onSuccessItem = (item, response, status, headers) => {
@@ -93,15 +96,12 @@ export class UploadPostComponent implements OnInit, OnChanges, ControlValueAcces
 
   preview(files) {
     console.log(files);
-    if (files.length === 0) {
-      return;
-    }
     const reader = new FileReader();
-    this.imagePath = files;
-    reader.readAsDataURL(files[0]);
+    reader.readAsDataURL(files);
     reader.onload = (event) => {
       this.imgURL = reader.result;
     };
+
   }
 
   postPhoto() {
@@ -118,106 +118,31 @@ export class UploadPostComponent implements OnInit, OnChanges, ControlValueAcces
     });
   }
 
-  public get croppieOptions(): CroppieOptions {
-    const opts: CroppieOptions = {};
-    opts.viewport = {
-      width: parseInt(this.imgCropToWidth, 10),
-      height: parseInt(this.imgCropToHeight, 10)
-    };
-
-    opts.boundary = {
-      width: parseInt(this.imgCropToWidth, 10) + 100,
-      height: parseInt(this.imgCropToWidth, 10) + 100
-    };
-
-    opts.enforceBoundary = true;
-    return opts;
-}
-
-imageUploadEvent(evt: any) {
-  if (!evt.target) {
-    return;
-  }
-  if (!evt.target.files) {
-    return;
-  }
-
-  if (evt.target.files.length !== 1) {
-    return;
-  }
-
-  const file = evt.target.files[0];
-  if (
-    file.type !== 'image/jpeg' &&
-    file.type !== 'image/png' &&
-    file.type !== 'image/gif' &&
-    file.type !== 'image/jpg'
-  ) {
-    return;
-  }
-
-  const fr = new FileReader();
-  fr.onloadend = loadEvent => {
-    this.croppieImage = fr.result.toString();
-  };
-
-  fr.readAsDataURL(file);
-}
-
-newImageResultFromCroppie(img: string) {
-  this.croppieImage = img;
-  this.propagateChange(this.croppieImage);
-}
-
 public blobToFile = (theBlob: Blob, fileName: string): File => {
-  const b: any = theBlob;
-  // A Blob() is almost a File() - it's just missing the two properties below which we will add
-  b.lastModifiedDate = new Date();
-  b.name = fileName;
 
-  // Cast to a File() type
-  return  theBlob as File;
+  const b: File = new File([theBlob], fileName);
+  return b;
 }
 
-dataURItoBlob(dataURI: string) {
-  const binary = atob(dataURI.split(',')[1]);
-  const array = [];
-  for (let i = 0; i < binary.length; i++) {
-   array.push(binary.charCodeAt(i));
-  }
-  return new Blob([new Uint8Array(array)], {
-  type: 'image/jpg'
+cropImageModal() {
+  const initialState = {
+    list: [
+      'Open a modal with component',
+      'Pass your data',
+      'Do something else',
+      '...'
+    ],
+    title: 'Modal with component'
+  };
+  this.bsModalRef = this.modalService.show(CroppingModalComponent, {initialState});
+  this.bsModalRef.content.sendPhoto.subscribe(value => {
+    const blobImage = value.BlobImage;
+    const file = this.blobToFile(blobImage, 'newPhoto');
+    const array: File[] = [file];
+    this.uploader.addToQueue(array);
+    this.bsModalRef.hide();
+    this.preview(blobImage);
   });
 }
-
-ngOnChanges(changes: any) {
-  if (this.croppieImage) {
-    return;
-  }
-
-  if (!changes.imageUrl) {
-    return;
-  }
-
-  if (!changes.imageUrl.previousValue && changes.imageUrl.currentValue) {
-    this.croppieImage = changes.imageUrl.currentValue;
-    this.propagateChange(this.croppieImage);
-  }
-}
-writeValue(value: any) {
-  if (value !== undefined) {
-    this.croppieImage = value;
-    this.propagateChange(this.croppieImage);
-  }
-}
-
-propagateChange = (_: any) => {};
-
-registerOnChange(fn) {
-  this.propagateChange = fn;
-}
-
-registerOnTouched() {}
-
 
 }

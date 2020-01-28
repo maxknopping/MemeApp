@@ -1,0 +1,24 @@
+<form [formGroup]="myform" (submit)="submit()" fxFlex="100">
+  <div
+    fxFlex="500px"
+    fxLayoutAlign="center center"
+    fxLayout="column"
+    fxFlexOffset="calc(50% - 250px)"
+    fxFlex.xs="100"
+    fxFlexOffset.xs="0"
+    style="padding: 10px; text-align: center;"
+  >
+    <app-custom-image-form-control
+      formControlName="BlobImage"
+      [responseType]="'blob'"
+    ></app-custom-image-form-control>
+
+    <div class="invalid" *ngIf="myform.controls['BlobImage'].hasError('required')">
+      This field is required
+    </div>
+    <br>
+    <button class="btn-success" fxFlex color="primary">
+      Submit
+    </button>
+  </div>
+</form>

@@ -1,0 +1,10 @@
+<div fxFlex="100" fxLayout="column" fxLayoutAlign="center center" class="container">
+  <ngx-croppie *ngIf="croppieImage" #ngxCroppie [outputFormatOptions]="outputoption" [croppieOptions]="croppieOptions" [imageUrl]="croppieImage"
+    (result)="newImageResultFromCroppie($event)"></ngx-croppie>
+  <input #imageUpload hidden type="file" id="fileupload" #imageUpload (change)="imageUploadEvent($event)" accept="image/gif, image/jpeg, image/png"
+  />
+  <button fxFlex="100" class="btn-info" type="button" style="display: block; margin: 0 auto;" color="primary"
+    (click)="imageUpload.click()">
+    Select Image
+  </button>
+</div>

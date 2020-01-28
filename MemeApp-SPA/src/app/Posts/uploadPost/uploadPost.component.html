@@ -11,13 +11,10 @@
   </div>
   <div class="col-sm-6 text-center">
     <div fxFlex="100" fxLayout="column" fxLayoutAlign="center center">
-      <input class="photo-input" #imageUpload ng2FileSelect [uploader]="uploader" #fileInput hidden type="file" id="fileupload" #imageUpload (change)="imageUploadEvent($event)" accept="image/gif, image/jpeg, image/png"/>
-      <button fxFlex="100" class="input-label font-weight-bold mat-elevation-z0" type="button" color="primary"
-        (click)="imageUpload.click()">
-        Choose a Photo
+      <button fxFlex="100" class="btn-info" type="button" color="primary"
+        (click)="cropImageModal()">
+        Upload Photo
       </button>
-      <ngx-croppie *ngIf="croppieImage" #ngxCroppie [outputFormatOptions]="outputoption" [croppieOptions]="croppieOptions" [imageUrl]="croppieImage"
-        (result)="newImageResultFromCroppie($event)"></ngx-croppie>
     </div>
     <div *ngFor="let item of uploader.queue">
         <button type="button" class="btn btn-danger btn-xs"
@@ -25,6 +22,7 @@
             <span class="glyphicon glyphicon-trash"></span> Remove
         </button>
     </div>
+  <img class="preview" [src]="imgURL" *ngIf="imgURL">
   </div>
 </div>
 
