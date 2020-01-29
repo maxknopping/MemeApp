@@ -63,9 +63,23 @@ namespace MemeApp.API.Controllers
             try {
                 var user = await repo.GetUser(username);
 
-                var post = repo.GetFeed(user, index);
+                var post = await repo.GetFeed(user, index);
 
-                return Ok(post.Result);
+                return Ok(post);
+            } catch {
+                return BadRequest();
+            }
+
+        }
+
+        [HttpGet("featured/{index}")]
+        public async Task<IActionResult> GetFeatured(int index)
+        {
+            try {
+
+                var post = await repo.GetFeatured(index);
+
+                return Ok(post);
             } catch {
                 return BadRequest();
             }

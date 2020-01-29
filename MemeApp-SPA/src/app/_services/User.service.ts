@@ -31,6 +31,10 @@ export class UserService {
     return this.http.get<Post>(this.baseUrl + '/feed/' + username + `/${index}`);
   }
 
+  getFeatured(index): Observable<Post> {
+    return this.http.get<Post>(this.baseUrl + '/featured' + `/${index}`);
+  }
+
   updateUser(id: number, user: User) {
     return this.http.put(this.baseUrl + '/' + id, user);
   }

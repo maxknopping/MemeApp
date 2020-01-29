@@ -20,6 +20,8 @@ namespace MemeApp.API.Data
 
          Task<PostForDetailedDto> GetFeed(User user, int index);
 
+         Task<PostForDetailedDto> GetFeatured(int index);
+
          Task<Post> GetPost(int id);
 
          Task<Follow> GetFollow(int userId, int recipientId);

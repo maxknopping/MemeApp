@@ -1,7 +1,6 @@
 import {Routes} from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { FeedComponent } from './Posts/feed/feed.component';
-import { FeaturedComponent } from './featured/featured.component';
 import { MessagesComponent } from './messages/messages.component';
 import { AuthGuard } from './_guards/auth.guard';
 import { ProfileComponent } from './profile/profile.component';
@@ -17,6 +16,7 @@ import { FollowingListComponent } from './followingList/followingList.component'
 import { FollowingListResolver } from './_resolvers/followingList.resolver';
 import { CommentListComponent } from './CommentList/CommentList.component';
 import { CommentListResolver } from './_resolvers/commentList.resolver';
+import { FeaturedComponent } from './Posts/featured/featured.component';
 
 export const appRoutes: Routes = [
     {path: '', component: HomeComponent},

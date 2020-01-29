@@ -11,7 +11,6 @@ import { RegisterComponent } from './register/register.component';
 import { ErrorInterceptorProvider } from './_services/error.interceptor';
 import { BsDropdownModule, TabsModule, BsDatepickerModule, ModalModule } from 'ngx-bootstrap';
 import { FeedComponent } from './Posts/feed/feed.component';
-import { FeaturedComponent } from './featured/featured.component';
 import { MessagesComponent } from './messages/messages.component';
 import { RouterModule, ActivatedRouteSnapshot } from '@angular/router';
 import { appRoutes } from './routes';
@@ -36,6 +35,7 @@ import { CommentListResolver } from './_resolvers/commentList.resolver';
 import { NgxCroppieModule } from 'ngx-croppie';
 import { CroppingModalComponent } from './Posts/CroppingModal/CroppingModal.component';
 import { CustomImageFormControlComponent } from './Posts/CustomImageFormControl/CustomImageFormControl.component';
+import { FeaturedComponent } from './Posts/featured/featured.component';
 
 export function tokenGetter() {
    return localStorage.getItem('token');

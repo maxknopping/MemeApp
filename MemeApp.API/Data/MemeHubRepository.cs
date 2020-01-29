@@ -98,6 +98,21 @@ namespace MemeApp.API.Data
             return feed;
         }
 
+        public async Task<PostForDetailedDto> GetFeatured(int index)
+        {
+            var posts = await GetAllPosts();
+            var allPosts = new List<PostForDetailedDto>();
+            foreach (var post in posts)
+            {
+                var postDto = mapper.Map<PostForDetailedDto>(post);
+                allPosts.Add(postDto);
+
+            }
+            var feed = allPosts[index];
+
+            return feed;
+        }
+
         public int SortPostsByDate(PostForDetailedDto x, PostForDetailedDto y)
         {
             return y.Created.CompareTo(x.Created);
@@ -105,6 +120,11 @@ namespace MemeApp.API.Data
 
         public async Task<Post> GetPost(int id) {
             var post = await context.Posts.Include(p => p.LikeList).Include(p => p.Comments).FirstOrDefaultAsync(p => p.Id == id);
+            return post;
+        }
+
+        public async Task<IList<Post>> GetAllPosts() { //need to do only posts from last x amount of time (eventually)
+            var post = await context.Posts.Include(p => p.LikeList).Include(p => p.Comments).Include(p => p.User).OrderByDescending(p => p.LikeList.Count).ToListAsync();
             return post;
         }
 
