@@ -11,7 +11,7 @@ export class CroppingModalComponent implements OnInit {
   @Output() sendPhoto = new EventEmitter();
 
   myform: FormGroup = null;
-
+  type: string;
   title: string;
   closeBtnName: string;
   list: any[] = [];

@@ -26,22 +26,6 @@ import { CroppingModalComponent } from '../CroppingModal/CroppingModal.component
 })
 export class UploadPostComponent implements OnInit  {
   bsModalRef: BsModalRef;
-  @Input()
-  public imgCropToHeight = '400';
-
-  /* Pass the width of the image to this component */
-  @Input()
-  public imgCropToWidth = '400';
-  @Input()
-  private responseType: 'blob' | 'base64' = 'blob';
-
-  @ViewChild('ngxCroppie', {static: true})
-  ngxCroppie: NgxCroppieComponent;
-
-  public outputoption = { type: 'blob', size: 'original' };
-  croppieImage;
-
-  public imagePath;
   imgURL;
   public message: string;
   post = {
@@ -57,7 +41,6 @@ export class UploadPostComponent implements OnInit  {
 
   ngOnInit() {
     this.initializeUploader();
-    this.outputoption = { type: this.responseType, size: 'original' };
   }
 
   initializeUploader() {
@@ -113,7 +96,6 @@ export class UploadPostComponent implements OnInit  {
       if (element === item) {
         element.remove();
         this.imgURL = '';
-        this.croppieImage = '';
       }
     });
   }
@@ -126,13 +108,7 @@ public blobToFile = (theBlob: Blob, fileName: string): File => {
 
 cropImageModal() {
   const initialState = {
-    list: [
-      'Open a modal with component',
-      'Pass your data',
-      'Do something else',
-      '...'
-    ],
-    title: 'Modal with component'
+    type: 'square'
   };
   this.bsModalRef = this.modalService.show(CroppingModalComponent, {initialState});
   this.bsModalRef.content.sendPhoto.subscribe(value => {

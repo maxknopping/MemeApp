@@ -1,3 +1,9 @@
+<div class="modal-header">
+  <h4 class="modal-title pull-left">Crop Image</h4>
+  <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+  <span aria-hidden="true">&times;</span>
+  </button>
+</div>
 <form [formGroup]="myform" (submit)="submit()" fxFlex="100">
   <div
     fxFlex="500px"
@@ -11,6 +17,7 @@
     <app-custom-image-form-control
       formControlName="BlobImage"
       [responseType]="'blob'"
+      [type] = "type"
     ></app-custom-image-form-control>
 
     <div class="invalid" *ngIf="myform.controls['BlobImage'].hasError('required')">

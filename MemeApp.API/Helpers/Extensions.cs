@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using MemeApp.API.Dtos;
 using Microsoft.AspNetCore.Http;
 
 namespace MemeApp.API.Helpers
@@ -18,6 +21,11 @@ namespace MemeApp.API.Helpers
                 age --;
             }
             return age;
+        }
+
+        public static List<CommentForListDto> SortComments (this List<CommentForListDto> comments) {
+            comments = comments.OrderByDescending(c => c.LikeList.Count).ToList();
+            return comments;
         }
     }
 }

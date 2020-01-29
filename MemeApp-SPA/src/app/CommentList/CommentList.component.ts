@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit, Input } from '@angular/core';
+import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { Comment } from '../_models/Comment';
 import { UserService } from '../_services/User.service';
 import { AuthService } from '../_services/auth.service';
@@ -11,14 +11,21 @@ import { AuthService } from '../_services/auth.service';
 })
 export class CommentListComponent implements OnInit {
   comments: Comment[];
+  myPost: boolean;
 
-  constructor(private route: ActivatedRoute, private user: UserService, private authService: AuthService) { }
+  constructor(private route: ActivatedRoute, private user: UserService,
+              private authService: AuthService) { }
 
   ngOnInit() {
     this.route.data.subscribe(data => {
       this.comments = data['comments'];
+      this.myPost = this.route.snapshot.params['myPost'];
       this.comments.forEach(element => {
         element.likes = element.likeList.length;
+        if (element.commenterId == this.authService.decodedToken.nameid ||
+            this.myPost) {
+              element.deleteable = true;
+        }
         element.likeList.forEach(e => {
           if (e.commenterId == this.authService.decodedToken.nameid) {
             element.liked = true;
@@ -39,6 +46,12 @@ export class CommentListComponent implements OnInit {
     this.user.unlikeComment(this.authService.decodedToken.nameid, comment.postId, comment.id).subscribe(() => {
       comment.liked = false;
       comment.likes--;
+    });
+  }
+
+  deleteComment(comment: Comment) {
+    this.user.deleteComment(comment.id).subscribe(() => {
+      this.comments = this.comments.filter(obj => obj !== comment);
     });
   }
 }

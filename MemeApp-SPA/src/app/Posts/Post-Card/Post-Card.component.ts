@@ -60,7 +60,7 @@ export class PostCardComponent implements OnInit {
 
   sendComment() {
     this.user.sendComment(this.comment, this.post.id, this.authService.decodedToken.nameid).subscribe(() => {
-      this.router.navigate(['/comments', this.post.id]);
+      this.router.navigate(['/comments', this.post.id, this.myPost]);
     });
   }
 

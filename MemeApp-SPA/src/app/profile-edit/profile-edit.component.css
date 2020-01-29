@@ -25,6 +25,11 @@
     border-radius: 6px;
 }
 
+.btn-info {
+    width: 70%;
+    display: inline-block;
+}
+
 .photo-input{
     width: 0.1px;
 	height: 0.1px;

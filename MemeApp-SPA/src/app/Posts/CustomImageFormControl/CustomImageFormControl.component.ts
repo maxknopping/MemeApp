@@ -39,6 +39,9 @@ export class CustomImageFormControlComponent
   @Input()
   private responseType: 'blob' | 'base64' = 'blob';
 
+  @Input()
+  private type;
+
   /* Our cropped image and the value of our image controller */
   public croppieImage;
 
@@ -54,6 +57,7 @@ export class CustomImageFormControlComponent
   ngOnInit() {
     /* Size the outputoptions of our cropped imaged - whether is base64 or blob */
     this.outputoption = { type: this.responseType, size: 'original' };
+    console.log(this.type);
   }
 
   ngOnChanges(changes: any) {
@@ -78,7 +82,8 @@ export class CustomImageFormControlComponent
     const opts: CroppieOptions = {};
     opts.viewport = {
       width: parseInt(this.imgCropToWidth, 10),
-      height: parseInt(this.imgCropToHeight, 10)
+      height: parseInt(this.imgCropToHeight, 10),
+      type: this.type
     };
     opts.boundary = {
       width: parseInt(this.imgCropToWidth, 10) + 50,

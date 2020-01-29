@@ -1,3 +1,7 @@
+<div *ngIf="posts.length === 0 && reachedEnd" style="text-align: center;">
+  <h5 style="display: inline-block;">When you follow other users, you'll see their posts here.</h5>
+</div>
+
 <div class="container">
   <div *ngFor="let post of posts" class="row">
     <div class = "col-md-3 col-sm-1"></div>

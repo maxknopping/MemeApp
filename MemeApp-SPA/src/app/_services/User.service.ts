@@ -92,4 +92,8 @@ export class UserService {
   unlikeComment(commenterId, postId, commentId) {
     return this.http.post(`${this.baseUrl}/${commenterId}/comment/unlike/${commentId}/${postId}`, {});
   }
+
+  deleteComment(commentId) {
+    return this.http.delete(`${this.baseUrl}/${commentId}/deleteComment`);
+  }
 }

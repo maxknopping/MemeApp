@@ -312,6 +312,8 @@ namespace MemeApp.API.Controllers
                 comments.Add(commentToReturn);
             }
 
+            comments = comments.SortComments();
+
             return Ok(comments);
 
         }
@@ -400,6 +402,28 @@ namespace MemeApp.API.Controllers
 
             return Ok(likers);
 
+        }
+
+        [HttpDelete("{commentId}/deleteComment")]
+        public async Task<IActionResult> DeleteComment(int commentId) {
+            var comment = await repo.GetComment(commentId);
+
+            if (comment == null) {
+                //follow
+                return BadRequest("This comment doesn't exist");
+            }
+
+            foreach(var like in comment.LikeList) {
+                repo.Delete<CommentLike>(like);
+            }
+            repo.Delete<Comment>(comment);
+
+            if (await repo.SaveAll()) {
+                return Ok();
+            }
+
+            return BadRequest("failed to delete comment");
+            
         }
 
 

@@ -33,7 +33,7 @@ export const appRoutes: Routes = [
             {path: 'messages', component: MessagesComponent},
             {path: 'upload', component: UploadPostComponent},
             {path: 'list/:username/:type', component: FollowingListComponent, resolve: {users: FollowingListResolver}},
-            {path: 'comments/:postId', component: CommentListComponent, resolve: {comments: CommentListResolver}}
+            {path: 'comments/:postId/:myPost', component: CommentListComponent, resolve: {comments: CommentListResolver}}
         ]
     },
     {path: '**', redirectTo: '', pathMatch: 'full'}

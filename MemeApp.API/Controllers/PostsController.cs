@@ -64,10 +64,33 @@ namespace MemeApp.API.Controllers
                  var deleteParams = new DeletionParams(post.PublicId);
                 var result = cloudinary.Destroy(deleteParams);
                 if (result.Result == "ok") {
+                foreach(var comment in post.Comments) {
+                    var fullComment = await repo.GetComment(comment.Id);
+                    foreach(var like in fullComment.LikeList) {
+                    repo.Delete<CommentLike>(like);
+                }
+                repo.Delete<Comment>(comment);
+                }
+
+                foreach(var like in post.LikeList) {
+                    repo.Delete<Like>(like);
+                }
+
                 repo.Delete(post);
                 }
             }
             if (post.PublicId == null) {
+                foreach(var comment in post.Comments) {
+                    var fullComment = await repo.GetComment(comment.Id);
+                    foreach(var like in fullComment.LikeList) {
+                    repo.Delete<CommentLike>(like);
+                }
+                repo.Delete<Comment>(comment);
+                }
+
+                foreach(var like in post.LikeList) {
+                    repo.Delete<Like>(like);
+                }
                 repo.Delete(post);
             }
             if (await repo.SaveAll()) {

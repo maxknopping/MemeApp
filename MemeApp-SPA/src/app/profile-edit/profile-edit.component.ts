@@ -10,6 +10,8 @@ import { FileUploader } from 'ng2-file-upload';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer } from '@angular/platform-browser';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+import { CroppingModalComponent } from '../Posts/CroppingModal/CroppingModal.component';
 
 @Component({
   selector: 'app-profile-edit',
@@ -18,6 +20,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 })
 export class ProfileEditComponent implements OnInit {
   @ViewChild('editForm', {static: true}) editForm: NgForm;
+  bsModalRef: BsModalRef;
   user: User;
   posts: Post[];
   public imagePath;
@@ -36,7 +39,8 @@ export class ProfileEditComponent implements OnInit {
 
   constructor(private route: ActivatedRoute, private alertify: AlertifyService, private userService: UserService,
               private authService: AuthService, private router: Router,
-              private sanitizer: DomSanitizer, private http: HttpClient) { }
+              private sanitizer: DomSanitizer, private http: HttpClient,
+              private modalService: BsModalService) { }
 
   ngOnInit() {
     this.route.data.subscribe(data => {
@@ -71,15 +75,14 @@ export class ProfileEditComponent implements OnInit {
       url: this.baseURL + '/api/users/' + this.authService.decodedToken.nameid + '/posts/profilePicture',
       authToken: 'Bearer ' + localStorage.getItem('token'),
       isHTML5: true,
-      allowedFileType: ['image'],
       removeAfterUpload: true,
       autoUpload: false,
       maxFileSize: 10 * 1024 * 1024
     });
     this.uploader.onAfterAddingFile = (file) => {
-      this.imgURL = (window.URL) ? this.sanitizer.
-        bypassSecurityTrustUrl(window.URL.createObjectURL(file._file)) :
-        this.sanitizer.bypassSecurityTrustUrl((window as any).webkitURL.createObjectURL(file._file));
+      //this.imgURL = (window.URL) ? this.sanitizer.
+      //  bypassSecurityTrustUrl(window.URL.createObjectURL(file._file)) :
+      //  this.sanitizer.bypassSecurityTrustUrl((window as any).webkitURL.createObjectURL(file._file));
       file.withCredentials = false;
       console.log(this.imgURL);
     };
@@ -110,6 +113,37 @@ export class ProfileEditComponent implements OnInit {
         }
       }
     };
+  }
+
+  public blobToFile = (theBlob: Blob, fileName: string): File => {
+
+    const b: File = new File([theBlob], fileName);
+    return b;
+  }
+
+  cropImageModal() {
+    const initialState = {
+      type: 'circle'
+    };
+    this.bsModalRef = this.modalService.show(CroppingModalComponent, {initialState});
+    this.bsModalRef.content.sendPhoto.subscribe(value => {
+      const blobImage = value.BlobImage;
+      const file = this.blobToFile(blobImage, 'newPhoto');
+      const array: File[] = [file];
+      this.uploader.addToQueue(array);
+      this.bsModalRef.hide();
+      this.preview(blobImage);
+    });
+  }
+
+  preview(files) {
+    console.log(files);
+    const reader = new FileReader();
+    reader.readAsDataURL(files);
+    reader.onload = (event) => {
+      this.imgURL = reader.result;
+    };
+
   }
 
 

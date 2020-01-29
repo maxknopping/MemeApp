@@ -12,7 +12,9 @@ export interface Comment {
     created: Date;
     postId: number;
     username: string;
+    creatorId: number;
     photoUrl: string;
     likeList: CommentLike[];
     liked: boolean;
+    deleteable: boolean;
 }

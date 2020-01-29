@@ -23,7 +23,7 @@
           </button>
           <ul class="dropdown-menu mb-3" [ngClass]="{'dropdown-menu-right': true}" role="menu"  *dropdownMenu>
             <li *ngIf="myPost" role="menuitem"><a class="dropdown-item" (click)="deletePost(post.id)">Delete Post</a></li>
-            <li role="menuitem"><a class="dropdown-item">Save Image</a></li>
+            <li role="menuitem"><a [href]="post.url" download="" class="dropdown-item">Save Image</a></li>
           </ul>
         </div>
         <p>
@@ -31,7 +31,7 @@
           <span class="ml-2" style="color: white">{{post.caption}}</span></button>
         </p>
         <div class="like-button">
-          <a class="ml-1" *ngIf="post.comments.length > 0" [routerLink]="[ '/comments/', post.id]">
+          <a class="ml-1" *ngIf="post.comments.length > 0" [routerLink]="[ '/comments/', post.id, myPost]">
           View all {{post.comments.length}} Comments
           </a>
         </div>

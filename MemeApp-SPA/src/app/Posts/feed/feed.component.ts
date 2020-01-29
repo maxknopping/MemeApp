@@ -12,6 +12,7 @@ import { ActivatedRouteSnapshot, ActivatedRoute, Router } from '@angular/router'
 export class FeedComponent implements OnInit {
   posts: Post[] =  [];
   index: number;
+  reachedEnd: boolean;
 
   constructor(private user: UserService, private route: ActivatedRoute, private alertify: AlertifyService) { }
 
@@ -31,6 +32,7 @@ export class FeedComponent implements OnInit {
       this.posts.push(post);
       this.index++;
     }, error => {
+      this.reachedEnd = true;
     });
   }
 

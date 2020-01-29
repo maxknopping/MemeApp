@@ -13,7 +13,7 @@ import { BsDropdownModule, TabsModule, BsDatepickerModule, ModalModule } from 'n
 import { FeedComponent } from './Posts/feed/feed.component';
 import { FeaturedComponent } from './featured/featured.component';
 import { MessagesComponent } from './messages/messages.component';
-import { RouterModule } from '@angular/router';
+import { RouterModule, ActivatedRouteSnapshot } from '@angular/router';
 import { appRoutes } from './routes';
 import { UserService } from './_services/User.service';
 import { PostCardComponent } from './Posts/Post-Card/Post-Card.component';
