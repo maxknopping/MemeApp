@@ -36,6 +36,7 @@ import { NgxCroppieModule } from 'ngx-croppie';
 import { CroppingModalComponent } from './Posts/CroppingModal/CroppingModal.component';
 import { CustomImageFormControlComponent } from './Posts/CustomImageFormControl/CustomImageFormControl.component';
 import { FeaturedComponent } from './Posts/featured/featured.component';
+import { PasswordModalComponent } from './PasswordModal/PasswordModal.component';
 
 export function tokenGetter() {
    return localStorage.getItem('token');
@@ -58,7 +59,8 @@ export function tokenGetter() {
       FollowingListComponent,
       CommentListComponent,
       CroppingModalComponent,
-      CustomImageFormControlComponent
+      CustomImageFormControlComponent,
+      PasswordModalComponent
    ],
    imports: [
       HttpClientModule,
@@ -73,11 +75,11 @@ export function tokenGetter() {
       BrowserAnimationsModule,
       NgxCroppieModule,
       JwtModule.forRoot({
-         config: {
-            tokenGetter: tokenGetter,
-            whitelistedDomains: ['localhost:5000'],
-            blacklistedRoutes: ['localhost:5000/api/auth/register']
-         }}),
+            config: {
+              tokenGetter: tokenGetter,
+              whitelistedDomains: ['localhost:5000'],
+              blacklistedRoutes: ['localhost:5000/api/auth/register']
+            }}),
       ModalModule.forRoot()
    ],
    //JwtModule.forRoot({
@@ -102,7 +104,8 @@ export function tokenGetter() {
       AppComponent
    ],
    entryComponents: [
-      CroppingModalComponent
+      CroppingModalComponent,
+      PasswordModalComponent
    ]
 })
 export class AppModule { }

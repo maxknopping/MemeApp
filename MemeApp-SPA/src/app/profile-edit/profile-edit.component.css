@@ -10,24 +10,22 @@
 }
 
 .save-button {
-    -webkit-appearance: none;
     width: 40%;
     height: 50px;
-    background-color: #4BB73f;
-    color: white;
-    font-size: 20px;
-    border-radius: 10px;
-    font-family: Nunito Sans;
-    letter-spacing: 2px;
+    font-size: large;
 }
 
 .alert-info {
     border-radius: 6px;
 }
 
-.btn-info {
+.change-picture {
     width: 70%;
     display: inline-block;
+}
+
+.password-change {
+    width: 30%;
 }
 
 .photo-input{
@@ -39,3 +37,6 @@
 	z-index: -1;
 }
 
+.password-container {
+    padding-bottom: 10px;
+}

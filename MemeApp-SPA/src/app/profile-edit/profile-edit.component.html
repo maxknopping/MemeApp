@@ -2,7 +2,7 @@
     <div class="row">
       <div class="col-sm-3" style="text-align: center;">
           <img class="card-img-top profile-picture" [src]="imgURL || '../../../assets/user.png'">
-          <button class="btn-info" (click)="cropImageModal()">Change Profile Picture</button>
+          <button class="btn-info change-picture" (click)="cropImageModal()">Change Profile Picture</button>
       </div>
       <div class="col-sm-6">
         <form #editForm="ngForm" id="editForm" (ngSubmit)="sendChanges()">
@@ -14,7 +14,10 @@
               <h4>Bio</h4>
               <textarea name="bio" rows="4" class="form-control" [(ngModel)]="user.bio"></textarea>
           </div>
-          <button form="editForm" [disabled]="!editForm.dirty && uploader.queue.length == 0" class="save-button">SAVE CHANGES</button>
+          <div class="password-container">
+            <button type="button" (click)="changePasswordModal()" class="btn-info password-change">Change Password</button>
+          </div>
+          <button form="editForm" [disabled]="!editForm.dirty && uploader.queue.length == 0" class="save-button btn-success">SAVE CHANGES</button>
         </form>
       </div>
       <div class="col-sm-3">

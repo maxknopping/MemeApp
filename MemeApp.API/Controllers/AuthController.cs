@@ -36,7 +36,7 @@ namespace MemeApp.API.Controllers
             userForRegister.Username = userForRegister.Username.ToLower();
             if (await _repo.UserExists(userForRegister.Username))
             {
-                return BadRequest("Username already exists.");
+                return BadRequest("Username taken.");
             }
 
             var userToCreate = mapper.Map<User>(userForRegister);
@@ -89,6 +89,26 @@ namespace MemeApp.API.Controllers
             });
 
         }
+
+        [HttpPut("changePassword")]
+        public async Task<IActionResult> ChangePassword(UserForPasswordChangeDto userForLogin)
+        {
+            var userFromRepo = await _repo.Login(userForLogin.Username.ToLower(), userForLogin.CurrentPassword);
+
+            if (userFromRepo == null)
+            {
+                return BadRequest("Incorrect Password");
+            }
+
+            if (await _repo.ChangePassword(userFromRepo, userForLogin.NewPassword)) {
+                return Ok();
+            }
+
+            return BadRequest();
+
+        }
+
+
 
     }
 }

@@ -48,4 +48,12 @@ export class AuthService {
   changeMainPhoto(url: string) {
     this.photoUrl.next(url);
   }
+
+  changePassword(username, newPassword, currentPassword) {
+    return this.http.put(`${this.baseUrl}changePassword`, {
+      username: username,
+      currentPassword: currentPassword,
+      newPassword: newPassword
+    });
+  }
 }

@@ -12,6 +12,7 @@ import { HttpClient } from '@angular/common/http';
 import { DomSanitizer } from '@angular/platform-browser';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 import { CroppingModalComponent } from '../Posts/CroppingModal/CroppingModal.component';
+import { PasswordModalComponent } from '../PasswordModal/PasswordModal.component';
 
 @Component({
   selector: 'app-profile-edit',
@@ -40,7 +41,7 @@ export class ProfileEditComponent implements OnInit {
   constructor(private route: ActivatedRoute, private alertify: AlertifyService, private userService: UserService,
               private authService: AuthService, private router: Router,
               private sanitizer: DomSanitizer, private http: HttpClient,
-              private modalService: BsModalService) { }
+              private modalService: BsModalService, private auth: AuthService) { }
 
   ngOnInit() {
     this.route.data.subscribe(data => {
@@ -133,6 +134,25 @@ export class ProfileEditComponent implements OnInit {
       this.uploader.addToQueue(array);
       this.bsModalRef.hide();
       this.preview(blobImage);
+    });
+  }
+
+  changePasswordModal() {
+    const initialState = {
+      type: 'circle'
+    };
+    console.log('opening modal');
+    this.bsModalRef = this.modalService.show(PasswordModalComponent, {initialState});
+    this.bsModalRef.content.sendPassword.subscribe(value => {
+      console.log(`${this.auth.decodedToken.unique_name} ${value.NewPassword} ${value.CurrentPassword}`);
+      this.auth.changePassword(this.auth.decodedToken.unique_name,
+        value.NewPassword,
+        value.CurrentPassword)
+        .subscribe(() => {
+           this.alertify.success('Your password was successfully changed');
+        }, error => {
+          this.alertify.error(error);
+        });
     });
   }
 

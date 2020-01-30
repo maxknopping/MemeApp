@@ -56,6 +56,19 @@ namespace MemeApp.API.Data
             return user;
         }
 
+        public async Task<bool> ChangePassword(User user, string password)
+        {
+            byte[] passwordHash, passwordSalt;
+            CreatePasswordHash(password, out passwordHash, out passwordSalt);
+
+            user.PasswordHash = passwordHash;
+            user.PasswordSalt = passwordSalt;
+
+             _context.Update(user);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
             using(var hmac = new System.Security.Cryptography.HMACSHA512()) 
