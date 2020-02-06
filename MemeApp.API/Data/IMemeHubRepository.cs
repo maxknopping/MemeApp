@@ -34,6 +34,11 @@ namespace MemeApp.API.Data
 
          Task<CommentLike> GetCommentLike(int userId, int commentId);
 
+         Task<Message> GetMessage(int id);
+
+         Task<IList<Message>> GetConversationListForUser(int userId);
+         Task<IList<Message>> GetMessageThread(int userId, int recipientId);
+
 
 
 

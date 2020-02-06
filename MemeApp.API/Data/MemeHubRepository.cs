@@ -33,6 +33,8 @@ namespace MemeApp.API.Data
            var user = await context.Users
                 .Include(p => p.Following)
                 .Include(p => p.Followers)
+                .Include(p => p.MessagesReceived)
+                .Include(p => p.MessagesSent)
                 .FirstOrDefaultAsync(x => x.Id == id);
             
             var posts = context.Posts
@@ -42,6 +44,16 @@ namespace MemeApp.API.Data
 
             user.Posts = posts.AsEnumerable().ToList();
 
+            var messages = context.Messages
+                .Include(p => p.Sender).Include(p => p.Recipient).AsQueryable();
+
+            var messagesReceived = messages.Where(p => p.RecipientId == user.Id);
+
+            var messagesSent = messages.Where(m => m.SenderId == user.Id);
+
+            user.MessagesReceived = messagesReceived.AsEnumerable().ToList();
+            user.MessagesSent = messagesSent.AsEnumerable().ToList();
+
             return user;
         }
 
@@ -50,6 +62,8 @@ namespace MemeApp.API.Data
             var user = await context.Users
                 .Include(p => p.Following)
                 .Include(p => p.Followers)
+                .Include(p => p.MessagesReceived)
+                .Include(p => p.MessagesSent)
                 .FirstOrDefaultAsync(x => x.Username == username);
             
             var posts = context.Posts
@@ -154,6 +168,59 @@ namespace MemeApp.API.Data
         {
             var comment = await context.Comments.Include(p => p.LikeList).FirstOrDefaultAsync(p => p.Id == commentId);
             return comment;
+        }
+
+        public async Task<Message> GetMessage(int id)
+        {
+            return await context.Messages.Include(m => m.Sender)
+                .Include(m => m.Recipient).FirstOrDefaultAsync(m => m.Id == id);
+        }
+
+        public async Task<IList<Message>> GetConversationListForUser(int userId)
+        {
+            var user = await GetUser(userId);
+            var allMessages = new List<Message>();
+            allMessages.AddRange(user.MessagesReceived);
+            allMessages.AddRange(user.MessagesSent);
+
+            //get all the users who there is a conversation with
+            var conversationUsers = new List<User>();
+            foreach(var message in user.MessagesReceived) {
+                if (!conversationUsers.Contains(message.Sender)) {
+                    conversationUsers.Add(message.Sender);
+                }
+            }
+            foreach(var message in user.MessagesSent) {
+                if (!conversationUsers.Contains(message.Recipient)) {
+                    conversationUsers.Add(message.Recipient);
+                }
+            }
+            var conversations = new List<Message>();
+            //get the most recent message in the conversation from each user
+            foreach(var person in conversationUsers) {
+                var messageList = new List<Message>();
+                messageList = allMessages.Where(m => (m.RecipientId == person.Id && m.SenderDeleted == false) || 
+                    (m.SenderId == person.Id && m.RecipientDeleted == false)).ToList();
+                messageList = messageList.OrderByDescending(m => m.MessageSent).ToList();
+                conversations.Add(messageList[0]);
+            }
+
+            //sort the most recent messages by date
+            conversations = conversations.OrderByDescending(m => m.MessageSent).ToList();
+
+            return conversations;
+        }
+
+        public async Task<IList<Message>> GetMessageThread(int userId, int recipientId)
+        {
+            var messages = await context.Messages.Include(m => m.Sender).ThenInclude(u => u.Posts)
+                .Include(m => m.Recipient).ThenInclude(u => u.Posts)
+                .Where(m => (m.RecipientId == userId && m.SenderId == recipientId && m.RecipientDeleted == false) ||
+                    (m.RecipientId == recipientId && m.SenderId == userId && m.SenderDeleted == false))
+                .OrderBy(m => m.MessageSent)
+                .ToListAsync();
+
+            return messages;
         }
     }
 }

@@ -17,6 +17,9 @@ import { FollowingListResolver } from './_resolvers/followingList.resolver';
 import { CommentListComponent } from './CommentList/CommentList.component';
 import { CommentListResolver } from './_resolvers/commentList.resolver';
 import { FeaturedComponent } from './Posts/featured/featured.component';
+import { MessagesListResolver } from './_resolvers/messagesList.resolver';
+import { MessageThreadComponent } from './message-thread/message-thread.component';
+import { MessageThreadResolver } from './_resolvers/messageThread.resolver';
 
 export const appRoutes: Routes = [
     {path: '', component: HomeComponent},
@@ -25,7 +28,7 @@ export const appRoutes: Routes = [
         runGuardsAndResolvers: 'always',
         canActivate: [AuthGuard],
         children: [
-            {path: 'feed', component: FeedComponent, canActivate: [AuthGuard]},
+            {path: 'feed', component: FeedComponent, canActivate: [AuthGuard], resolve: {FeedResolver}},
             {path: 'featured', component: FeaturedComponent},
             {path: 'profile/:username', component: ProfileComponent, resolve: {user: ProfileResolver}},
             {path: 'edit/profile', component: ProfileEditComponent, resolve: {user: ProfileEditResolver},
@@ -33,7 +36,9 @@ export const appRoutes: Routes = [
             {path: 'messages', component: MessagesComponent},
             {path: 'upload', component: UploadPostComponent},
             {path: 'list/:username/:type', component: FollowingListComponent, resolve: {users: FollowingListResolver}},
-            {path: 'comments/:postId/:myPost', component: CommentListComponent, resolve: {comments: CommentListResolver}}
+            {path: 'comments/:postId/:myPost', component: CommentListComponent, resolve: {comments: CommentListResolver}},
+            {path: 'messages', component: MessagesComponent, resolve: {messages: MessagesListResolver}},
+            {path: 'messages/thread/:recipientId', component: MessageThreadComponent, resolve: {messages: MessageThreadResolver}},
         ]
     },
     {path: '**', redirectTo: '', pathMatch: 'full'}

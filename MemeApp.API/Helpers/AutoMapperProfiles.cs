@@ -24,6 +24,8 @@ namespace MemeApp.API.Helpers
             CreateMap<CommentForCreationDto, Comment>();
             CreateMap<Comment, CommentForListDto>();
             CreateMap<CommentLike, CommentLikeDto>();
+            CreateMap<MessageForCreationDto, Message>().ReverseMap();
+            CreateMap<Message, MessageForListDto>();
 
         }
     }

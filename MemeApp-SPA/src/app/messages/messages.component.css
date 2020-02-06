@@ -1,0 +1,57 @@
+.profile-picture {
+    max-height: 60px;
+    max-width: 60px;
+    border-radius: 50%;
+    float: left;
+}
+
+.like-button {
+    cursor: pointer;
+    font-size: large;
+    border: 0px;
+    color: black;
+    background-color: transparent;
+    padding-left: 0px;
+}
+
+.like-button:hover {
+    background: transparent
+}
+
+.first-bottom-line {
+    padding-right: 30px;
+}
+
+.message {
+    text-overflow: ellipsis;
+    width: 200px;
+    height: 24px;
+    float: right;
+    white-space: nowrap;
+    overflow: hidden;
+    font-size: large;
+    margin-bottom: 0px;
+}
+
+.wrapper {
+    left: 50%;
+    position: absolute;
+}
+
+.form-control {
+    width: 80%;
+    padding-right: 0px;
+}
+
+.input-group-append {
+    background-color: transparent;
+    border: 0px;
+}
+
+.fa-plus {
+    transform: scale(1.75);
+}
+
+.list {
+    cursor: pointer;
+}

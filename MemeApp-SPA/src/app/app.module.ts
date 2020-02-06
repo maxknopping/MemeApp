@@ -37,6 +37,9 @@ import { CroppingModalComponent } from './Posts/CroppingModal/CroppingModal.comp
 import { CustomImageFormControlComponent } from './Posts/CustomImageFormControl/CustomImageFormControl.component';
 import { FeaturedComponent } from './Posts/featured/featured.component';
 import { PasswordModalComponent } from './PasswordModal/PasswordModal.component';
+import { MessagesListResolver } from './_resolvers/messagesList.resolver';
+import { MessageThreadComponent } from './message-thread/message-thread.component';
+import { MessageThreadResolver } from './_resolvers/messageThread.resolver';
 
 export function tokenGetter() {
    return localStorage.getItem('token');
@@ -60,7 +63,8 @@ export function tokenGetter() {
       CommentListComponent,
       CroppingModalComponent,
       CustomImageFormControlComponent,
-      PasswordModalComponent
+      PasswordModalComponent,
+      MessageThreadComponent
    ],
    imports: [
       HttpClientModule,
@@ -76,9 +80,9 @@ export function tokenGetter() {
       NgxCroppieModule,
       JwtModule.forRoot({
             config: {
-              tokenGetter: tokenGetter,
-              whitelistedDomains: ['localhost:5000'],
-              blacklistedRoutes: ['localhost:5000/api/auth/register']
+               tokenGetter: tokenGetter,
+               whitelistedDomains: ['localhost:5000'],
+               blacklistedRoutes: ['localhost:5000/api/auth/register']
             }}),
       ModalModule.forRoot()
    ],
@@ -98,7 +102,9 @@ export function tokenGetter() {
       PreventUnsavedChanges,
       FollowerListResolver,
       FollowingListResolver,
-      CommentListResolver
+      CommentListResolver,
+      MessagesListResolver,
+      MessageThreadResolver
    ],
    bootstrap: [
       AppComponent

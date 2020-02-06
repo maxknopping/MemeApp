@@ -1,0 +1,96 @@
+.profile-picture {
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+}
+
+.username {
+    padding-left: 10px;
+    padding-top: 10px;
+    color: black;
+}
+
+.username-button {
+    background-color: transparent;
+    border: 0px;
+}
+
+.card-header {
+    background-color: transparent;
+}
+
+.message-thread {
+  height: 400px;
+  overflow-y: scroll;
+}
+
+.chat {
+    list-style-type: none;
+    padding-left: 0px;
+  }
+  
+  .chat__bubble {
+    margin-bottom: 3px;
+    padding: 5px 20px;
+    clear: both;
+    border-radius: 30px 30px 5px 5px ;
+    max-width: 300px;
+  }
+  
+  .chat__bubble--rcvd {
+    background: #f2f2f2;
+    color: black;
+    float: left;
+    border-bottom-right-radius: 30px;
+  }
+  
+  .chat__bubble--sent {
+    background: #0084ff;
+    color: white;
+    float: right;
+    border-bottom-left-radius: 30px;
+  }
+  
+  .chat__bubble--sent + .chat__bubble--sent {
+    border-top-right-radius: 5px;
+  }
+  
+  .chat__bubble--rcvd + .chat__bubble--rcvd {
+    border-top-left-radius: 5px;
+  }
+  
+  .chat__bubble--stop {
+    border-bottom-right-radius: 30px;
+    border-bottom-left-radius: 30px;
+  }
+
+  .send-button {
+    background-color: #0084ff;
+    color: white;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+  }
+
+  .form-control {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+  }
+
+  .chat__bubble .tooltiptext {
+    visibility: hidden;
+    width: 70px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    font-size: x-small;
+    border-radius: 6px;
+    padding: 5px 0;
+  
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+  }
+  
+  .chat__bubble:hover .tooltiptext {
+    visibility: visible;
+  }

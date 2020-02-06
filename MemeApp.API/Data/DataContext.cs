@@ -20,6 +20,8 @@ namespace MemeApp.API.Data
         public DbSet<Comment> Comments { get; set; }
         public DbSet<CommentLike> CommentLikes { get; set; }
 
+        public DbSet<Message> Messages { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder) {
             builder.Entity<Follow>().HasKey(p => new {p.FollowerId, p.FolloweeId});
 
@@ -60,6 +62,17 @@ namespace MemeApp.API.Data
                 .HasOne(u => u.Comment)
                 .WithMany(p => p.LikeList)
                 .HasForeignKey(u => u.CommentId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
+            builder.Entity<Message>()
+                .HasOne(u => u.Sender)
+                .WithMany(m => m.MessagesSent)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Message>()
+                .HasOne(u => u.Recipient)
+                .WithMany(m => m.MessagesReceived)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }

@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { User } from '../_models/User';
 import { Post } from '../_models/Post';
+import { Message } from '../_models/Message';
 
 
 
@@ -99,5 +100,25 @@ export class UserService {
 
   deleteComment(commentId) {
     return this.http.delete(`${this.baseUrl}/${commentId}/deleteComment`);
+  }
+
+  getMessages(id: number) {
+    return this.http.get(`${this.baseUrl}/${id}/messages`)
+  }
+
+  getMessageThread(id: number, recipientId: number) {
+    return this.http.get<Message[]>(`${this.baseUrl}/${id}/messages/thread/${recipientId}`);
+  }
+
+  sendMessage(id: number, message: Message) {
+    return this.http.post(`${this.baseUrl}/${id}/messages`, message);
+  }
+
+  deleteMessage(id: number, userId: number) {
+    return this.http.post(`${this.baseUrl}/${userId}/messages/${id}`, {});
+  }
+
+  markAsRead(id: number, userId: number) {
+    return this.http.post(`${this.baseUrl}/${userId}/messages/${id}/read`, {}).subscribe();
   }
 }

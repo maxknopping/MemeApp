@@ -1,3 +1,43 @@
-<p>
-  messages works!
-</p>
+<div class="row">
+  <div class = "col-sm-3"></div>
+  <div class="col-sm-6">
+      <div class="row" *ngIf="messages?.length == 0">
+        <div class="wrapper">
+          <h3>No Messages</h3>
+        </div>
+      </div>
+      <li class="list-group-item title">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="Search" aria-label="Search" [(ngModel)]="search" name="search">
+          <button class="input-group-append">
+            <i class="fa fa-plus"></i>
+        </button>
+        </div>
+      </li>
+      <div *ngFor="let message of messages">
+          <li class="list-group-item title list" [routerLink]="[ '/messages/thread', message.senderId == id ? message.recipientId : message.senderId]">
+              <img *ngIf="message.senderId == id" class="profile-picture mr-2" src="{{message.recipientPhotoUrl || '../../../assets/user.png'}}" alt="">
+              <img *ngIf="message.recipientId == id" class="profile-picture mr-2" src="{{message.senderPhotoUrl || '../../../assets/user.png'}}" alt="">
+              <button *ngIf="message.senderId == id" class="like-button" (click)="$event.stopPropagation()" [routerLink]="[ '/profile/', message.recipientUsername]">
+              <strong>
+                  {{message.recipientUsername}}
+              </strong></button>
+              <button *ngIf="message.recipientId == id" class="like-button" [routerLink]="[ '/profile/', message.senderUsername]">
+                <strong>
+                    {{message.senderUsername}}
+                </strong></button> 
+                <i *ngIf="!message.isRead && message.senderId != id" class="fa fa-circle" style="color: #0084ff;"></i>
+                <p class="message">
+                  {{message.content}}
+                </p>
+                <br>
+                <span class="first-bottom-line">
+                  {{message.messageSent | timeAgo}}
+                </span>
+                <div style="clear: both;"></div>
+                
+                
+          </li>
+      </div>
+  </div>
+  <div class = "col-sm-3"></div>

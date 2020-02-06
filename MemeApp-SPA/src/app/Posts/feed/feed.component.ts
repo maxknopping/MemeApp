@@ -17,9 +17,11 @@ export class FeedComponent implements OnInit {
   constructor(private user: UserService, private route: ActivatedRoute, private alertify: AlertifyService) { }
 
   ngOnInit() {
-    this.index = 0;
-    this.loadPosts();
-    window.addEventListener('scroll', this.scroll, true); //third parameter
+    this.route.data.subscribe(data => {
+      this.index = 0;
+      this.loadPosts();
+      window.addEventListener('scroll', this.scroll, true); //third parameter
+    })
   }
 
   ngOnDestroy() {
