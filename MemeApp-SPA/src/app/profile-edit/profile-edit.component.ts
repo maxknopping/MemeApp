@@ -94,8 +94,7 @@ export class ProfileEditComponent implements OnInit {
         const newUser = {
           id: res.id,
           username: res.username,
-          knownAs: res.knownAs,
-          gender: res.gender,
+          email: res.email,
           created: res.created,
           lastActive: res.lastActive,
           photoUrl: res.photoUrl,

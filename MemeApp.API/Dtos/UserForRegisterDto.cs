@@ -9,17 +9,11 @@ namespace MemeApp.API.Dtos
         public string Username { get; set; }
 
         [Required]
-        [StringLength(50, MinimumLength = 4, ErrorMessage = "Your password must be between 4 and 50 characters")]
+        [StringLength(30, MinimumLength = 4, ErrorMessage = "Your password must be between 4 and 50 characters")]
         public string Password { get; set; }
 
         [Required]
-        public string Gender { get; set; }
-
-        [Required]
-        public DateTime DateOfBirth { get; set; }
-
-        [Required]
-        public string KnownAs { get; set; }
+        public string Email { get; set; }
 
         public DateTime Created { get; set; }
 

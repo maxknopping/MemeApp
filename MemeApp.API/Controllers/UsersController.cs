@@ -92,11 +92,11 @@ namespace MemeApp.API.Controllers
 
             var user = await repo.GetUser(username);
 
-            var followers = new List<UserForListDto>();
+            var followers = new List<UserForDetailedDto>();
             foreach (var follow in user.Followers)
             {
                 var follower = await repo.GetUser(follow.FollowerId);
-                var userToReturn = mapper.Map<UserForListDto>(follower);
+                var userToReturn = mapper.Map<UserForDetailedDto>(follower);
                 followers.Add(userToReturn);
             }
 
@@ -110,11 +110,11 @@ namespace MemeApp.API.Controllers
 
             var user = await repo.GetUser(username);
 
-            var following = new List<UserForListDto>();
+            var following = new List<UserForDetailedDto>();
             foreach (var follow in user.Following)
             {
                 var followee = await repo.GetUser(follow.FolloweeId);
-                var userToReturn = mapper.Map<UserForListDto>(followee);
+                var userToReturn = mapper.Map<UserForDetailedDto>(followee);
                 following.Add(userToReturn);
             }
 
@@ -269,11 +269,11 @@ namespace MemeApp.API.Controllers
 
             var post = await repo.GetPost(postId);
 
-            var likers = new List<UserForListDto>();
+            var likers = new List<UserForDetailedDto>();
             foreach (var like in post.LikeList)
             {
                 var liker = await repo.GetUser(like.LikerId);
-                var userToReturn = mapper.Map<UserForListDto>(liker);
+                var userToReturn = mapper.Map<UserForDetailedDto>(liker);
                 likers.Add(userToReturn);
             }
 
@@ -406,11 +406,11 @@ namespace MemeApp.API.Controllers
 
             var comment = await repo.GetComment(commentId);
 
-            var likers = new List<UserForListDto>();
+            var likers = new List<UserForDetailedDto>();
             foreach (var like in comment.LikeList)
             {
                 var liker = await repo.GetUser(like.CommenterId);
-                var userToReturn = mapper.Map<UserForListDto>(liker);
+                var userToReturn = mapper.Map<UserForDetailedDto>(liker);
                 likers.Add(userToReturn);
             }
 
@@ -438,6 +438,15 @@ namespace MemeApp.API.Controllers
 
             return BadRequest("failed to delete comment");
             
+        }
+
+        [HttpGet("search/{query}/{fullResult}")]
+        public async Task<IActionResult> SearchForUser(string query, bool fullResult) {
+            var users = await repo.SearchForUser(query.ToLower(), fullResult);
+
+            var usersToReturn = mapper.Map<IList<UserForDetailedDto>>(users);
+
+            return Ok(usersToReturn);
         }
 
 

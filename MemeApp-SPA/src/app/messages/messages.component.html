@@ -7,12 +7,31 @@
         </div>
       </div>
       <li class="list-group-item title">
-        <div class="input-group">
-          <input type="text" class="form-control" placeholder="Search" aria-label="Search" [(ngModel)]="search" name="search">
-          <button class="input-group-append">
-            <i class="fa fa-plus"></i>
-        </button>
-        </div>
+          <div dropdown class="dropdown search-dropdown" #dropdown="bs-dropdown">
+            <form #searchForm="ngForm" id="searchForm" (ngSubmit)="dropdown.show(); searchPreview(query)">
+              <div class="input-group">
+                <input type="text"
+                        required 
+                        class="form-control" 
+                        placeholder="Search" 
+                        [(ngModel)]="query" 
+                        name="query">
+                <div class="input-group-append">
+                  <button class="search-button" [disabled]="!searchForm.valid"><i class="fa fa-search" dropdownToggle></i></button>
+                </div>
+              </div>
+            </form>
+            <div class="dropdown-menu" role="menu" *dropdownMenu>
+              <div *ngFor="let user of searchPreviewUsers">
+                <a class="dropdown-item" role="menuitem"
+                [routerLink]="[ '/messages/thread', user.id]"
+                  href="#">
+                    <img class="mr-1 search-picture" src="{{user.photoUrl || '../../../assets/user.png'}}">
+                    {{user.username}}</a>
+                <div class="dropdown-divider"></div>
+                </div>
+              </div>
+            </div>
       </li>
       <div *ngFor="let message of messages">
           <li class="list-group-item title list" [routerLink]="[ '/messages/thread', message.senderId == id ? message.recipientId : message.senderId]">

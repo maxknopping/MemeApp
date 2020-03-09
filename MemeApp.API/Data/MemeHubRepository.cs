@@ -73,6 +73,16 @@ namespace MemeApp.API.Data
 
             user.Posts = posts.AsEnumerable().ToList();
 
+            var messages = context.Messages
+                .Include(p => p.Sender).Include(p => p.Recipient).AsQueryable();
+
+            var messagesReceived = messages.Where(p => p.RecipientId == user.Id);
+
+            var messagesSent = messages.Where(m => m.SenderId == user.Id);
+
+            user.MessagesReceived = messagesReceived.AsEnumerable().ToList();
+            user.MessagesSent = messagesSent.AsEnumerable().ToList();
+
             return user;
         }
 
@@ -221,6 +231,55 @@ namespace MemeApp.API.Data
                 .ToListAsync();
 
             return messages;
+        }
+
+        public async Task<IList<User>> SearchForUser(string query, bool fullResult)
+        {
+            var arrayOfChars = query.ToCharArray();
+            var allMatches = new List<KeyValuePair<string, int>>();
+
+            foreach(var user in context.Users) {
+                var usernameToChar = user.Username.ToCharArray();
+                var matches = SimpleTextSearch(arrayOfChars, usernameToChar);
+                allMatches.Add(new KeyValuePair<string, int>(user.Username, matches));
+            }
+
+            allMatches = allMatches.OrderByDescending(kvp => kvp.Value).ToList();
+            var usersToReturn = new List<User>();
+            var userList = new List<User>();
+            for (int i = 0; i < 10; i++) {
+                var user = await GetUser(allMatches[i].Key);
+                userList.Add(user);
+            } 
+
+            if (fullResult) {
+                usersToReturn = userList;
+            } else {
+                usersToReturn = userList.GetRange(0, 5);
+            }
+            return usersToReturn;
+
+        }
+
+        public static int SimpleTextSearch(char[] pattern, char[] text) {
+            int patternSize = pattern.Count();
+            int textSize = text.Count();
+ 
+            int i = 0;
+            var maxMatches = 0;
+            while ((i + patternSize) <= textSize) {
+                int j = 0;
+                while (text[i + j] == pattern[j]) {
+                    j += 1;
+                    if (j > maxMatches) {
+                        maxMatches = j;
+                    }
+                    if (j >= patternSize)
+                        return j;
+                }
+                i += 1;
+            }
+            return maxMatches;
         }
     }
 }

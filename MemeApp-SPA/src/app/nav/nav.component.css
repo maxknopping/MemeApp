@@ -2,8 +2,26 @@
     cursor: pointer;
 }
 
-img {
+.profile-picture {
     max-height: 40px;
     max-width: 40px;
     border-radius: 50%;
+}
+
+.search-dropdown {
+    margin-right: 10px;
+}
+
+.logo {
+    max-width: 200px;
+}
+
+.container-fluid {
+    margin-left: 0px;
+    margin-right: 10px;
+    width: 100% !important;
+}
+
+.profile-dropdown {
+    padding-left: 100px;
 }

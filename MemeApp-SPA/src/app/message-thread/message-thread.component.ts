@@ -27,7 +27,14 @@ export class MessageThreadComponent implements OnInit {
     this.route.data.subscribe(data => {
       this.messages = data['messages'];
       this.id = this.auth.decodedToken.nameid;
-      if (this.messages[0].senderId == this.id) {
+      console.log(this.messages);
+      if (this.messages.length == 0) {
+        this.user.getUser(this.route.snapshot.params['recipientId']).subscribe(user => {
+          this.photoUrlOtherPerson = user.photoUrl;
+          this.usernameOtherPerson = user.username;
+          this.recipientId = user.id;
+        });
+      } else if (this.messages[0].senderId == this.id) {
         this.photoUrlOtherPerson = this.messages[0].recipientPhotoUrl;
         this.usernameOtherPerson = this.messages[0].recipientUsername;
         this.recipientId = this.messages[0].recipientId;

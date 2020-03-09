@@ -90,6 +90,7 @@ namespace MemeApp.API.Controllers
 
         }
 
+        //move to user controller, as needs to be authorized
         [HttpPut("changePassword")]
         public async Task<IActionResult> ChangePassword(UserForPasswordChangeDto userForLogin)
         {

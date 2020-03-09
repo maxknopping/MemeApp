@@ -148,11 +148,7 @@ namespace MemeApp.API.Migrations
 
                     b.Property<DateTime>("Created");
 
-                    b.Property<DateTime>("DateOfBirth");
-
-                    b.Property<string>("Gender");
-
-                    b.Property<string>("KnownAs");
+                    b.Property<string>("Email");
 
                     b.Property<DateTime>("LastActive");
 

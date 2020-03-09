@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { AuthService } from '../_services/auth.service';
 import { AlertifyService } from '../_services/alertify.service';
 import { Router } from '@angular/router';
+import { UserService } from '../_services/User.service';
 
 @Component({
   selector: 'app-nav',
@@ -12,10 +13,15 @@ export class NavComponent implements OnInit {
   model: any = {};
   username;
   photoUrl: string;
+  query: string;
+  searchPreviewUsers;
+  @ViewChild('dropdown', {static: true}) private dropdown: ElementRef;
+
   constructor(
     public authService: AuthService,
     private alertify: AlertifyService,
-    private router: Router
+    private router: Router,
+    private user: UserService
   ) {}
 
   ngOnInit() {
@@ -50,4 +56,19 @@ export class NavComponent implements OnInit {
     this.router.navigate(['/home']);
     this.alertify.success('logged out successfully');
   }
+
+  search(phrase) {
+    this.user.searchForUser(phrase, true).subscribe(users => {
+      this.searchPreviewUsers = users;
+    });
+
+    //eventually, router navigate to search results
+  }
+
+  searchPreview(phrase) {
+    this.user.searchForUser(phrase, false).subscribe(users => {
+      this.searchPreviewUsers = users;
+    });
+  }
+
 }

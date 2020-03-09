@@ -36,32 +36,10 @@
     </div>
 
     <div class="form-group">
-        <input [ngClass]="{'is-invalid': registerForm.get('knownAs').errors && registerForm.get('knownAs').touched}" class="form-control"
-          placeholder="Name" formControlName="knownAs">
-        <div class="invalid-feedback" *ngIf="registerForm.get('knownAs').touched && registerForm.get('knownAs').hasError('required')">Known as is required</div>
+        <input [ngClass]="{'is-invalid': registerForm.get('email').errors && registerForm.get('email').touched}" class="form-control"
+          placeholder="Email Address" formControlName="email">
+        <div class="invalid-feedback" *ngIf="registerForm.get('email').touched && registerForm.get('email').hasError('email')">Email address is required</div>
       </div>
-    
-
-    <div class="form-group">
-        <label class="control-label" style="margin-right:10px">I am: </label>
-        <label class="radio-inline">
-          <input class="mr-3" type="radio" value="male" formControlName="gender">Male
-        </label>
-        <label class="radio-inline ml-3">
-          <input class="mr-3" type="radio" value="female" formControlName="gender">Female
-        </label>
-        <label class="radio-inline ml-3">
-            <input class="mr-3" type="radio" value="other" formControlName="gender">Other
-        </label>
-      </div>
-
-    <div class="form-group">
-      <input [ngClass]="{'is-invalid': registerForm.get('dateOfBirth').errors && registerForm.get('dateOfBirth').touched}" class="form-control"
-          placeholder="Date of Birth" formControlName="dateOfBirth" type="text" bsDatepicker [bsConfig]="bsConfig">
-      <div class="invalid-feedback" *ngIf="registerForm.get('dateOfBirth').touched && registerForm.get('dateOfBirth').hasError('required')">Date of Birth is required</div>
-    </div>
-
-
   
     <div class="form-group text-center">
       <button [disabled]="!registerForm.valid" class="btn btn-success" type="submit">Register</button>

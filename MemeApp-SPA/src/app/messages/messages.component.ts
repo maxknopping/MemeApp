@@ -11,10 +11,10 @@ import { AlertifyService } from '../_services/alertify.service';
   styleUrls: ['./messages.component.css']
 })
 export class MessagesComponent implements OnInit {
-
+  query: string;
+  searchPreviewUsers;
   messages: Message[];
   id;
-  search;
   messageContainer = 'Unread';
   constructor(private user: UserService, private auth: AuthService,
               private route: ActivatedRoute, private alertify: AlertifyService) { }
@@ -30,6 +30,20 @@ export class MessagesComponent implements OnInit {
     this.user.getMessages(this.auth.decodedToken.nameid).subscribe((data: Message[]) => {
       this.messages = data;
       this.id = this.auth.decodedToken.nameid;
+    });
+  }
+
+  search(phrase) {
+    this.user.searchForUser(phrase, true).subscribe(users => {
+      this.searchPreviewUsers = users;
+    });
+
+    //eventually, router navigate to search results
+  }
+
+  searchPreview(phrase) {
+    this.user.searchForUser(phrase, false).subscribe(users => {
+      this.searchPreviewUsers = users;
     });
   }
 

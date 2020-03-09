@@ -121,4 +121,8 @@ export class UserService {
   markAsRead(id: number, userId: number) {
     return this.http.post(`${this.baseUrl}/${userId}/messages/${id}/read`, {}).subscribe();
   }
+
+  searchForUser(query: string, fullResult: boolean) {
+    return this.http.get(`${this.baseUrl}/search/${query}/${fullResult}`);
+  }
 }

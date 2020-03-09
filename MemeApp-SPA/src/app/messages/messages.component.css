@@ -5,6 +5,12 @@
     float: left;
 }
 
+.search-picture {
+    max-height: 40px;
+    max-width: 40px;
+    border-radius: 50%;
+}
+
 .like-button {
     cursor: pointer;
     font-size: large;

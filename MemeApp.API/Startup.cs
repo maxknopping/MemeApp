@@ -85,7 +85,8 @@ namespace MemeApp.API
             }
 
             app.UseHttpsRedirection();
-            app.UseCors(x => x.WithOrigins("http://localhost:4200").AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+            // WithOrigins("http://localhost:4200", "http://localhost:19002")
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
             app.UseAuthentication();
             app.UseMvc();
         }

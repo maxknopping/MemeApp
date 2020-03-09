@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MemeApp.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20200130022718_messages")]
-    partial class messages
+    [Migration("20200215173913_userRebuild")]
+    partial class userRebuild
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -150,11 +150,7 @@ namespace MemeApp.API.Migrations
 
                     b.Property<DateTime>("Created");
 
-                    b.Property<DateTime>("DateOfBirth");
-
-                    b.Property<string>("Gender");
-
-                    b.Property<string>("KnownAs");
+                    b.Property<string>("Email");
 
                     b.Property<DateTime>("LastActive");
 

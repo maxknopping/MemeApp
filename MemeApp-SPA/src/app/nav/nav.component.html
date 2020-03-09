@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-  <div class="container">
-      <a class="navbar-brand" href="#">Meme Hub</a>
+  <div class="container-fluid">
+      <img class="logo" src="{{'../../assets/memehub.png'}}">
 
       <ul *ngIf="loggedIn()" class="navbar-nav mr-auto">
         <li class="nav-item" routerLinkActive="active">
@@ -17,11 +17,36 @@
         </li>
       </ul>
   
+      <div *ngIf="loggedIn()" dropdown class="dropdown search-dropdown" #dropdown="bs-dropdown">
+        <form #searchForm="ngForm" id="searchForm" (ngSubmit)="dropdown.show(); searchPreview(query)">
+          <div class="input-group">
+            <input type="text"
+                    required 
+                    class="form-control" 
+                    placeholder="Search" 
+                    [(ngModel)]="query" 
+                    name="query">
+            <div class="input-group-append">
+              <button class="search-button" [disabled]="!searchForm.valid"><i class="fa fa-search" dropdownToggle></i></button>
+            </div>
+          </div>
+        </form>
+        <div class="dropdown-menu" role="menu" *dropdownMenu>
+          <div *ngFor="let user of searchPreviewUsers">
+            <a class="dropdown-item" role="menuitem"
+              [routerLink]="[ '/profile/', user.username]" 
+              href="#">
+                <img class="profile-picture mr-1" src="{{user.photoUrl || '../../../assets/user.png'}}">
+                {{user.username}}</a>
+            <div class="dropdown-divider"></div>
+            </div>
+          </div>
+        </div>
 
-      <div *ngIf="loggedIn()" class="dropdown" dropdown>
+      <div *ngIf="loggedIn()" class="dropdown profile-dropdown" dropdown>
           <span class="mr-2"></span>
           <span>
-            <img src="{{authService.currentUser.photoUrl}}" alt="">
+            <img class="profile-picture" src="{{authService.currentUser.photoUrl || '../../../assets/user.png'}}" alt="">
           </span>
           <a class="dropdown-toggle text-light" dropdownToggle>
             {{authService.decodedToken?.unique_name | titlecase}}

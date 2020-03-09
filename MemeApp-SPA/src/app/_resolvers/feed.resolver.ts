@@ -19,8 +19,6 @@ export class FeedResolver implements Resolve<Post[]> {
         const username = this.authService.decodedToken.unique_name;
         return this.userService.getFeed(username, 0).pipe(
             catchError(error => {
-                this.alertify.error('Problem retreiving data');
-                this.router.navigate(['/home']);
                 return of(null);
             })
         );

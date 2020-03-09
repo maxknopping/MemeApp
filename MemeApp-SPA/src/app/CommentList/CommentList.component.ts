@@ -30,7 +30,7 @@ export class CommentListComponent implements OnInit {
           if (e.commenterId == this.authService.decodedToken.nameid) {
             element.liked = true;
           }
-        })
+        });
       });
     });
   }

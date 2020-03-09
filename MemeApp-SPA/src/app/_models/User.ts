@@ -4,8 +4,7 @@ import { Follow } from './Follow';
 export interface User {
     id: number;
     username: string;
-    knownAs: string;
-    gender: string;
+    email: string;
     created: Date;
     lastActive: Date;
     photoUrl: string;
