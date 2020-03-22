@@ -20,7 +20,7 @@ const Profile = ({
     const [followButton, setFollowButton] = useState('Follow');
     const [followers, setFollowers] = useState(0); 
     const [modalVisible, setModalVisible] = useState(false);
-    let username = state.username;
+    const [username, setUsername] = useState(state.username);
     const segmentClicked = (index) => {
         setActiveIndex(index);
     };
@@ -45,7 +45,7 @@ const Profile = ({
     
     useEffect(() => {
         if (navigation.getParam('username')) {
-            username = navigation.getParam('username');
+            setUsername(navigation.getParam('username'));
             navigation.setParams({otherUsername: state.username});
         } else {
             navigation.setParams({username: state.username, id: state.id});
@@ -195,7 +195,9 @@ const Profile = ({
                 {followButton === 'Follow' ? <Button buttonStyle={{backgroundColor: EStyleSheet.value('$crimson'), 
                     borderRadius: EStyleSheet.value('.8rem')}} style={styles.followButton} title={followButton} onPress={follow}/> :
                     followButton === 'Edit Profile' ? <Button buttonStyle={{backgroundColor: 'gray', 
-                    borderRadius: EStyleSheet.value('.8rem')}} style={styles.followButton} title={followButton}/> :
+                    borderRadius: EStyleSheet.value('.8rem')}} style={styles.followButton} title={followButton} onPress={() => {
+                        navigation.navigate('EditProfile', {username: state.username});
+                    }}/> :
                     <Button buttonStyle={{backgroundColor: 'gray', borderColor: 'black', borderWidth: EStyleSheet.value('.05rem'), 
                     borderRadius: EStyleSheet.value('.8rem')}}
                     style={styles.followButton} title={followButton} onPress={() => unfollow()}/>

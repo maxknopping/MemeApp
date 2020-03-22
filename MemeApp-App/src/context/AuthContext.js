@@ -12,6 +12,8 @@ const authReducer = (state, action) => {
             return {token: action.payload.token, id: action.payload.id, username: action.payload.username, errorMessage: ''};
         case 'signout':
             return {token: null, id: 0, username: '', errorMessage: null};
+        case 'changeUsername':
+            return {...state, username: action.payload};
         default: 
             return state;
     }
@@ -76,5 +78,10 @@ const signout = (dispatch) => async () => {
         navigate('authFlow');
 }
 
-export const {Context, Provider} = createDataContext(authReducer, {signin, signout, signup, tryLocalSignIn},
+const changeUsername = (dispatch) => async ({newUsername}) => {
+    await AsyncStorage.setItem('username', newUsername);
+    dispatch({type: 'changeUsername', payload: newUsername});
+}
+
+export const {Context, Provider} = createDataContext(authReducer, {signin, changeUsername, signout, signup, tryLocalSignIn},
      {token: null, id: 0, username: '', errorMessage: null});

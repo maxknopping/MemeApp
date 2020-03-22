@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -148,6 +149,73 @@ namespace MemeApp.API.Controllers
             return BadRequest("Could not add the photo");
         }
 
+        [HttpPost("profilePicture/ios")]
+        public async Task<IActionResult> AddProfilePictureForUserIos(int userId, PostForCreationIosDto postForCreation) {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
+                return Unauthorized();
+            }
+
+            var userFromRepo = await repo.GetUser(userId);
+            byte[] data = System.Convert.FromBase64String(postForCreation.File);
+            var stream = new MemoryStream(data);
+            var uploadResult = new ImageUploadResult();
+
+            if (data.Length > 0) {
+                var uploadParams = new ImageUploadParams() {
+                    File = new FileDescription("New Post", stream),
+                    Transformation = new Transformation().Width(1080).Height(1080).Crop("pad").Radius("max")
+                };
+                uploadResult = cloudinary.Upload(uploadParams);
+            }
+
+            userFromRepo.PhotoUrl = uploadResult.Uri.ToString();
+            userFromRepo.PublicIdForPhoto = uploadResult.PublicId;
+
+            if (await repo.SaveAll()) {
+                return CreatedAtRoute("GetPost", new {id = userFromRepo.Id}, userFromRepo);
+            }
+
+            return BadRequest("Could not add the photo");
+        }
+
+        [HttpPost("ios")]
+        public async Task<IActionResult> AddPostForUserIos(int userId, PostForCreationIosDto postForCreation) {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
+                return Unauthorized();
+            }
+
+            var userFromRepo = await repo.GetUser(userId);
+            byte[] data = System.Convert.FromBase64String(postForCreation.File);
+            var stream = new MemoryStream(data);
+            var uploadResult = new ImageUploadResult();
+
+            if (data.Length > 0) {
+                var uploadParams = new ImageUploadParams() {
+                    File = new FileDescription("New Post", stream),
+                    Transformation = new Transformation().Width(1080).Height(1080).Crop("pad")
+                };
+                uploadResult = cloudinary.Upload(uploadParams);
+            }
+
+            var postTemp = new PostForCreationDto();
+
+            postTemp.Url = uploadResult.Uri.ToString();
+            postTemp.PublicId = uploadResult.PublicId;
+            postTemp.Caption = postForCreation.Caption;
+
+
+            var post = mapper.Map<Post>(postTemp);
+            post.Created = DateTime.Now;
+            userFromRepo.Posts.Add(post);
+
+            if (await repo.SaveAll()) {
+                var postToReturn = mapper.Map<PostForDetailedDto>(post);
+                return CreatedAtRoute("GetPost", new {id = post.Id}, postToReturn);
+            }
+
+            return BadRequest("Could not add the photo");
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddPostForUser(int userId, [FromForm]PostForCreationDto postForCreation) {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
@@ -186,4 +254,6 @@ namespace MemeApp.API.Controllers
         }
 
     }
+
+    
 }

@@ -20,6 +20,7 @@ import {StatusBar} from 'react-native';
 import LoadingScreen from './src/screens/LoadingScren';
 import {Feather, Ionicons} from 'react-native-vector-icons';
 import NewPost from './src/screens/NewPost';
+import EditProfile from './src/screens/EditProfile'
 
 
 const switchNavigator = createSwitchNavigator({
@@ -76,12 +77,22 @@ const switchNavigator = createSwitchNavigator({
       List: List,
       Profile: Profile,
       Comments: Comments
+    },
+    {
+      initialRouteName: 'Search',
+      defaultNavigationOptions: ({navigation}) => ({
+        headerBackImage: () => {
+          return <Ionicons style={styles.backIcon} name="ios-arrow-back"/>
+        },
+        headerBackTitleVisible: false
+      })
     }),
     profileFlow: createStackNavigator({
       Profile: Profile,
       List: List,
       Settings: Settings,
-      Comments: Comments
+      Comments: Comments,
+      EditProfile: EditProfile
     },
     {
       initialRouteName: 'Profile',
@@ -127,11 +138,8 @@ const switchNavigator = createSwitchNavigator({
 
 const crimson = '#DC143C';
 
-const _XHR = GLOBAL.originalXMLHttpRequest ?  
-    GLOBAL.originalXMLHttpRequest :           
-    GLOBAL.XMLHttpRequest                     
+GLOBAL.XMLHttpRequest = GLOBAL.originalXMLHttpRequest || GLOBAL.XMLHttpRequest;
 
-XMLHttpRequest = _XHR
 
 EStyleSheet.build({ // always call EStyleSheet.build() even if you don't use global variables!
   $crimson: '#DC143C'

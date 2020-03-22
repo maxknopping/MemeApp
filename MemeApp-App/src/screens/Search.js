@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { Text, View, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
+import { Text, View, SafeAreaView, ScrollView, TouchableOpacity, TextInput } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import SearchHeader from 'react-native-search-header';
 import userService from './../apis/user';
 import { Context } from '../context/AuthContext';
 import {ListItem, Button} from 'react-native-elements';
+import {Feather} from 'react-native-vector-icons';
 
 const Search = ({
     navigation
@@ -12,31 +12,6 @@ const Search = ({
     const {state} = useContext(Context);
     const [inputValue, setInputValue] = useState('');
     const [list, setList] = useState([]);
-
-    search = (text) => {
-        userService.get(`/search/${text}/true`, {
-            headers: {
-                'Authorization': `Bearer ${state.token}`
-            }
-        }).then(
-            function(response) {
-
-                response.data.forEach(element => {
-                    element.followButton = 'Follow';
-                    if (element.id == state.id) {
-                        element.followButton = 'Myself'
-                    }
-                    element.followers.forEach(e => {
-                        if (e.followerId == state.id) {
-                          element.followButton = 'Following';
-                        }
-                    });
-                });
-                setList([...response.data]);
-                console.log(response.data);
-            }
-        ).catch(error => console.log(error));
-    };
 
     follow = (user) => {
         userService.post(`/${state.id}/follow/${user.id}`, {}, {
@@ -76,19 +51,37 @@ const Search = ({
         ).catch(error => console.log(error));
     };
 
+    search = (text) => {
+        userService.get(`/search/${text}/true`, {
+            headers: {
+                'Authorization': `Bearer ${state.token}`
+            }
+        }).then(
+            function(response) {
+
+                response.data.forEach(element => {
+                    element.followButton = 'Follow';
+                    if (element.id == state.id) {
+                        element.followButton = 'Myself'
+                    }
+                    element.followers.forEach(e => {
+                        if (e.followerId == state.id) {
+                          element.followButton = 'Following';
+                        }
+                    });
+                });
+                setList([...response.data]);
+                console.log(response.data);
+            }
+        ).catch(error => console.log(error));
+    };
+
     return (
         <SafeAreaView style={styles.container}>
-            <View style={styles.headerContainer}>
-                <SearchHeader
-                    autoCorrect={false}
-                    autoCapitalize="none"
-                    placeholder="Search..."
-                    placeholderColor="gray"
-                    enableSuggestion={false}
-                    topOffset={EStyleSheet.value('0rem')}
-                    persistent={true}
-                    onSearch={(text) => search(text.nativeEvent.text)}
-                />
+            <View style={styles.searchView}>
+                <Feather name="search" style={styles.searchIcon}/>
+                <TextInput value={inputValue} onChangeText={(text) => setInputValue(text)} style={styles.searchInput}
+                    placeholder="Search..." returnKeyType="search" onSubmitEditing={() => search(inputValue)}/>
             </View>
             <ScrollView style={styles.scrollView}>
                 {list.map((item, index) => (
@@ -132,14 +125,14 @@ const styles = EStyleSheet.create({
     container: {
         flex: 1,
     },
-    headerContainer: {
-        flex: 1
-    },
     scrollView: {
         zIndex: -1,
-        marginTop: '4rem',
+        marginTop: '.75rem'
     },
     searchInput: {
+        flex: 1,
+        marginLeft: '1rem',
+        fontSize: '1rem'
     },
     username: {
         fontSize: '1rem',
@@ -152,6 +145,16 @@ const styles = EStyleSheet.create({
     followButton: {
         marginHorizontal: '5%',
         marginVertical: '5%',
+    },
+    searchView: {
+        flexDirection: 'row',
+        backgroundColor: 'white',
+        borderRadius: '1rem',
+        padding: '1rem',
+        marginHorizontal: '.5rem'
+    },
+    searchIcon: {
+        fontSize: '1.7rem'
     }
 });
 

@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useContext} from 'react';
-import { Text, View, ScrollView, TextInput, KeyboardAvoidingView, TouchableOpacity, Alert } from 'react-native';
+import { Text, View, ScrollView, TextInput, KeyboardAvoidingView, TouchableOpacity, Alert, Keyboard } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import userService from './../apis/user';
 import { Context } from '../context/AuthContext';
@@ -131,7 +131,7 @@ const Comments = ({
     };
 
     return (
-        <KeyboardAvoidingView keyboardVerticalOffset={EStyleSheet.value('4rem')} behavior={Platform.OS === "ios" ? "height" : null} style={{flex: 1}}>
+        <KeyboardAvoidingView keyboardVerticalOffset={60} behavior={Platform.OS === "ios" ? "height" : null} style={{flex: 1}} enabled>
             <ScrollView>
                 {comments.map((comment, index) => (
                     <ListItem
@@ -192,7 +192,7 @@ const Comments = ({
             <View style={styles.bottomBorder}>
                 <View style={styles.inputContainer}>
                     <TextInput style={styles.input} value={commentInput} 
-                        onChangeText={(text) => changeInput(text)} autoCorrect={false} onSubmitEditing={() => sendComment(commentInput)} 
+                        onChangeText={(text) => changeInput(text)} onSubmitEditing={() => sendComment(commentInput)} 
                         returnKeyType="send" placeholder="Leave a comment..."/>
                     <TouchableOpacity onPress={() => sendComment(commentInput)}>
                         <Text style={styles.postButton}>Post</Text>

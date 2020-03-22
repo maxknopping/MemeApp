@@ -105,6 +105,12 @@ namespace MemeApp.API.Data
         public async Task<PostForDetailedDto> GetFeed(User user, int index)
         {
             var allPosts = new List<PostForDetailedDto>();
+            foreach(var Post in user.Posts) {
+                var fullPost = await GetPost(Post.Id);
+                var postDto = mapper.Map<PostForDetailedDto>(fullPost);
+                allPosts.Add(postDto);
+            }
+
             foreach (var account in user.Following)
             {
                 var fullAccount = await GetUser(account.FolloweeId);

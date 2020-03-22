@@ -161,7 +161,7 @@ const styles = EStyleSheet.create({
     },
     iconsContainer: { 
         flexDirection: 'row',
-        marginTop: '2%',
+        marginTop: '1%',
         marginLeft: '3%'
     },
     likeButton: {

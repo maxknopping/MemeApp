@@ -2,9 +2,11 @@ import { Constants} from 'expo';
 import * as Permissions from 'expo-permissions';
 import * as ImagePicker from 'expo-image-picker';
 import React, { Component } from 'react';
+import ImageEditor from '@react-native-community/image-editor';
 import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import getPermissions from './../helpers/getPermissions';
 import EStyleSheet from 'react-native-extended-stylesheet';
+import * as FileSystem from 'expo-file-system';
 
 
 const UploadPost = ({
@@ -21,7 +23,7 @@ const UploadPost = ({
       if (status) {
         const result = await ImagePicker.launchCameraAsync(options);
         if (!result.cancelled) {
-          navigation.navigate('NewPost', { image: result.uri });
+          navigation.navigate('NewPost', { image: result.uri, base64: result.base64 });
         }
       }
     };
@@ -31,7 +33,25 @@ const UploadPost = ({
         if (status) {
           const result = await ImagePicker.launchImageLibraryAsync(options);
           if (!result.cancelled) {
-            navigation.navigate('NewPost', { image: result.uri });
+            navigation.navigate('NewPost', { image: result.uri, base64: result.base64 });
+            /*
+            ImageEditor.cropImage(result.uri, {
+              offset: {x: 0, y: 0},
+              size: {width: 1080, height: 1080},
+              resizeMode: 'contain'
+            },
+            (uri) => {
+              let base64 = '';
+              FileSystem.readAsStringAsync(uri, {
+                encoding: 'base64'
+              }).then(
+                function (response) {
+                  base64 = response;
+                  navigation.navigate('NewPost', { image: uri, base64: base64 });
+                }
+              ).catch(error => console.log(error));
+            })
+            */
           }
         }
       };
@@ -50,6 +70,12 @@ const UploadPost = ({
     );
 };
 
+UploadPost.navigationOptions = () => {
+  return {
+    headerShown: false
+  };
+};
+
 const styles = EStyleSheet.create({
     container: {
       flex: 1,
@@ -61,7 +87,7 @@ const styles = EStyleSheet.create({
       fontSize: 18,
       fontWeight: 'bold',
       textAlign: 'center',
-    },
+    }
   });
 
 export default UploadPost;

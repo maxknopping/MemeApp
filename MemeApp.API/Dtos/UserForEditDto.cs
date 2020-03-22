@@ -6,6 +6,6 @@ namespace MemeApp.API.Dtos
 
         public string Bio { get; set; }
 
-        public string PhotoUrl { get; set; }
+        public string Email { get; set; }
     }
 }
