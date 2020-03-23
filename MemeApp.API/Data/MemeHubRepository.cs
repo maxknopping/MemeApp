@@ -215,8 +215,13 @@ namespace MemeApp.API.Data
             //get the most recent message in the conversation from each user
             foreach(var person in conversationUsers) {
                 var messageList = new List<Message>();
-                messageList = allMessages.Where(m => (m.RecipientId == person.Id && m.SenderDeleted == false) || 
+                if (person.Id == userId) {
+                    messageList = allMessages.Where(m => (m.RecipientId == person.Id && m.SenderDeleted == false) && 
                     (m.SenderId == person.Id && m.RecipientDeleted == false)).ToList();
+                } else {
+                    messageList = allMessages.Where(m => (m.RecipientId == person.Id && m.SenderDeleted == false) || 
+                    (m.SenderId == person.Id && m.RecipientDeleted == false)).ToList();
+                }
                 messageList = messageList.OrderByDescending(m => m.MessageSent).ToList();
                 conversations.Add(messageList[0]);
             }

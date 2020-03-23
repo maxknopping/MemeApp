@@ -52,24 +52,12 @@ const Search = ({
     };
 
     search = (text) => {
-        userService.get(`/search/${text}/true`, {
+        userService.get(`/search/${state.id}/${text}/true`, {
             headers: {
                 'Authorization': `Bearer ${state.token}`
             }
         }).then(
             function(response) {
-
-                response.data.forEach(element => {
-                    element.followButton = 'Follow';
-                    if (element.id == state.id) {
-                        element.followButton = 'Myself'
-                    }
-                    element.followers.forEach(e => {
-                        if (e.followerId == state.id) {
-                          element.followButton = 'Following';
-                        }
-                    });
-                });
                 setList([...response.data]);
                 console.log(response.data);
             }

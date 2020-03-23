@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useContext} from 'react';
-import { Text, View, ScrollView, TextInput, KeyboardAvoidingView, TouchableOpacity, Alert, Keyboard } from 'react-native';
+import { Text, View, ScrollView, TextInput, KeyboardAvoidingView, TouchableOpacity, Alert, Keyboard, Dimensions } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import userService from './../apis/user';
 import { Context } from '../context/AuthContext';
@@ -9,6 +9,8 @@ import {FontAwesome} from 'react-native-vector-icons';
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
 
+const { height: fullHeight } = Dimensions.get('window');
+
 const Comments = ({
     navigation
 }) => {
@@ -16,6 +18,7 @@ const Comments = ({
     const [comments, setComments] = useState([]);
     const postId = navigation.getParam('postId');
     const myPost = navigation.getParam('myPost');
+    const [offest, setOffset] = useState(0);
     const [commentInput, changeInput] = useState('');
     console.log(comments);
     TimeAgo.addLocale(en)
@@ -130,13 +133,22 @@ const Comments = ({
         }
     };
 
+    const onLayout = ({
+        nativeEvent: { layout: { height } },
+      }) => {
+        const off = fullHeight - height;
+        setOffset(off);
+      }
+
     return (
-        <KeyboardAvoidingView keyboardVerticalOffset={60} behavior={Platform.OS === "ios" ? "height" : null} style={{flex: 1}} enabled>
+        <View style={{flex: 1}} onLayout={onLayout}>
+        <KeyboardAvoidingView keyboardVerticalOffset={offest} behavior={Platform.OS === "ios" ? "padding" : null} style={{flex: 1}} enabled>
             <ScrollView>
                 {comments.map((comment, index) => (
                     <ListItem
                     key={index}
-                    leftAvatar={{source: {uri: comment.photoUrl}}}
+                    leftAvatar={{source: comment.photoUrl ? {uri: comment.photoUrl} : 
+                        require('./../../assets/user.png')}}
                     title={
                         <View style={styles.commentWrapper}>
                             <TouchableOpacity onPress={() => navigation.navigate('Profile', {username: comment.username})}>
@@ -200,6 +212,7 @@ const Comments = ({
                 </View>
             </View>
         </KeyboardAvoidingView>
+        </View>
     );
 };
 

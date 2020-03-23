@@ -28,6 +28,8 @@ namespace MemeApp.API.Helpers
             CreateMap<CommentLike, CommentLikeDto>();
             CreateMap<MessageForCreationDto, Message>().ReverseMap();
             CreateMap<Message, MessageForListDto>();
+            CreateMap<User, UserForManipulationDto>();
+            CreateMap<UserForManipulationDto, UserForListDto>();
 
         }
     }

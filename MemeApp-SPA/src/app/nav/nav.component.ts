@@ -58,7 +58,7 @@ export class NavComponent implements OnInit {
   }
 
   search(phrase) {
-    this.user.searchForUser(phrase, true).subscribe(users => {
+    this.user.searchForUser(this.authService.decodedToken.nameid ,phrase, true).subscribe(users => {
       this.searchPreviewUsers = users;
     });
 
@@ -66,7 +66,7 @@ export class NavComponent implements OnInit {
   }
 
   searchPreview(phrase) {
-    this.user.searchForUser(phrase, false).subscribe(users => {
+    this.user.searchForUser(this.authService.decodedToken.nameid, phrase, false).subscribe(users => {
       this.searchPreviewUsers = users;
     });
   }

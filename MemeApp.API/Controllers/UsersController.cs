@@ -440,13 +440,26 @@ namespace MemeApp.API.Controllers
             
         }
 
-        [HttpGet("search/{query}/{fullResult}")]
-        public async Task<IActionResult> SearchForUser(string query, bool fullResult) {
+        [HttpGet("search/{id}/{query}/{fullResult}")]
+        public async Task<IActionResult> SearchForUser(int id, string query, bool fullResult) {
             var users = await repo.SearchForUser(query.ToLower(), fullResult);
 
-            var usersToReturn = mapper.Map<IList<UserForDetailedDto>>(users);
+            var usersToReturn = mapper.Map<IList<UserForManipulationDto>>(users);
 
-            return Ok(usersToReturn);
+            foreach(var user in usersToReturn) {
+                user.FollowButton = "Follow";
+                    if (user.Id == id) {
+                        user.FollowButton = "Myself";
+                    }
+                    foreach(var follower in user.Followers)
+                        if (follower.FollowerId == id) {
+                          user.FollowButton = "Following";
+                        }
+            }
+
+            var usersWithoutFollowers = mapper.Map<IList<UserForListDto>>(usersToReturn);
+
+            return Ok(usersWithoutFollowers);
         }
 
 

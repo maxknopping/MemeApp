@@ -20,7 +20,7 @@ const Profile = ({
     const [followButton, setFollowButton] = useState('Follow');
     const [followers, setFollowers] = useState(0); 
     const [modalVisible, setModalVisible] = useState(false);
-    const [username, setUsername] = useState(state.username);
+    let username = state.username;
     const segmentClicked = (index) => {
         setActiveIndex(index);
     };
@@ -45,7 +45,7 @@ const Profile = ({
     
     useEffect(() => {
         if (navigation.getParam('username')) {
-            setUsername(navigation.getParam('username'));
+            username = navigation.getParam('username');
             navigation.setParams({otherUsername: state.username});
         } else {
             navigation.setParams({username: state.username, id: state.id});

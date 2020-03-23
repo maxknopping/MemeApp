@@ -1,11 +1,11 @@
 import React, {useContext, useEffect, useState} from 'react';
-import { Text, View, ScrollView, Image, ActivityIndicator, Dimensions, RefreshControl, SafeAreaView, FlatList, ListView } from 'react-native';
+import { Text, View, ScrollView, Image, ActivityIndicator, FlatList, ListView, TouchableOpacity } from 'react-native';
 import {Button} from 'react-native-elements';
 import {Button as NativeButton} from 'native-base';
 import {Context} from './../context/AuthContext';
 import userService from './../apis/user';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {MaterialIcons} from 'react-native-vector-icons';
+import {MaterialIcons, Feather} from 'react-native-vector-icons';
 import Constants from 'expo-constants';
 import PostCard from './PostCard';
 import InfiniteScrollView from 'react-native-infinite-scroll-view';
@@ -93,8 +93,13 @@ const Featured = ({
 const styles = EStyleSheet.create({
     container: {
 
+    },
+    gearIcon: {
+        fontSize: '1.7rem',
+        color: 'black'
     }
 });
+
 
 export default Featured;
 

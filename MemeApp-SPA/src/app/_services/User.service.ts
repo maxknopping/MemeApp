@@ -122,7 +122,7 @@ export class UserService {
     return this.http.post(`${this.baseUrl}/${userId}/messages/${id}/read`, {}).subscribe();
   }
 
-  searchForUser(query: string, fullResult: boolean) {
-    return this.http.get(`${this.baseUrl}/search/${query}/${fullResult}`);
+  searchForUser(userId: number, query: string, fullResult: boolean) {
+    return this.http.get(`${this.baseUrl}/search/${userId}/${query}/${fullResult}`);
   }
 }

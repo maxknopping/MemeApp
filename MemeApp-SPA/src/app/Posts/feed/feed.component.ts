@@ -19,11 +19,12 @@ export class FeedComponent implements OnInit {
   ngOnInit() {
     this.route.data.subscribe(data => {
       this.index = 0;
-      this.loadPosts();
+      this.loadInitialPosts();
       window.addEventListener('scroll', this.scroll, true); //third parameter
-    })
+    });
   }
 
+  // tslint:disable-next-line: use-lifecycle-interface
   ngOnDestroy() {
     window.removeEventListener('scroll', this.scroll, true);
   }
@@ -33,6 +34,20 @@ export class FeedComponent implements OnInit {
     this.user.getFeed(username, this.index).subscribe((post: Post) => {
       this.posts.push(post);
       this.index++;
+    }, error => {
+      this.reachedEnd = true;
+    });
+  }
+
+  loadInitialPosts() {
+    const username = localStorage.getItem('username');
+    this.user.getFeed(username, this.index).subscribe((post: Post) => {
+      this.posts.push(post);
+      this.index++;
+      this.user.getFeed(username, this.index).subscribe((post2: Post) => {
+        this.posts.push(post2);
+        this.index++;
+      })
     }, error => {
       this.reachedEnd = true;
     });

@@ -34,7 +34,7 @@ export class MessagesComponent implements OnInit {
   }
 
   search(phrase) {
-    this.user.searchForUser(phrase, true).subscribe(users => {
+    this.user.searchForUser(this.auth.decodedToken.nameid ,phrase, true).subscribe(users => {
       this.searchPreviewUsers = users;
     });
 
@@ -42,7 +42,7 @@ export class MessagesComponent implements OnInit {
   }
 
   searchPreview(phrase) {
-    this.user.searchForUser(phrase, false).subscribe(users => {
+    this.user.searchForUser(this.auth.decodedToken.nameid, phrase, false).subscribe(users => {
       this.searchPreviewUsers = users;
     });
   }

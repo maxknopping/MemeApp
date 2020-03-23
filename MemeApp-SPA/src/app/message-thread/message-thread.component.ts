@@ -45,6 +45,7 @@ export class MessageThreadComponent implements OnInit {
       }
       // tslint:disable-next-line: prefer-for-of
       for (let i = 0; i < this.messages.length; i++) {
+        // tslint:disable-next-line: triple-equals
         if (this.messages[i].isRead == false && this.messages[i].recipientId == this.id) {
           this.user.markAsRead(this.messages[i].id, this.id);
         }

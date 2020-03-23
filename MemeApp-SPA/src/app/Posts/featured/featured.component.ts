@@ -17,7 +17,7 @@ export class FeaturedComponent implements OnInit {
 
   ngOnInit() {
     this.index = 0;
-    this.loadPosts();
+    this.loadInitialPosts();
     window.addEventListener('scroll', this.scroll, true); //third parameter
   }
 
@@ -29,6 +29,18 @@ export class FeaturedComponent implements OnInit {
     this.user.getFeatured(this.index).subscribe((post: Post) => {
       this.posts.push(post);
       this.index++;
+    }, error => {
+    });
+  }
+
+  loadInitialPosts() {
+    this.user.getFeatured(this.index).subscribe((post: Post) => {
+      this.posts.push(post);
+      this.index++;
+      this.user.getFeatured(this.index).subscribe((post2: Post) => {
+        this.posts.push(post2);
+        this.index++;
+      })
     }, error => {
     });
   }

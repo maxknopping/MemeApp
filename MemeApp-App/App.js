@@ -21,6 +21,8 @@ import LoadingScreen from './src/screens/LoadingScren';
 import {Feather, Ionicons} from 'react-native-vector-icons';
 import NewPost from './src/screens/NewPost';
 import EditProfile from './src/screens/EditProfile'
+import MessageList from './src/screens/MessageList';
+import MessageThread from './src/screens/MessageThread';
 
 
 const switchNavigator = createSwitchNavigator({
@@ -34,7 +36,9 @@ const switchNavigator = createSwitchNavigator({
         Feed: Feed,
         List: List,
         Profile: Profile,
-        Comments: Comments
+        Comments: Comments,
+        Messages: MessageList,
+        MessageThread: MessageThread
     },{
       initialRouteName: 'Feed',
       defaultNavigationOptions: ({navigation}) => ({
