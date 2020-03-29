@@ -37,6 +37,18 @@ const SignIn = ({
                     <Text style={[styles.text, {color: crimson}]}>Sign Up</Text>
                 </TouchableOpacity>
             </View>
+            <View style={styles.textContainer}>
+                <TouchableOpacity onPress={() => navigation.navigate('ForgotUsername')}>
+                    <Text style={styles.forgot}>
+                        Forgot Username? {' '}
+                    </Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
+                    <Text style={styles.forgot}>
+                        Forgot Password?
+                    </Text>
+                </TouchableOpacity>
+            </View>
 
         </View>);
 };
@@ -74,6 +86,8 @@ const styles = EStyleSheet.create({
     },
     text: {
         fontSize: '1.1rem'
+    }, forgot: {
+        color: '$crimson'
     }
 });
 

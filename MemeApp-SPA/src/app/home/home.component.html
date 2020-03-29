@@ -1,10 +1,11 @@
 <div class="container mt-5">
-    <div *ngIf="!registerMode" style="text-align: center">
-      <h1>Find your memes</h1>
-      <p class="lead">Come on in to run your own meme page...All you need to do is sign up!</p>
+    <div *ngIf="!registerMode && !forgotUsernameMode && !forgotPasswordMode && !tempPasswordMode" style="text-align: center">
+      <h1>MemeClub</h1>
+      <p class="lead">The meme social media.</p>
       <div class="text-center">
         <button class="btn btn-primary btn-lg mr-2" (click)="registerToggle()">Register</button>
-        <button class="btn btn-info btn-lg">Learn more</button>
+        <button class="btn btn-info btn-lg mr-2" (click)="forgotUsernameToggle()">Forgot Username?</button>
+        <button class="btn btn-success btn-lg" (click)="forgotPasswordToggle()">Forgot Password?</button>
       </div>
     </div>
   
@@ -12,6 +13,62 @@
       <div class="row justify-content-center">
         <div class="col-4">
           <app-register (cancelRegister)="cancelRegisterMode($event)"></app-register>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="forgotUsernameMode">
+    <div class="row justify-content-center">
+      <div class="col-4">
+        <div class="form-group">
+          <h2>Email</h2>
+          <input name="email" class="form-control" id="email-input" [(ngModel)]="email">
+        </div>
+        <div class="text-center">
+          <button class="btn btn-success btn-md mr-2" (click)="sendEmail()">Submit</button>
+          <button class="btn btn-danger btn-md" (click)="forgotUsernameToggle()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div *ngIf="forgotPasswordMode">
+    <div class="row justify-content-center">
+      <div class="col-4">
+        <div class="form-group">
+          <h2>Username</h2>
+          <input name="username" class="form-control" id="username-input" [(ngModel)]="username">
+        </div>
+        <div class="text-center">
+          <button class="btn btn-success btn-md mr-2" (click)="sendUsername()">Submit</button>
+          <button class="btn btn-danger btn-md" (click)="forgotPasswordToggle()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="tempPasswordMode">
+    <div class="row justify-content-center">
+      <div class="col-4">
+        <div class="form-group">
+          <h3>Temporary Password From Email</h3>
+          <input name="tempPassword" type="password" class="form-control" id="tempPassword-input" [(ngModel)]="tempPassword">
+        </div>
+        <div class="form-group">
+          <h3>New Password</h3>
+          <input name="newPassword" type="password" class="form-control" id="newPassword-input" [(ngModel)]="newPassword">
+          <p *ngIf="newPassword.length < 8" style="color: crimson;">Password must be at least 8 characters</p>
+        </div>
+        <div class="form-group">
+          <h2>Confirm Password</h2>
+          <input name="confirmPassword" type="password" class="form-control" id="confirmPassword-input" [(ngModel)]="confirmNewPassword">
+          <p *ngIf="newPassword !== confirmNewPassword" style="color: crimson;">Passwords must match</p>
+        </div>
+        <div class="text-center">
+          <button class="btn btn-success btn-md mr-2" [disabled]="newPassword !== confirmNewPassword || newPassword.length < 8" (click)="sendNewPassword()">Submit</button>
+          <button class="btn btn-danger btn-md" (click)="tempPasswordToggle()">Cancel</button>
         </div>
       </div>
     </div>

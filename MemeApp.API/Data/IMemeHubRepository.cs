@@ -37,6 +37,8 @@ namespace MemeApp.API.Data
          Task<Message> GetMessage(int id);
 
          Task<IList<Message>> GetConversationListForUser(int userId);
+
+         Task<IList<User>> GetConversationUsers(int userId);
          Task<IList<Message>> GetMessageThread(int userId, int recipientId);
 
         Task<IList<User>> SearchForUser(string query, bool fullResult);

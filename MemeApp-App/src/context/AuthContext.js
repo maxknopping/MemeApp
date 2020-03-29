@@ -14,6 +14,8 @@ const authReducer = (state, action) => {
             return {token: null, id: 0, username: '', errorMessage: null};
         case 'changeUsername':
             return {...state, username: action.payload};
+        case 'changePassword':
+            return {...state};
         default: 
             return state;
     }
@@ -83,5 +85,10 @@ const changeUsername = (dispatch) => async ({newUsername}) => {
     dispatch({type: 'changeUsername', payload: newUsername});
 }
 
-export const {Context, Provider} = createDataContext(authReducer, {signin, changeUsername, signout, signup, tryLocalSignIn},
+const changePassword = (dispatch) => async ({newPassword}) => {
+    await AsyncStorage.setItem('password', newPassword);
+    dispatch({type: 'changePassword', payload: newPassword});
+}
+
+export const {Context, Provider} = createDataContext(authReducer, {signin, changeUsername, changePassword, signout, signup, tryLocalSignIn},
      {token: null, id: 0, username: '', errorMessage: null});

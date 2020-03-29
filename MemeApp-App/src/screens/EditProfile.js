@@ -23,6 +23,7 @@ const EditProfile = ({
     const [base64, setBase64] = useState('');
     const [whatHasChanged, setWhatHasChanged] = useState({profilePicture: false, bio: false, username: false, email: false});
     const [bioHeight, setBioHeight] = useState(0);
+    const [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
         userService.get(`/username/${username}`, {
@@ -79,12 +80,13 @@ const EditProfile = ({
                     headers: {
                         'Authorization': `Bearer ${state.token}`
                     }
-                }).catch(error => console.log(error));
+                }).then(
+                    function (response) {
+                        setWhatHasChanged({...whatHasChanged, profilePicture: false});
+                    }
+                ).catch(error => console.log(error));
             }
 
-            if (whatHasChanged.username) {
-                changeUsername({newUsername: user.username});
-            }
 
             if (whatHasChanged.bio || whatHasChanged.email || whatHasChanged.username) {
                 userService.put(`${state.id}`, {
@@ -97,12 +99,14 @@ const EditProfile = ({
                     }
                 }).then(
                     function (response) {
+                        if (whatHasChanged.username) {
+                            changeUsername({newUsername: user.username});
+                        }
+                        setWhatHasChanged({...whatHasChanged, bio: false, username: false, email: false});
                         navigation.navigate('Profile', {username: user.username});
                     }
-                ).catch(error => console.log(error));
+                ).catch(error => setErrorMessage(error.response.data));
             }
-
-            setWhatHasChanged({profilePicture: false, bio: false, username: false, email: false});
       };
 
     return (
@@ -136,12 +140,15 @@ const EditProfile = ({
                     <Text style={styles.usernameLabel}>
                         Username
                     </Text>
-                    <TextInput value={user.username} onChangeText={(text) => {
+                    <TextInput value={user.username} autoCorrect={false} autoCapitalize="none" onChangeText={(text) => {
                         let newUser = user;
                         newUser.username = text;
                         setUser(newUser);
                         setWhatHasChanged({...whatHasChanged, username: true});
                     }} style={styles.username}/>
+                    {user.username.length > 30 ? <Text style={styles.validator}>Username must be less than 30 characters.</Text>: null}
+                    {user.username.indexOf(' ') != -1 ? <Text style={styles.validator}>Username cannot have any spaces</Text> : null}
+                    {user.username.length == 0 ? <Text style={styles.validator}>Username is required</Text> : null}
                 </View>
                 <View style={styles.listContainer}>
                     <Text style={styles.usernameLabel}>
@@ -164,10 +171,17 @@ const EditProfile = ({
                         setUser(newUser);
                         setWhatHasChanged({...whatHasChanged, email: true});
                     }} style={styles.bio} autoCapitalize="none" autoCorrect={false}/>
+                    {!user.email.includes('@') || !user.email.includes('.') ?  
+                <Text style={[styles.validator]}>Please enter a valid email address</Text> : null}
                 </View>
-                <Button title='Save Changes' disabled={whatHasChanged.bio == false && 
+                {errorMessage.length > 0 ? <Text style={[styles.validator, {alignSelf: 'center'}]}>{errorMessage}</Text> : null}
+                <Button title='Save Changes' disabled={
+                    (whatHasChanged.bio == false && 
                     whatHasChanged.email == false && whatHasChanged.username == false &&
-                    whatHasChanged.profilePicture == false} buttonStyle={styles.changePassword} 
+                    whatHasChanged.profilePicture == false) || (!user.email.includes('@') || !user.email.includes('.')) || 
+                    user.username.length > 30 || user.username.indexOf(' ') != -1 || user.username.length == 0
+                
+                } buttonStyle={styles.changePassword} 
                     disabledStyle={styles.saveChangesDisabled} onPress={() => saveChanges()}/>
             </View>
         : null}
@@ -189,6 +203,7 @@ const styles = EStyleSheet.create({
         borderBottomWidth: '.02rem',
         borderBottomColor: 'gray',
         paddingVertical: '1rem',
+        flexWrap: 'wrap'
     },
     profilePictureText: {
         marginVertical: '12%',
@@ -204,7 +219,7 @@ const styles = EStyleSheet.create({
         textAlign: 'center'
     },
     username: {
-        width: "75%",
+        width: "70%",
         aspectRatio: 7 /1,
         padding: '.5rem',
         borderRadius: '.5rem',
@@ -232,7 +247,8 @@ const styles = EStyleSheet.create({
         marginVertical: '1rem'
     },
     validator: {
-        fontSize: '.8rem'
+        fontSize: '.8rem',
+        color: '$crimson',
     },
     saveChangesDisabled: {
         width: '80%',

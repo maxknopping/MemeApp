@@ -24,6 +24,10 @@ export class UserService {
     return this.http.get<User>(this.baseUrl + '/' + id);
   }
 
+  getPost(id: number): Observable<Post> {
+    return this.http.get<Post>(`${this.baseUrl}/post/${id}`);
+  }
+
   getUserByUsername(username: string): Observable<User> {
     return this.http.get<User>(this.baseUrl + '/username/' + username);
   }
@@ -52,12 +56,12 @@ export class UserService {
     return this.http.post(`${this.baseUrl}/${id}/unfollow/${recipientId}`, {});
   }
 
-  getFollowers(username: string) {
-    return this.http.get(`${this.baseUrl}/followers/${username}`);
+  getFollowers(username: string, userId: number) {
+    return this.http.get(`${this.baseUrl}/${userId}/followers/${username}`);
   }
 
-  getFollowing(username: string) {
-    return this.http.get(`${this.baseUrl}/following/${username}`);
+  getFollowing(username: string, userId: number) {
+    return this.http.get(`${this.baseUrl}/${userId}/following/${username}`);
   }
 
   likePost(id: number, recipientId: number) {
@@ -68,12 +72,12 @@ export class UserService {
     return this.http.post(`${this.baseUrl}/${id}/unlike/${recipientId}`, {});
   }
 
-  getLikers(postId) {
-    return this.http.get(`${this.baseUrl}/likers/${postId}`);
+  getLikers(postId, userId) {
+    return this.http.get(`${this.baseUrl}/${userId}/likers/${postId}`);
   }
 
-  getCommentLikers(commentId) {
-    return this.http.get(`${this.baseUrl}/commentLikers/${commentId}`);
+  getCommentLikers(commentId, userId) {
+    return this.http.get(`${this.baseUrl}/${userId}/commentLikers/${commentId}`);
   }
 
   sendComment(comment, postId, commenterId) {
@@ -114,6 +118,10 @@ export class UserService {
     return this.http.post(`${this.baseUrl}/${id}/messages`, message);
   }
 
+  sendMessageWithPost(id: number, message) {
+    return this.http.post(`${this.baseUrl}/${id}/messages/withPost`, message);
+  }
+
   deleteMessage(id: number, userId: number) {
     return this.http.post(`${this.baseUrl}/${userId}/messages/${id}`, {});
   }
@@ -125,4 +133,5 @@ export class UserService {
   searchForUser(userId: number, query: string, fullResult: boolean) {
     return this.http.get(`${this.baseUrl}/search/${userId}/${query}/${fullResult}`);
   }
+
 }

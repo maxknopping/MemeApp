@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using MemeApp.API.Models;
 using Microsoft.EntityFrameworkCore;
@@ -87,6 +89,15 @@ namespace MemeApp.API.Data
             }
 
             return false;
+        }
+
+        public async Task<IList<User>> GetUsersByEmail(string email)
+        {
+            var queryable =  _context.Users.AsQueryable();
+
+            var users = await queryable.Where(u => u.Email == email).ToListAsync();
+
+            return users;
         }
     }
 }

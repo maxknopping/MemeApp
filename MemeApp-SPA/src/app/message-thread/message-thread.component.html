@@ -13,9 +13,11 @@
             <ul class="chat">
                 <li *ngFor="let message of messages; let i = index"
                 [ngClass]="{'chat__bubble': true, 
+                            'post_bubble': message.post != null,
                             'chat__bubble--sent': message.senderId == id, 
                             'chat__bubble--rcvd': message.senderId != id,
                             'chat__bubble--stop': i == (messages.length - 1) || messages[i+1].senderId != message.senderId}">
+                      <app-post-card-message *ngIf="message.post != null" [post]="message.post"></app-post-card-message>
                       <span *ngIf="message.senderId == id" class="tooltiptext">{{message.messageSent | date:'shortTime'}}</span>
                       {{message.content}}
                       <span *ngIf="message.senderId != id" class="tooltiptext">{{message.messageSent | date:'shortTime'}}</span>

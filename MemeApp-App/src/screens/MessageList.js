@@ -17,10 +17,12 @@ const MessageList = ({
     const [searchInput, setSearchInput] = useState('');
     const [searchVisible, setSearchVisible] = useState(false);
     const [list, setList] = useState([]);
+    const [refreshing, setRefreshing] = useState(false);
     TimeAgo.addLocale(en);
     const timeAgo = new TimeAgo('en-US');
 
     useEffect(() => {
+        setRefreshing(true);
         userService.get(`/${state.id}/messages`, {
             headers: {
                 'Authorization': `Bearer ${state.token}`
@@ -29,8 +31,10 @@ const MessageList = ({
             function (response) {
                 setMessages(response.data);
                 console.log(response.data);
+                setRefreshing(false);
             }).catch(error => {
                 console.log(error);
+                setRefreshing(false);
         });
         navigation.addListener('willFocus', () => {
             getMessages();
@@ -67,7 +71,7 @@ const MessageList = ({
  
     return (
         <>
-            {messages.length !== 0 ?
+            {!refreshing  ?
                 <ScrollView style={{flex: 1}}>
                     <ListItem 
                         contentContainerStyle={{alignItems: 'center'}}

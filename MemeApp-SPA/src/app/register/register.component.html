@@ -8,7 +8,12 @@
       class="form-control" 
       formControlName = "username" 
       placeholder="Username">
-      <div class="invalid-feedback">Please choose a username</div>
+      <div *ngIf="registerForm.get('username').hasError('required') && registerForm.get('username').touched" 
+      class="invalid-feedback">Username is required</div>
+      <div *ngIf="registerForm.get('username').hasError('maxlength') && registerForm.get('username').touched" 
+      class="invalid-feedback">Username cannot exceed 30 characters</div>
+      <div *ngIf="registerForm.get('username').hasError('spaces') && registerForm.get('username').touched" 
+      class="invalid-feedback">Username cannot have any spaces</div>
     </div>
   
     <div class="form-group">
@@ -38,7 +43,10 @@
     <div class="form-group">
         <input [ngClass]="{'is-invalid': registerForm.get('email').errors && registerForm.get('email').touched}" class="form-control"
           placeholder="Email Address" formControlName="email">
-        <div class="invalid-feedback" *ngIf="registerForm.get('email').touched && registerForm.get('email').hasError('email')">Email address is required</div>
+        <div class="invalid-feedback" *ngIf="registerForm.get('email').touched && registerForm.get('email').hasError('email')">
+          Please Enter a Valid Email</div>
+        <div class="invalid-feedback" *ngIf="registerForm.get('email').touched && registerForm.get('email').hasError('required')">
+            Email is required</div> 
       </div>
   
     <div class="form-group text-center">

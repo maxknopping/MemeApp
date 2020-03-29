@@ -76,10 +76,12 @@ const Profile = ({
     const renderGridSection = () => {
         return user.posts.map((post, index) => {
             return (
+                <TouchableOpacity key={index} onPress={() => navigation.navigate('SinglePost', {postId: post.id})}>
                 <View style={[ {width: width / 3} , {height: width/3}, {marginBottom: EStyleSheet.value('.1rem')}, index % 3 !== 0 ? 
-                    {paddingLeft: EStyleSheet.value('.1rem')} : {paddingLeft: 0}]} key={index}>
-                    <Image style={{flex: 1, width: undefined, height: undefined}} source={{uri: post.url}}/>
+                    {paddingLeft: EStyleSheet.value('.1rem')} : {paddingLeft: 0}]} >
+                        <Image style={{flex: 1, width: undefined, height: undefined}} source={{uri: post.url}}/>
                 </View>
+                </TouchableOpacity>
             );
         });
     }

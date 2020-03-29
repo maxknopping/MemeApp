@@ -10,6 +10,9 @@ using MemeApp.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using System.Net.Mail;
+using Microsoft.AspNetCore.Authorization;
+using System.Linq;
 
 namespace MemeApp.API.Controllers
 {
@@ -20,11 +23,16 @@ namespace MemeApp.API.Controllers
         private readonly IAuthRepository _repo;
         private readonly IConfiguration _configuration;
         private readonly IMapper mapper;
-        public AuthController(IAuthRepository repo, IConfiguration _configuration, IMapper mapper)
+        private readonly IMemeHubRepository userRepo;
+
+        private readonly Random random;
+        public AuthController(IAuthRepository repo, IMemeHubRepository userRepo, IConfiguration _configuration, IMapper mapper)
         {
+            this.userRepo = userRepo;
             this.mapper = mapper;
             this._configuration = _configuration;
             this._repo = repo;
+            this.random = new Random();
 
         }
 
@@ -45,7 +53,34 @@ namespace MemeApp.API.Controllers
 
             var userToReturn = mapper.Map<UserForDetailedDto>(createdUser);
 
-            return CreatedAtRoute("GetUser", new {controller = "Users", id = createdUser.Id}, userToReturn);
+            MailMessage welcomeEmail = new MailMessage();
+
+            welcomeEmail.From = new MailAddress("no-reply@memeclub.co", "MemeClub Team");
+            welcomeEmail.To.Add(userForRegister.Email);
+            welcomeEmail.Subject = "Welcome to MemeClub";
+            welcomeEmail.Body = $"Welcome to MemeClub!\n\nThank you for creating your account. Your username is {userForRegister.Username}. To get started, follow some meme pages or click on the featured tab. If you wish to compete for the title of best meme, visit the Joust Page. Here, you can enter memes to go head-to-head with other memes. We hope you find some quality memes on our app.\n\nSincerly,\nThe MemeClub Team";
+            welcomeEmail.IsBodyHtml = false;
+            SmtpClient smtp = new SmtpClient()
+            {
+                Host = "smtp.gmail.com",
+                Port = 587,
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new System.Net.NetworkCredential("no-reply@memeclub.co", "memeclub6969")
+
+            };
+
+            try
+            {
+                smtp.Send(welcomeEmail);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return CreatedAtRoute("GetUser", new { controller = "Users", id = createdUser.Id }, userToReturn);
         }
 
         [HttpPost("login")]
@@ -90,7 +125,7 @@ namespace MemeApp.API.Controllers
 
         }
 
-        //move to user controller, as needs to be authorized
+        [Authorize]
         [HttpPut("changePassword")]
         public async Task<IActionResult> ChangePassword(UserForPasswordChangeDto userForLogin)
         {
@@ -101,13 +136,135 @@ namespace MemeApp.API.Controllers
                 return BadRequest("Incorrect Password");
             }
 
-            if (await _repo.ChangePassword(userFromRepo, userForLogin.NewPassword)) {
+            if (await _repo.ChangePassword(userFromRepo, userForLogin.NewPassword))
+            {
+                return Ok();
+            }
+
+            return BadRequest("The passwords are the same");
+
+        }
+
+        [HttpPost("forgotUsername/{email}")]
+        public async Task<IActionResult> ForgotUsername(string email)
+        {
+            var users = await _repo.GetUsersByEmail(email);
+
+            if (users.Count == 0)
+            {
+                return BadRequest("This email address is not asscoiated with an account.");
+            }
+
+            string emails = "";
+            foreach (var user in users)
+            {
+                emails += $"{user.Username}\n";
+            }
+
+            MailMessage forgotEmail = new MailMessage();
+
+            forgotEmail.From = new MailAddress("no-reply@memeclub.co", "MemeClub Team");
+            forgotEmail.To.Add(email);
+            forgotEmail.Subject = "Forgot Username";
+            forgotEmail.Body = $"Here are all the usernames associated with this email:\n\n{emails}\n\nSincerely,\nThe MemeClub Team";
+            forgotEmail.IsBodyHtml = false;
+            SmtpClient smtp = new SmtpClient()
+            {
+                Host = "smtp.gmail.com",
+                Port = 587,
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new System.Net.NetworkCredential("no-reply@memeclub.co", "memeclub6969")
+
+            };
+
+            try
+            {
+                smtp.Send(forgotEmail);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return Ok();
+
+        }
+
+        [HttpPost("forgotPassword/{username}")]
+        public async Task<IActionResult> forgotPassword(string username)
+        {
+            var user = await userRepo.GetUser(username);
+
+            if (user == null)
+            {
+                return BadRequest("Username doesn't exist");
+            }
+
+            var newPassword = RandomString(8);
+
+            await _repo.ChangePassword(user, newPassword);
+
+            MailMessage forgotEmail = new MailMessage();
+
+            forgotEmail.From = new MailAddress("no-reply@memeclub.co", "MemeClub Team");
+            forgotEmail.To.Add(user.Email);
+            forgotEmail.Subject = "Forgot Password";
+            forgotEmail.Body = $"Your temporary password for user {username} is:\n\n{newPassword}\n\n-The MemeClub Team";
+            forgotEmail.IsBodyHtml = false;
+            SmtpClient smtp = new SmtpClient()
+            {
+                Host = "smtp.gmail.com",
+                Port = 587,
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new System.Net.NetworkCredential("no-reply@memeclub.co", "memeclub6969")
+
+            };
+
+            try
+            {
+                smtp.Send(forgotEmail);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return Ok(new {
+                email = user.Email
+            });
+
+        }
+
+        public string RandomString(int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string(Enumerable.Repeat(chars, length)
+                .Select(s => s[this.random.Next(s.Length)]).ToArray());
+        }
+
+        [HttpPut("changeTempPassword")]
+        public async Task<IActionResult> ChangeTempPassword(UserForPasswordChangeDto userForLogin)
+        {
+            var userFromRepo = await _repo.Login(userForLogin.Username.ToLower(), userForLogin.CurrentPassword);
+
+            if (userFromRepo == null)
+            {
+                return BadRequest("Incorrect Temporary Password.");
+            }
+
+            if (await _repo.ChangePassword(userFromRepo, userForLogin.NewPassword))
+            {
                 return Ok();
             }
 
             return BadRequest();
 
         }
+
 
 
 

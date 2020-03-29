@@ -14,86 +14,42 @@ const List = ({
 
     useEffect(() => {
         if (listType === 'followers') {
-            userService.get(`/followers/${identifier}`, {
+            userService.get(`/${state.id}/followers/${identifier}`, {
                 headers: {
                     'Authorization': `Bearer ${state.token}`
                 }
             }).then(
                 function (response) {
-                    response.data.forEach(element => {
-                        element.followButton = 'Follow';
-                        if (element.id == state.id) {
-                            element.followButton = 'Myself'
-                        }
-                        element.followers.forEach(e => {
-                            if (e.followerId == state.id) {
-                              element.followButton = 'Following';
-                            }
-                        });
-                    });
                     setList(response.data);
                 }
             ).catch(error => console.log(error));
         } else if (listType === 'following') {
-            userService.get(`/following/${identifier}`, {
+            userService.get(`/${state.id}/following/${identifier}`, {
                 headers: {
                     'Authorization': `Bearer ${state.token}`
                 }
             }).then(
                 function (response) {
-                    response.data.forEach(element => {
-                        element.followButton = 'Follow';
-                        if (element.id == state.id) {
-                            element.followButton = 'Myself'
-                        }
-                        element.followers.forEach(e => {
-                            if (e.followerId == state.id) {
-                              element.followButton = 'Following';
-                            }
-                        });
-                    });
                     setList(response.data);
                 }
             ).catch(error => console.log(error));
         } else if (listType === 'likers') {
-            userService.get(`/likers/${identifier}`, {
+            userService.get(`/${state.id}/likers/${identifier}`, {
                 headers: {
                     'Authorization': `Bearer ${state.token}`
                 }
             }).then(
                 function (response) {
-                    response.data.forEach(element => {
-                        element.followButton = 'Follow';
-                        if (element.id == state.id) {
-                            element.followButton = 'Myself'
-                        }
-                        element.followers.forEach(e => {
-                            if (e.followerId == state.id) {
-                              element.followButton = 'Following';
-                            }
-                        });
-                    });
                     setList(response.data);
                 }
             ).catch(error => console.log(error));
         } else if (listType === 'commentLikers') {
-            userService.get(`/commentLikers/${identifier}`, {
+            userService.get(`/${state.id}/commentLikers/${identifier}`, {
                 headers: {
                     'Authorization': `Bearer ${state.token}`
                 }
             }).then(
                 function (response) {
-                    response.data.forEach(element => {
-                        element.followButton = 'Follow';
-                        if (element.id == state.id) {
-                            element.followButton = 'Myself'
-                        }
-                        element.followers.forEach(e => {
-                            if (e.followerId == state.id) {
-                              element.followButton = 'Following';
-                            }
-                        });
-                    });
                     setList(response.data);
                 }
             ).catch(error => console.log(error));
@@ -147,7 +103,15 @@ const List = ({
                         require('./../../assets/user.png')}}
                     title={
                         <View style={styles.titleWrapper}>
-                            <TouchableOpacity onPress={() => navigation.navigate('Profile', {username: item.username})}>
+                            <TouchableOpacity onPress={() => {
+                                if (listType == 'followers' || listType == 'following')
+                                {
+                                    navigation.navigate('OtherProfile', {username: item.username});
+                                } else {
+                                    navigation.navigate('Profile', {username: item.username});
+                                }
+                                
+                                }}>
                                 <Text style={styles.username}>{item.username}</Text>
                             </TouchableOpacity>
                         </View>

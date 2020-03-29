@@ -37,7 +37,7 @@
             <div class="post-container">
                 <div class="row row-wrapper">
                   <div *ngFor="let post of posts" class="col-sm-4">
-                    <img class="card-img grid-image" src="{{post.url}}">
+                    <img class="card-img grid-image" src="{{post.url}}" [routerLink]="['/post/', post.id]">
                   </div>
                 </div>
               </div>

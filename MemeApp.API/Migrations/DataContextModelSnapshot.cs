@@ -94,6 +94,8 @@ namespace MemeApp.API.Migrations
 
                     b.Property<DateTime>("MessageSent");
 
+                    b.Property<int?>("PostId");
+
                     b.Property<bool>("RecipientDeleted");
 
                     b.Property<int>("RecipientId");
@@ -105,6 +107,8 @@ namespace MemeApp.API.Migrations
                     b.Property<bool>("SenderReadReceipts");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PostId");
 
                     b.HasIndex("RecipientId");
 
@@ -233,6 +237,11 @@ namespace MemeApp.API.Migrations
 
             modelBuilder.Entity("MemeApp.API.Models.Message", b =>
                 {
+                    b.HasOne("MemeApp.API.Models.Post", "Post")
+                        .WithMany("MessagesSent")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("MemeApp.API.Models.User", "Recipient")
                         .WithMany("MessagesReceived")
                         .HasForeignKey("RecipientId")

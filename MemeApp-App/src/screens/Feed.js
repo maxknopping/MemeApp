@@ -98,7 +98,14 @@ Feed.navigationOptions = ({navigation}) => {
                 <View style={{marginRight: 10}}>
                     <Feather style={styles.gearIcon} name="message-circle"/>
                 </View>
-            </TouchableOpacity>)
+            </TouchableOpacity>),
+        headerLeft: () => (
+            <TouchableOpacity>
+                <View style={{marginLeft: 10}}>
+                    <Feather style={styles.bellIcon} name="bell"/>
+                </View>
+            </TouchableOpacity>
+        )
     };
 };
 
@@ -109,6 +116,9 @@ const styles = EStyleSheet.create({
     gearIcon: {
         fontSize: '1.7rem',
         color: 'black'
+    },
+    bellIcon: {
+        fontSize: '1.7rem'
     }
 });
 

@@ -5,7 +5,7 @@ import {Button as NativeButton} from 'native-base';
 import {Context} from './../context/AuthContext';
 import userService from './../apis/user';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {MaterialIcons, Feather} from 'react-native-vector-icons';
+import {MaterialCommunityIcons, Feather} from 'react-native-vector-icons';
 import Constants from 'expo-constants';
 import PostCard from './PostCard';
 import InfiniteScrollView from 'react-native-infinite-scroll-view';
@@ -97,8 +97,23 @@ const styles = EStyleSheet.create({
     gearIcon: {
         fontSize: '1.7rem',
         color: 'black'
+    },
+    joustIcon: {
+        fontSize: '1.7rem'
     }
 });
+
+Featured.navigationOptions = ({navigation}) => {
+    return {
+        headerRight: () => (
+            <TouchableOpacity>
+                <View style={{marginRight: 10}}>
+                    <MaterialCommunityIcons style={styles.joustIcon} name="sword-cross"/>
+                </View>
+            </TouchableOpacity>
+        )
+    };
+};
 
 
 export default Featured;

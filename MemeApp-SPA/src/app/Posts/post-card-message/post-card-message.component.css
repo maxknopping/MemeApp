@@ -1,0 +1,38 @@
+.profile-picture {
+    max-height: 40px;
+    max-width: 40px;
+    border-radius: 50%;
+}
+
+.like-button {
+    cursor: pointer;
+    size: scale(10);
+    border: 0px;
+    color: crimson;
+    background-color: transparent;
+}
+
+.like-button:hover {
+    background: transparent
+}
+
+.list-container {
+    width: 150 !important;
+    list-style-type: none;
+    padding: 0px;
+}
+
+li {
+    width: 200;
+}
+
+.main-image {
+    aspect-ratio: 1;
+}
+
+.whole-container {
+    cursor: pointer;
+}
+
+
+

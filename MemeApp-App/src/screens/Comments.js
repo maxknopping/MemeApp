@@ -96,7 +96,7 @@ const Comments = ({
             function (response) {
                 comment.liked = true;
                 comment.likes++;
-                const old = comments.filter((item) => item.id !== comment.id)
+                const old = comments.filter((item) => item.id !== comment.id);
                 setComments([...old, comment]);
             }
         ).catch(error => console.log(error));
@@ -111,7 +111,7 @@ const Comments = ({
             function (response) {
                 comment.liked = false;
                 comment.likes--;
-                const old = comments.filter((item) => item.id !== comment.id)
+                const old = comments.filter((item) => item.id !== comment.id);
                 setComments([...old, comment]);
             }
         ).catch(error => console.log(error));

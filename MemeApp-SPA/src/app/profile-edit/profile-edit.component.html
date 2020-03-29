@@ -9,7 +9,16 @@
           <div class="form-group">
               <h4>Username</h4>
               <input name="username" class="form-control" id="username-input" [(ngModel)]="user.username">
+              <p *ngIf="user.username.includes(' ')" style="color: crimson;">Username must not have any spaces</p>
+              <p *ngIf="user.username.length > 30" style="color: crimson;">Username must not exceed 30 characters</p>
+              <p *ngIf="user.username.length === 0" style="color: crimson;">Username is required</p>
           </div>
+          <div class="form-group">
+            <h4>Email</h4>
+            <input name="email" class="form-control" id="email-input" [(ngModel)]="user.email">
+            <p *ngIf="!user.email.includes('@') || !user.email.includes('.')" style="color: crimson;">Please enter a valid email</p>
+            <p *ngIf="user.email.length === 0" style="color: crimson;">Email is required</p>
+        </div>
           <div class="form-group">
               <h4>Bio</h4>
               <textarea name="bio" rows="4" class="form-control" [(ngModel)]="user.bio"></textarea>
@@ -17,7 +26,9 @@
           <div class="password-container">
             <button type="button" (click)="changePasswordModal()" class="btn-info password-change">Change Password</button>
           </div>
-          <button form="editForm" [disabled]="!editForm.dirty && uploader.queue.length == 0" class="save-button btn-success">SAVE CHANGES</button>
+          <button form="editForm" [disabled]="(!editForm.dirty && uploader.queue.length == 0) || 
+            user.username.indexOf(' ') !== -1 || user.username.length > 30 || !user.email.includes('@') || 
+            !user.email.includes('.') || user.email.length === 0 || user.username.length === 0" class="save-button btn-success">SAVE CHANGES</button>
         </form>
       </div>
       <div class="col-sm-3">

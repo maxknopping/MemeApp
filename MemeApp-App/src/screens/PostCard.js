@@ -1,9 +1,10 @@
 import React, {useState, useEffect, useContext} from 'react';
-import { Text, View, Image, TouchableOpacity, Dimensions } from 'react-native';
+import { Text, View, Image, TouchableOpacity, Dimensions, TextInput, ScrollView, ActivityIndicator } from 'react-native';
+import {Overlay, ListItem, CheckBox, Button} from 'react-native-elements';
 import {Context} from './../context/AuthContext';
 import userService from './../apis/user';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {Entypo, FontAwesome, EvilIcons, SimpleLineIcons} from 'react-native-vector-icons';
+import {Entypo, FontAwesome, Feather, SimpleLineIcons} from 'react-native-vector-icons';
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
 
@@ -17,6 +18,10 @@ const PostCard = ({
     const [postState, setPost] = useState(null);
     const [myPost, setMyPost] = useState(false);
     const [likes, setLikes] = useState(0);
+    const [searchInput, setSearchInput] = useState('');
+    const [list, setList] = useState([]);
+    const [searchVisible, setSearchVisible] = useState(false);
+    const [userIds, setUserIds] = useState([]);
 
     TimeAgo.addLocale(en)
     const timeAgo = new TimeAgo('en-US');
@@ -63,8 +68,57 @@ const PostCard = ({
                 }
             ).catch(error => console.log(error));
     };
-    
 
+    search = (text) => {
+        userService.get(`/search/${state.id}/${text}/false`, {
+            headers: {
+                'Authorization': `Bearer ${state.token}`
+            }
+        }).then(
+            function(response) {
+                response.data.forEach(element => {
+                    if (userIds.indexOf(element.id) != -1) {
+                        element.checked = true;
+                    } else {
+                        element.checked = false;
+                    }
+                });
+                setList([...response.data]);
+                console.log(response.data);
+            }
+        ).catch(error => console.log(error));
+    };
+
+    getInitialUsers = () => {
+        userService.get(`/${state.id}/messages/users`, {
+            headers: {
+                'Authorization': `Bearer ${state.token}`
+            }
+        }).then(
+            function (response) {
+                response.data.forEach(element => {
+                    element.checked = false;
+                });
+                setList([...response.data]);
+            }
+        ).catch(err => console.log(err));
+    };
+
+    const sendMessages = () => {
+        userIds.forEach(element => {
+            userService.post(`/${state.id}/messages/withPost`, {
+                senderId: state.id, 
+                recipientId: element, 
+                postId: postState.id
+            },
+            {
+                headers: {
+                    'Authorization': `Bearer ${state.token}`
+                }
+            });
+        });
+    };
+    
     return (
         <View style={{flex: 1}}>
             {postState ?
@@ -95,9 +149,80 @@ const PostCard = ({
                     <TouchableOpacity onPress={() => navigation.navigate('Comments', {postId: post.id, myPost: myPost})}>
                         <FontAwesome style={styles.commentIcon} name="comment-o"/>
                     </TouchableOpacity>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => setSearchVisible(true)}>
                         <SimpleLineIcons style={styles.planeIcon} name="paper-plane"/>
                     </TouchableOpacity>
+
+                    <Overlay isVisible={searchVisible} onShow={() => {
+                        getInitialUsers();
+                    }} children={
+                        <>
+                            <ListItem 
+                            contentContainerStyle={{alignItems: 'center'}}
+                            title={
+                                <View style={styles.searchBackground}>
+                                    <Feather style={styles.searchIcon} name="search" />
+                                    <TextInput value={searchInput} onChangeText={(text) => {
+                                        setSearchInput(text);
+                                        search(text);
+                                    }} style={styles.searchInput} placeholder="Search..." placeholderTextColor="#A9A9A9"/>
+                                </View>
+
+                                }/>
+                        <ScrollView style={styles.scrollView}>
+                                {list.length !== 0 ? list.map((item, index) => (
+                                    <ListItem
+                                    key={index}
+                                    leftAvatar={{source: item.photoUrl ? {uri: item.photoUrl} : 
+                                        require('./../../assets/user.png')}}
+                                    title={
+                                        <View style={styles.titleWrapper}>
+                                                <Text style={styles.username}>{item.username}</Text>
+                                        </View>
+                                    }
+                                    chevron={
+                                        <CheckBox 
+                                            uncheckedIcon="circle-thin" 
+                                            size={30} 
+                                            checkedIcon="dot-circle-o"
+                                            checkedColor="black"
+                                            checked={item.checked}
+                                            onIconPress={() => {
+                                                if (!item.checked) {
+                                                    const user = item;
+                                                    const newList = list;
+                                                    user.checked = true;
+                                                    newList[index] = user;
+                                                    setList(newList);
+                                                    setUserIds([...userIds, item.id]);
+                                                } else {
+                                                    const user = item;
+                                                    user.checked = false;
+                                                    const newList = list;
+                                                    newList[index] = user;
+                                                    setList(newList);
+                                                    const newIds = userIds.filter(e => e != item.id);
+                                                    setUserIds([...newIds]);
+                                                }
+                                            }}
+                                        />
+                                    }
+                                    />
+                                )): <ActivityIndicator size="small" animating/>}
+                        </ScrollView>
+                        <Button title="Send" disabled={userIds.length == 0} titleStyle={{color: 'white'}} 
+                            buttonStyle={styles.sendButton} onPress={() => {
+                                setSearchVisible(false);
+                                setUserIds([]);
+                                sendMessages();
+                                list.forEach(element => {
+                                    element.checked = false;
+                                });
+                            }}/>
+                        </>
+                    } onBackdropPress={() => setSearchVisible(false)} animationType={'fade'}>
+                    </Overlay>
+
                 </View>
                 <TouchableOpacity onPress={() => navigation.navigate('List', {type: 'likers', identifier: post.id})}>
                     <Text style={styles.likeCount}>{likes} Likes</Text>
@@ -215,6 +340,49 @@ const styles = EStyleSheet.create({
     timeAgoWrapper: {
         marginTop: '.5rem',
         marginHorizontal: '3%'
+    },
+    searchIcon: {
+        fontSize: '1.1rem',
+        marginLeft: '.5rem',
+        marginRight: '.5rem'
+    },
+    searchBackground: {
+        backgroundColor: '#ECECEC',
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderRadius: '2rem',
+    },
+    searchInput: {
+        width: '90%',
+        height: '2.5rem',
+        fontSize: '1rem',
+        color: 'black'
+    },
+    searchText: {
+        fontSize: '1rem',
+        width: '80%',
+        paddingVertical: '.7rem',
+        color: 'gray'
+    }, container: {
+        flex: 1,
+    },
+    scrollView: {
+        zIndex: -1,
+        marginTop: '.75rem'
+    },
+    username: {
+        fontSize: '1rem',
+        fontWeight: 'bold',
+        marginRight: '.75rem'
+    },
+    titleWrapper: {
+        flexDirection: 'row',
+    },
+    xIcon: {
+        fontSize: '1rem'
+    },
+    sendButton: {
+        backgroundColor: '$crimson'
     }
 });
 

@@ -9,7 +9,7 @@ import { AuthService } from './_services/auth.service';
 import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
 import { ErrorInterceptorProvider } from './_services/error.interceptor';
-import { BsDropdownModule, TabsModule, BsDatepickerModule, ModalModule } from 'ngx-bootstrap';
+import { BsDropdownModule, TabsModule, BsDatepickerModule, ModalModule, ButtonsModule } from 'ngx-bootstrap';
 import { FeedComponent } from './Posts/feed/feed.component';
 import { MessagesComponent } from './messages/messages.component';
 import { RouterModule, ActivatedRouteSnapshot } from '@angular/router';
@@ -40,6 +40,10 @@ import { PasswordModalComponent } from './PasswordModal/PasswordModal.component'
 import { MessagesListResolver } from './_resolvers/messagesList.resolver';
 import { MessageThreadComponent } from './message-thread/message-thread.component';
 import { MessageThreadResolver } from './_resolvers/messageThread.resolver';
+import { SendPostModalComponent } from './Posts/SendPostModal/SendPostModal.component';
+import { PostCardMessageComponent } from './Posts/post-card-message/post-card-message.component';
+import { SinglePostComponent } from './Posts/singlePost/singlePost.component';
+import { SinglePostResolver } from './_resolvers/singlePost.resolver';
 
 export function tokenGetter() {
    return localStorage.getItem('token');
@@ -64,7 +68,10 @@ export function tokenGetter() {
       CroppingModalComponent,
       CustomImageFormControlComponent,
       PasswordModalComponent,
-      MessageThreadComponent
+      MessageThreadComponent,
+      SendPostModalComponent,
+      PostCardMessageComponent,
+      SinglePostComponent
    ],
    imports: [
       HttpClientModule,
@@ -76,6 +83,7 @@ export function tokenGetter() {
       RouterModule.forRoot(appRoutes),
       FileUploadModule,
       BsDatepickerModule.forRoot(),
+      ButtonsModule.forRoot(),
       BrowserAnimationsModule,
       NgxCroppieModule,
       JwtModule.forRoot({
@@ -104,14 +112,16 @@ export function tokenGetter() {
       FollowingListResolver,
       CommentListResolver,
       MessagesListResolver,
-      MessageThreadResolver
+      MessageThreadResolver,
+      SinglePostResolver
    ],
    bootstrap: [
       AppComponent
    ],
    entryComponents: [
       CroppingModalComponent,
-      PasswordModalComponent
+      PasswordModalComponent,
+      SendPostModalComponent
    ]
 })
 export class AppModule { }

@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { BsModalRef } from 'ngx-bootstrap';
 import { AuthService } from '../_services/auth.service';
 import { AlertifyService } from '../_services/alertify.service';
+import {FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-PasswordModal',
@@ -17,7 +18,8 @@ export class PasswordModalComponent implements OnInit {
   closeBtnName: string;
   list: any[] = [];
 
-  constructor(public bsModalRef: BsModalRef, private fb: FormBuilder, private auth: AuthService, private alertify: AlertifyService) {}
+  constructor(public bsModalRef: BsModalRef, private fb: FormBuilder, 
+              private auth: AuthService, private alertify: AlertifyService) {}
 
   createForm(): FormGroup {
     return this.fb.group({
@@ -32,6 +34,7 @@ export class PasswordModalComponent implements OnInit {
 
   submit() {
     this.sendPassword.emit(this.myform.value);
+    this.bsModalRef.hide();
     console.log(this.myform.value);
 
   }

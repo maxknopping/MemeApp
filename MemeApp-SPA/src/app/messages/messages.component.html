@@ -36,12 +36,12 @@
       <div *ngFor="let message of messages">
           <li class="list-group-item title list" [routerLink]="[ '/messages/thread', message.senderId == id ? message.recipientId : message.senderId]">
               <img *ngIf="message.senderId == id" class="profile-picture mr-2" src="{{message.recipientPhotoUrl || '../../../assets/user.png'}}" alt="">
-              <img *ngIf="message.recipientId == id" class="profile-picture mr-2" src="{{message.senderPhotoUrl || '../../../assets/user.png'}}" alt="">
+              <img *ngIf="message.recipientId == id && message.senderId != id" class="profile-picture mr-2" src="{{message.senderPhotoUrl || '../../../assets/user.png'}}" alt="">
               <button *ngIf="message.senderId == id" class="like-button" (click)="$event.stopPropagation()" [routerLink]="[ '/profile/', message.recipientUsername]">
               <strong>
                   {{message.recipientUsername}}
               </strong></button>
-              <button *ngIf="message.recipientId == id" class="like-button" [routerLink]="[ '/profile/', message.senderUsername]">
+              <button *ngIf="message.recipientId == id && message.senderId != id" class="like-button" [routerLink]="[ '/profile/', message.senderUsername]">
                 <strong>
                     {{message.senderUsername}}
                 </strong></button> 

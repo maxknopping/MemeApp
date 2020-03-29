@@ -68,8 +68,11 @@ const Search = ({
         <SafeAreaView style={styles.container}>
             <View style={styles.searchView}>
                 <Feather name="search" style={styles.searchIcon}/>
-                <TextInput value={inputValue} onChangeText={(text) => setInputValue(text)} style={styles.searchInput}
-                    placeholder="Search..." returnKeyType="search" onSubmitEditing={() => search(inputValue)}/>
+                <TextInput value={inputValue} onChangeText={(text) => {
+                    setInputValue(text);
+                    search(text);
+                }} style={styles.searchInput}
+                    placeholder="Search..." autoCapitalize="none" returnKeyType="search" onSubmitEditing={() => search(inputValue)}/>
             </View>
             <ScrollView style={styles.scrollView}>
                 {list.map((item, index) => (

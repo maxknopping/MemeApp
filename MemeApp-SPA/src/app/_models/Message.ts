@@ -1,3 +1,5 @@
+import { Post } from './Post';
+
 export interface Message {
     id: number;
     senderId: number;
@@ -10,4 +12,6 @@ export interface Message {
     isRead: boolean;
     dateRead: Date;
     messageSent: Date;
+    post?: Post;
+    postId?: number;
 }

@@ -36,6 +36,10 @@
     border-radius: 30px 30px 5px 5px ;
     max-width: 300px;
   }
+
+  .post_bubble {
+    max-width: 400px;
+  }
   
   .chat__bubble--rcvd {
     background: #f2f2f2;

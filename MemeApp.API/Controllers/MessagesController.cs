@@ -54,6 +54,19 @@ namespace MemeApp.API.Controllers
             return Ok(conversations);
         }
 
+        [HttpGet("users")]
+        public async Task<IActionResult> GetConversationUsers(int userId) {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
+                return Unauthorized();
+            }
+
+            var usersFromRepo = await repo.GetConversationUsers(userId);
+
+            var usersToReturn = mapper.Map<List<UserForListDto>>(usersFromRepo);
+
+            return Ok(usersToReturn);
+        }
+
         [HttpGet("thread/{recipientId}")]
         public async Task<IActionResult> GetMessageThread(int userId, int recipientId) {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
@@ -82,6 +95,41 @@ namespace MemeApp.API.Controllers
             }
 
             var fullMessage = mapper.Map<Message>(message);
+
+            repo.Add(fullMessage);
+
+
+            if (await repo.SaveAll()) {
+                var messageToReturn = mapper.Map<MessageForListDto>(fullMessage);
+                return CreatedAtRoute("GetMessage", new {id = fullMessage.Id}, messageToReturn);
+            }
+
+            throw new Exception("Creating message failed on save");
+        }
+
+        [HttpPost("withPost")]
+        public async Task<IActionResult> CreateMessageWithPost(int userId, MessageForCreationPostDto message) {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
+                return Unauthorized();
+            }
+
+            message.SenderId = userId;
+
+            var recipient = await repo.GetUser(message.RecipientId);
+
+            if (recipient == null) {
+                return BadRequest("Could not find user");
+            }
+
+            var post = await repo.GetPost(message.PostId);
+
+            if (post == null) {
+                return BadRequest("Could not find post");
+            }
+
+            var fullMessage = mapper.Map<Message>(message);
+
+            fullMessage.Post = post;
 
             repo.Add(fullMessage);
 

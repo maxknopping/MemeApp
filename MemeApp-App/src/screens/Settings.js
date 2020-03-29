@@ -11,6 +11,11 @@ const Settings = ({
     return (
         <ScrollView>
             <Card containerStyle={{margin: 0}}>
+                <TouchableOpacity onPress={() => navigation.navigate('ChangePassword')}>
+                    <Text style={styles.changePassword}>Change Password</Text>
+                </TouchableOpacity>
+            </Card>
+            <Card containerStyle={{margin: 0}}>
                 <TouchableOpacity onPress={signout}>
                     <Text style={styles.logOut}>Log Out</Text>
                 </TouchableOpacity>
@@ -24,6 +29,10 @@ const styles = EStyleSheet.create({
         fontSize: '1rem',
         alignSelf: 'center',
         color: '$crimson'
+    },
+    changePassword: {
+        fontSize: '1rem',
+        alignSelf: 'center'
     }
 });
 

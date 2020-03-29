@@ -27,5 +27,8 @@ namespace MemeApp.API.Models
         public bool RecipientDeleted { get; set; }
 
         public bool SenderReadReceipts { get; set; }
+
+        public Post Post { get; set; }
+
     }
 }

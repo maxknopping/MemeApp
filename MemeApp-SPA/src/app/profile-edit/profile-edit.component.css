@@ -15,6 +15,10 @@
     font-size: large;
 }
 
+.save-button:disabled {
+    background-color: gray;
+}
+
 .alert-info {
     border-radius: 6px;
 }
@@ -39,4 +43,8 @@
 
 .password-container {
     padding-bottom: 10px;
+}
+
+.invalid {
+    color: 'crimson' !important;
 }

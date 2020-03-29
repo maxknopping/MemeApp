@@ -27,6 +27,8 @@ namespace MemeApp.API.Models
 
         public int UserId { get; set; }
 
+        public IList<Message> MessagesSent { get; set; }
+
 
         
     }

@@ -149,7 +149,7 @@ namespace MemeApp.API.Data
         }
 
         public async Task<Post> GetPost(int id) {
-            var post = await context.Posts.Include(p => p.LikeList).Include(p => p.Comments).FirstOrDefaultAsync(p => p.Id == id);
+            var post = await context.Posts.Include(p => p.LikeList).Include(p => p.Comments).Include(p => p.User).FirstOrDefaultAsync(p => p.Id == id);
             return post;
         }
 
@@ -235,7 +235,7 @@ namespace MemeApp.API.Data
         public async Task<IList<Message>> GetMessageThread(int userId, int recipientId)
         {
             var messages = await context.Messages.Include(m => m.Sender).ThenInclude(u => u.Posts)
-                .Include(m => m.Recipient).ThenInclude(u => u.Posts)
+                .Include(m => m.Recipient).ThenInclude(u => u.Posts).Include(m => m.Post).ThenInclude(p => p.User)
                 .Where(m => (m.RecipientId == userId && m.SenderId == recipientId && m.RecipientDeleted == false) ||
                     (m.RecipientId == recipientId && m.SenderId == userId && m.SenderDeleted == false))
                 .OrderBy(m => m.MessageSent)
@@ -291,6 +291,24 @@ namespace MemeApp.API.Data
                 i += 1;
             }
             return maxMatches;
+        }
+
+        public async Task<IList<User>> GetConversationUsers(int userId)
+        {
+            var messages = await GetConversationListForUser(userId);
+            var userList = new List<User>();
+            foreach (var message in messages) {
+                var idToSend = 0;
+                if (message.SenderId == userId) 
+                    idToSend = message.RecipientId;
+                else 
+                    idToSend = message.SenderId;
+                
+                var user = await GetUser(idToSend);
+                userList.Add(user);
+            }
+
+            return userList;
         }
     }
 }

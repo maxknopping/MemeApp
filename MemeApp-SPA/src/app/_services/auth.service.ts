@@ -56,4 +56,20 @@ export class AuthService {
       newPassword: newPassword
     });
   }
+
+  forgotUsername(email: string) {
+    return this.http.post(`${this.baseUrl}forgotUsername/${email}`, {});
+  }
+
+  forgotPassword(username: string) {
+    return this.http.post(`${this.baseUrl}forgotPassword/${username}`, {});
+  }
+
+  changeTempPassword(username, newPassword, currentPassword) {
+    return this.http.put(`${this.baseUrl}changeTempPassword`, {
+      username: username,
+      currentPassword: currentPassword,
+      newPassword: newPassword
+    });
+  }
 }

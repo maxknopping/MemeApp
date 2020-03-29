@@ -24,7 +24,9 @@ const SignUp = ({
             {username === '' ? 
                 <Text style={[styles.validator, {color: crimson}]}>Username is required</Text> :
                 username.length > 30 ?  
-                <Text style={[styles.validator, {color: crimson}]}>Username must be less than 30 characters</Text> : null}
+                <Text style={[styles.validator, {color: crimson}]}>Username must be less than 30 characters</Text> : 
+                username.indexOf(' ') != -1 ? 
+                <Text style={[styles.validator, {color: crimson}]}>Username cannot contain any spaces</Text>: null}
             <TextInput value={password} onChangeText={(text => setPassword(text))} 
                 secureTextEntry={true} style={styles.username} autoCapitalize="none" 
                 placeholder="Password" autoCorrect={false}/>

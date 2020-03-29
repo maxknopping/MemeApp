@@ -23,14 +23,29 @@ import NewPost from './src/screens/NewPost';
 import EditProfile from './src/screens/EditProfile'
 import MessageList from './src/screens/MessageList';
 import MessageThread from './src/screens/MessageThread';
+import SinglePost from './src/screens/SinglePost';
+import ChangePassword from './src/screens/ChangePassword';
+import ForgotUsername from './src/screens/ForgotUsername';
+import ForgotPassword from './src/screens/ForgotPassword';
+import TemporaryPassword from './src/screens/TemporaryPassword';
 
 
 const switchNavigator = createSwitchNavigator({
   Loading: LoadingScreen,
   authFlow: createStackNavigator({
     SignIn: SignIn,
-    SignUp: SignUp
-  }),
+    SignUp: SignUp,
+    ForgotUsername: ForgotUsername,
+    ForgotPassword: ForgotPassword,
+    TemporaryPassword: TemporaryPassword
+  }, {
+    initialRouteName: 'SignIn',
+    defaultNavigationOptions: ({navigation}) => ({
+    headerBackImage: () => {
+      return <Ionicons style={styles.backIcon} name="ios-arrow-back"/>
+    },
+    headerBackTitleVisible: false
+  })}),
   mainFlow: createBottomTabNavigator({
     feedFlow: createStackNavigator({
         Feed: Feed,
@@ -38,7 +53,8 @@ const switchNavigator = createSwitchNavigator({
         Profile: Profile,
         Comments: Comments,
         Messages: MessageList,
-        MessageThread: MessageThread
+        MessageThread: MessageThread,
+        SinglePost: SinglePost
     },{
       initialRouteName: 'Feed',
       defaultNavigationOptions: ({navigation}) => ({
@@ -96,7 +112,10 @@ const switchNavigator = createSwitchNavigator({
       List: List,
       Settings: Settings,
       Comments: Comments,
-      EditProfile: EditProfile
+      EditProfile: EditProfile,
+      OtherProfile: Profile,
+      SinglePost: SinglePost,
+      ChangePassword: ChangePassword
     },
     {
       initialRouteName: 'Profile',

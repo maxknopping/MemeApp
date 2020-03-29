@@ -1,0 +1,17 @@
+<div class="bg-dark whole-container" [routerLink]="[ '/post/', post.id]">
+  <ul class="list-container bg-dark">
+    <li class="bg-dark text-light">
+      <button class="like-button" style="color: white">
+        <img class="profile-picture mr-2" src="{{post.profilePictureUrl || '../../../assets/user.png'}}" alt="">{{post.username}}</button>
+    </li>
+    <div class="card-img-wrapper">
+      <img class="card-img-top main-image"  src="{{post.url}}" alt="{{post.caption}}">
+    </div>
+    <li class=" bg-dark text-light">
+        <p class="caption-username">
+          <button class="like-button">{{post.username}}
+          <span class="ml-2" style="color: white">{{post.caption}}</span></button>
+        </p>
+    </li>
+  </ul>
+</div>

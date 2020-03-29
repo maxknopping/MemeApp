@@ -30,6 +30,7 @@ namespace MemeApp.API.Helpers
             CreateMap<Message, MessageForListDto>();
             CreateMap<User, UserForManipulationDto>();
             CreateMap<UserForManipulationDto, UserForListDto>();
+            CreateMap<MessageForCreationPostDto, Message>();
 
         }
     }

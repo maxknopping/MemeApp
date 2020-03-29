@@ -8,6 +8,7 @@ import { ListItem } from 'react-native-elements';
 import {FontAwesome} from 'react-native-vector-icons';
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
+import PostCardMessage from './PostCardMessage';
 
 const { height: fullHeight } = Dimensions.get('window');
 
@@ -32,7 +33,7 @@ const MessageThread = ({
             function (response) {
                 for (let i = 0; i < response.data.length; i++) {
                     if (response.data[i].isRead == false && response.data[i].recipientId == state.id) {
-                        userService.post(`/${state.id}/messages/${response.data[i]}/read`, {}, {
+                        userService.post(`/${state.id}/messages/${response.data[i].id}/read`, {}, {
                             headers: {
                                 'Authorization': `Bearer ${state.token}`
                             }
@@ -93,7 +94,13 @@ const MessageThread = ({
       }
 
     const renderchatBubbleStyles = (message, i) => {
-        let array = [styles.chatBubble];
+        let array = [];
+
+        if (message.post == null) {
+            array.push(styles.chatBubble);
+        } else {
+            array.push(styles.chatBubblePost);
+        }
         
         if (message.senderId != state.id) {
             array.push(styles.chatBubbleRcvd);
@@ -125,9 +132,14 @@ const MessageThread = ({
             <ScrollView style={{marginTop: 10}}>
                 {messages.map((message, i) => (
                     <View key={i} style={renderchatBubbleStyles(message, i)}>
+                        {message.post ? (
+                            <TouchableOpacity onPress={() => navigation.navigate('SinglePost', {postId: message.post.id})}>
+                                <PostCardMessage navigation={navigation} post={message.post}/>
+                            </TouchableOpacity>
+                        ): (
                         <Text style={[styles.text]}>
                             {message.content}
-                        </Text>
+                        </Text>)}
                     </View>
                 ))}
             </ScrollView>
@@ -207,6 +219,15 @@ const styles = EStyleSheet.create({
         borderBottomLeftRadius: '.2rem',
         borderBottomRightRadius: '.2rem',
         maxWidth: '15rem'
+    },
+    chatBubblePost: {
+        marginVertical: '.1rem',
+        marginHorizontal: '1rem',
+        borderTopLeftRadius: '1.25rem',
+        borderTopRightRadius: '1.25rem',
+        borderBottomLeftRadius: '.2rem',
+        borderBottomRightRadius: '.2rem',
+        maxWidth: '75%'
     },
     chatBubbleRcvd: {
         backgroundColor: 'gray',

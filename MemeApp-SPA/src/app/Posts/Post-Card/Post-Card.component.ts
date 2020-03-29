@@ -6,6 +6,9 @@ import { AuthService } from 'src/app/_services/auth.service';
 import { User } from 'src/app/_models/User';
 import { NgForm } from '@angular/forms';
 import {Router} from '@angular/router';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap';
+import { SendPostModalComponent } from '../SendPostModal/SendPostModal.component';
+import { Message } from 'src/app/_models/Message';
 
 @Component({
   selector: 'app-Post-Card',
@@ -20,9 +23,10 @@ export class PostCardComponent implements OnInit {
   myPost = false;
   likes;
   comment;
+  bsModalRef: BsModalRef;
 
   constructor(private user: UserService, private alertify: AlertifyService, private authService: AuthService,
-              private router: Router) { }
+              private router: Router, private modalService: BsModalService) { }
 
   ngOnInit() {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -61,6 +65,16 @@ export class PostCardComponent implements OnInit {
   sendComment() {
     this.user.sendComment(this.comment, this.post.id, this.authService.decodedToken.nameid).subscribe(() => {
       this.router.navigate(['/comments', this.post.id, this.myPost]);
+    });
+  }
+
+  messagePost() {
+    this.bsModalRef = this.modalService.show(SendPostModalComponent, {});
+    this.bsModalRef.content.userToSendPostTo.subscribe(userIds => {
+      userIds.forEach(element => {
+        const message = {senderId: this.authService.decodedToken.nameid, recipientId: element, postId: this.post.id};
+        this.user.sendMessageWithPost(this.authService.decodedToken.nameid, message).subscribe();
+      });
     });
   }
 

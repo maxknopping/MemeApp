@@ -1,0 +1,64 @@
+<div class="modal-header">
+  <form #searchForm="ngForm" autocomplete="off" autocapitalize="none" id="searchForm" (ngSubmit)="searchPreview(query)">
+    <div class="input-group">
+      <input type="text"
+              required 
+              
+              (ngModelChange)="searchPreview(query)"
+              class="form-control" 
+              placeholder="Search" 
+              [(ngModel)]="query" 
+              name="query">
+      <div class="input-group-append">
+        <button class="search-button" [disabled]="!searchForm.valid"><i class="fa fa-search"></i></button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div *ngIf="users == null" class="modal-body">
+  <div *ngFor="let message of messages; index as i">
+    <li class="list-group-item title list">
+        <img *ngIf="message.senderId == id" class="profile-picture mr-2" src="{{message.recipientPhotoUrl || '../../../assets/user.png'}}" alt="">
+        <img *ngIf="message.recipientId == id && message.senderId != id" class="profile-picture mr-2" src="{{message.senderPhotoUrl || '../../../assets/user.png'}}" alt="">
+        <button *ngIf="message.senderId == id" class="like-button">
+        <strong>
+            {{message.recipientUsername}}
+        </strong></button>
+        <button *ngIf="message.recipientId == id && message.senderId != id" class="like-button">
+          <strong>
+              {{message.senderUsername}}
+          </strong></button> 
+          <div class="message">
+              <input type="checkbox" [(ngModel)]="userIds[i].checked"/>
+          </div>
+          <br>
+          <div style="clear: both;"></div>     
+    </li>
+  </div>
+</div>
+
+<div *ngIf="users" class="modal-body">
+  <div *ngFor="let user of users; index as i; tra">
+    <li class="list-group-item title list">
+        <img class="profile-picture mr-2" src="{{user.photoUrl || '../../../assets/user.png'}}" alt="">
+        <button class="like-button">
+          <strong>
+              {{user.username}}
+          </strong></button> 
+          <div class="message">
+              <input type="checkbox" [(ngModel)]="userIds[user.index].checked"/>
+          </div>
+          <br>
+          <div style="clear: both;"></div>     
+    </li>
+  </div>
+</div>
+
+
+<div class="modal-footer">
+  <button class="btn btn-primary" (click)="submit()">
+    Send
+    <i class="fa fa-paper-plane"></i>
+  </button>
+</div>

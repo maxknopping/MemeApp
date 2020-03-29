@@ -14,6 +14,7 @@ namespace MemeApp.API.Dtos
         public bool IsRead { get; set; }
         public string Content { get; set; }
 
+        public PostForDetailedDto Post { get; set; }
         public string RecipientPhotoUrl { get; set; }
 
         public string RecipientUsername { get; set; }

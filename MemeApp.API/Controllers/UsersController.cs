@@ -57,6 +57,16 @@ namespace MemeApp.API.Controllers
             return Ok(userToReturn);
         }
 
+        [HttpGet("post/{postId}")]
+        public async Task<IActionResult> GetPost(int postId)
+        {
+            var user = await repo.GetPost(postId);
+
+            var userToReturn = mapper.Map<PostForDetailedDto>(user);
+
+            return Ok(userToReturn);
+        }
+
         [HttpGet("feed/{username}/{index}")]
         public async Task<IActionResult> GetFeed(string username, int index)
         {
@@ -86,36 +96,57 @@ namespace MemeApp.API.Controllers
 
         }
 
-        [HttpGet("followers/{username}")]
-        public async Task<IActionResult> GetFollowers(string username)
+        [HttpGet("{userId}/followers/{username}")]
+        public async Task<IActionResult> GetFollowers( int userId, string username)
         {
 
             var user = await repo.GetUser(username);
 
-            var followers = new List<UserForDetailedDto>();
+            var followers = new List<UserForListDto>();
             foreach (var follow in user.Followers)
             {
                 var follower = await repo.GetUser(follow.FollowerId);
-                var userToReturn = mapper.Map<UserForDetailedDto>(follower);
-                followers.Add(userToReturn);
+                var userToReturn = mapper.Map<UserForManipulationDto>(follower);
+                userToReturn.FollowButton = "Follow";
+                    if (userToReturn.Id == userId) {
+                        userToReturn.FollowButton = "Myself";
+                    }
+                    foreach(var f in userToReturn.Followers) {
+                        if (f.FollowerId == userId) {
+                          userToReturn.FollowButton = "Following";
+                        }
+                    }
+                var userWithoutFollowers = mapper.Map<UserForListDto>(userToReturn);
+                followers.Add(userWithoutFollowers);
+
             }
 
             return Ok(followers);
 
         }
 
-        [HttpGet("following/{username}")]
-        public async Task<IActionResult> GetFollowing(string username)
+        [HttpGet("{userId}/following/{username}")]
+        public async Task<IActionResult> GetFollowing(string username, int userId)
         {
 
             var user = await repo.GetUser(username);
 
-            var following = new List<UserForDetailedDto>();
+            var following = new List<UserForListDto>();
             foreach (var follow in user.Following)
             {
                 var followee = await repo.GetUser(follow.FolloweeId);
-                var userToReturn = mapper.Map<UserForDetailedDto>(followee);
-                following.Add(userToReturn);
+                var userToReturn = mapper.Map<UserForManipulationDto>(followee);
+                userToReturn.FollowButton = "Follow";
+                    if (userToReturn.Id == userId) {
+                        userToReturn.FollowButton = "Myself";
+                    }
+                    foreach(var f in userToReturn.Followers) {
+                        if (f.FollowerId == userId) {
+                          userToReturn.FollowButton = "Following";
+                        }
+                    }
+                var userWithoutFollowers = mapper.Map<UserForListDto>(userToReturn);
+                following.Add(userWithoutFollowers);
             }
 
             return Ok(following);
@@ -128,7 +159,13 @@ namespace MemeApp.API.Controllers
                 return Unauthorized();
             }
 
+            var existingUser = await repo.GetUser(userForEdit.Username);
             var userFromRepo = await repo.GetUser(id);
+
+            if (existingUser != null && userForEdit.Username != userFromRepo.Username) {
+                return BadRequest("Useranme is taken.");
+            }
+            userForEdit.Username = userForEdit.Username.ToLower();
 
             mapper.Map(userForEdit, userFromRepo);
 
@@ -136,7 +173,7 @@ namespace MemeApp.API.Controllers
                 return NoContent();
             }
 
-            throw new Exception($"Updating user {id} failed on save.");
+            return BadRequest("No changes were made.");
         }
 
         [HttpPost("{id}/follow/{recipientId}")]
@@ -263,18 +300,28 @@ namespace MemeApp.API.Controllers
             
         }
 
-        [HttpGet("likers/{postId}")]
-        public async Task<IActionResult> GetLikers(int postId)
+        [HttpGet("{userId}/likers/{postId}")]
+        public async Task<IActionResult> GetLikers(int postId, int userId)
         {
 
             var post = await repo.GetPost(postId);
 
-            var likers = new List<UserForDetailedDto>();
+            var likers = new List<UserForListDto>();
             foreach (var like in post.LikeList)
             {
                 var liker = await repo.GetUser(like.LikerId);
-                var userToReturn = mapper.Map<UserForDetailedDto>(liker);
-                likers.Add(userToReturn);
+                var userToReturn = mapper.Map<UserForManipulationDto>(liker);
+                userToReturn.FollowButton = "Follow";
+                    if (userToReturn.Id == userId) {
+                        userToReturn.FollowButton = "Myself";
+                    }
+                    foreach(var f in userToReturn.Followers) {
+                        if (f.FollowerId == userId) {
+                          userToReturn.FollowButton = "Following";
+                        }
+                    }
+                var userWithoutFollowers = mapper.Map<UserForListDto>(userToReturn);
+                likers.Add(userWithoutFollowers);
             }
 
             return Ok(likers);
@@ -400,18 +447,28 @@ namespace MemeApp.API.Controllers
             
         }
 
-        [HttpGet("commentLikers/{commentId}")]
-        public async Task<IActionResult> GetCommentLikers(int commentId)
+        [HttpGet("{userId}/commentLikers/{commentId}")]
+        public async Task<IActionResult> GetCommentLikers(int commentId, int userId)
         {
 
             var comment = await repo.GetComment(commentId);
 
-            var likers = new List<UserForDetailedDto>();
+            var likers = new List<UserForListDto>();
             foreach (var like in comment.LikeList)
             {
                 var liker = await repo.GetUser(like.CommenterId);
-                var userToReturn = mapper.Map<UserForDetailedDto>(liker);
-                likers.Add(userToReturn);
+                var userToReturn = mapper.Map<UserForManipulationDto>(liker);
+                userToReturn.FollowButton = "Follow";
+                    if (userToReturn.Id == userId) {
+                        userToReturn.FollowButton = "Myself";
+                    }
+                    foreach(var f in userToReturn.Followers) {
+                        if (f.FollowerId == userId) {
+                          userToReturn.FollowButton = "Following";
+                        }
+                    }
+                var userWithoutFollowers = mapper.Map<UserForListDto>(userToReturn);
+                likers.Add(userWithoutFollowers);
             }
 
             return Ok(likers);
@@ -461,6 +518,7 @@ namespace MemeApp.API.Controllers
 
             return Ok(usersWithoutFollowers);
         }
+        
 
 
     }

@@ -17,7 +17,7 @@
             Likes
           </a>
           <span class="ml-1" *ngIf="likes === 0">Likes</span>
-          <button class="like-button"><i class="fa fa-envelope like-icon"></i></button>
+          <button class="like-button" (click)="messagePost()"><i class="fa fa-envelope like-icon"></i></button>
           <button type="button" class="dropup" dropdownToggle>
             <i class="fa fa-ellipsis-h ellipse-icon"></i>
           </button>

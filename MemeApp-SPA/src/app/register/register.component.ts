@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { AuthService } from '../_services/auth.service';
 import { AlertifyService } from '../_services/alertify.service';
-import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormBuilder, AbstractControl } from '@angular/forms';
 import { BsDatepickerConfig } from 'ngx-bootstrap';
 import { User } from '../_models/User';
 import { Router } from '@angular/router';
@@ -29,8 +29,8 @@ export class RegisterComponent implements OnInit {
 
   createRegisterForm() {
     this.registerForm = this.fb.group({
-      email: ['', Validators.required],
-      username: ['', Validators.required, Validators.maxLength(30)],
+      email: ['', [Validators.required, Validators.email]],
+      username: ['', [Validators.required, Validators.maxLength(30), this.noSpacesValidator()]],
       password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(50)]],
       confirmPassword: ['', Validators.required]
     }, {validator: this.passwordMatchValidator});
@@ -38,6 +38,12 @@ export class RegisterComponent implements OnInit {
 
   passwordMatchValidator(g: FormGroup) {
     return g.get('password').value === g.get('confirmPassword').value ? null : {'mismatch': true};
+  }
+
+  noSpacesValidator() {
+    return (control: AbstractControl): {[key: string]: any} | null => {
+      return control.value.indexOf(' ') !== -1 ? {spaces: true} : null;
+    };
   }
 
   register() {

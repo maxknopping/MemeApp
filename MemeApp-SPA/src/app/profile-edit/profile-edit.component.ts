@@ -124,7 +124,7 @@ export class ProfileEditComponent implements OnInit {
   cropImageModal() {
     const initialState = {
       type: 'circle'
-    };3
+    };
     this.bsModalRef = this.modalService.show(CroppingModalComponent, {initialState});
     this.bsModalRef.content.sendPhoto.subscribe(value => {
       const blobImage = value.BlobImage;
