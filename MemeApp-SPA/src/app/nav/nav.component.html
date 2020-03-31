@@ -1,19 +1,19 @@
-<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+<nav class="navbar navbar-expand-md navbar-collapse fixed-top navbar-dark bg-dark">
   <div class="container-fluid">
-      <img class="logo" src="{{'../../assets/memehub.png'}}">
+      <img class="logo" src="{{'../../assets/MemeClub.png'}}">
 
       <ul *ngIf="loggedIn()" class="navbar-nav mr-auto">
         <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" [routerLink]="[ '/feed']">Feed</a>
+          <a class="nav-link" [routerLink]="[ '/feed']"><i-feather name="home"></i-feather></a>
         </li>
         <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" [routerLink]="[ '/featured']">Featured</a>
+          <a class="nav-link" [routerLink]="[ '/featured']"><i-feather name="star"></i-feather></a>
         </li>
         <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" [routerLink]="[ '/upload']">Upload</a>
+          <a class="nav-link" [routerLink]="[ '/upload']"><i-feather name="plus-circle"></i-feather></a>
         </li>
         <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" [routerLink]="[ '/messages']">Messages</a>
+          <a class="nav-link" [routerLink]="[ '/messages']"><i-feather name="message-circle"></i-feather></a>
         </li>
       </ul>
   

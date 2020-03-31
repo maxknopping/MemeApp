@@ -19,5 +19,7 @@ namespace MemeApp.API.Dtos
         public string FollowButton { get; set; }
 
         public string PhotoUrl { get; set; }
+
+        public string Name { get; set; }
     }
 }

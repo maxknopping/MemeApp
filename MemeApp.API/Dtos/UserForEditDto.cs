@@ -7,5 +7,7 @@ namespace MemeApp.API.Dtos
         public string Bio { get; set; }
 
         public string Email { get; set; }
+
+        public string Name { get; set; }
     }
 }

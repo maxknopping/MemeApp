@@ -44,6 +44,7 @@ import { SendPostModalComponent } from './Posts/SendPostModal/SendPostModal.comp
 import { PostCardMessageComponent } from './Posts/post-card-message/post-card-message.component';
 import { SinglePostComponent } from './Posts/singlePost/singlePost.component';
 import { SinglePostResolver } from './_resolvers/singlePost.resolver';
+import { IconsModule } from './icons/icons.module';
 
 export function tokenGetter() {
    return localStorage.getItem('token');
@@ -92,7 +93,8 @@ export function tokenGetter() {
                whitelistedDomains: ['localhost:5000'],
                blacklistedRoutes: ['localhost:5000/api/auth/register']
             }}),
-      ModalModule.forRoot()
+      ModalModule.forRoot(),
+      IconsModule
    ],
    //JwtModule.forRoot({
    //   config: {

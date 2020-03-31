@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Text, View, TouchableOpacity, Image, TextInput, SafeAreaView, ScrollView } from 'react-native';
+import { Text, View, TouchableOpacity, Image, TextInput, SafeAreaView, ScrollView, Dimensions } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
 import { Button, Overlay } from 'react-native-elements';
@@ -11,7 +11,7 @@ import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
 import {Buffer} from 'buffer';
 
-
+const { height: fullHeight } = Dimensions.get('window');
 
 const EditProfile = ({
     navigation
@@ -21,7 +21,7 @@ const EditProfile = ({
     const [user, setUser] = useState(null);
     const [choosePictureOverlay, setPictureOverlay] = useState(false);
     const [base64, setBase64] = useState('');
-    const [whatHasChanged, setWhatHasChanged] = useState({profilePicture: false, bio: false, username: false, email: false});
+    const [whatHasChanged, setWhatHasChanged] = useState({profilePicture: false, name: false, bio: false, username: false, email: false});
     const [bioHeight, setBioHeight] = useState(0);
     const [errorMessage, setErrorMessage] = useState('');
 
@@ -88,11 +88,12 @@ const EditProfile = ({
             }
 
 
-            if (whatHasChanged.bio || whatHasChanged.email || whatHasChanged.username) {
+            if (whatHasChanged.bio || whatHasChanged.email || whatHasChanged.username || whatHasChanged.name) {
                 userService.put(`${state.id}`, {
                     bio: user.bio,
                     email: user.email,
-                    username: user.username
+                    username: user.username,
+                    name: user.name
                 }, {
                     headers: {
                         'Authorization': `Bearer ${state.token}`
@@ -102,12 +103,19 @@ const EditProfile = ({
                         if (whatHasChanged.username) {
                             changeUsername({newUsername: user.username});
                         }
-                        setWhatHasChanged({...whatHasChanged, bio: false, username: false, email: false});
+                        setWhatHasChanged({...whatHasChanged, bio: false, username: false, email: false, name: false});
                         navigation.navigate('Profile', {username: user.username});
                     }
                 ).catch(error => setErrorMessage(error.response.data));
             }
       };
+
+      const onLayout = ({
+        nativeEvent: { layout: { height } },
+      }) => {
+        const off = fullHeight - height;
+        setOffset(off);
+      }
 
     return (
         <ScrollView style={{flex: 1}}>
@@ -174,9 +182,20 @@ const EditProfile = ({
                     {!user.email.includes('@') || !user.email.includes('.') ?  
                 <Text style={[styles.validator]}>Please enter a valid email address</Text> : null}
                 </View>
+                <View style={styles.listContainer}>
+                    <Text style={styles.usernameLabel}>
+                        Name
+                    </Text>
+                    <TextInput value={user.name} onChangeText={(text) => {
+                        let newUser = user;
+                        newUser.name = text;
+                        setUser(newUser);
+                        setWhatHasChanged({...whatHasChanged, name: true});
+                    }} style={styles.bio} autoCapitalize="none" autoCorrect={false}/>
+                </View>
                 {errorMessage.length > 0 ? <Text style={[styles.validator, {alignSelf: 'center'}]}>{errorMessage}</Text> : null}
                 <Button title='Save Changes' disabled={
-                    (whatHasChanged.bio == false && 
+                    (whatHasChanged.bio == false && whatHasChanged.name == false &&
                     whatHasChanged.email == false && whatHasChanged.username == false &&
                     whatHasChanged.profilePicture == false) || (!user.email.includes('@') || !user.email.includes('.')) || 
                     user.username.length > 30 || user.username.indexOf(' ') != -1 || user.username.length == 0

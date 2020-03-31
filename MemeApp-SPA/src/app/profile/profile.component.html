@@ -15,7 +15,8 @@
         <button *ngIf="isMyProfile" class="edit-button bg-dark" [routerLink]="[ '/edit/profile' ]">EDIT PROFILE</button>
       </div>
       <div>
-        <h3 class="bio-text text-center">{{user?.bio}}</h3>
+        <h3>{{user.name}}</h3>
+        <h5 class="bio-text text-center">{{user?.bio}}</h5>
           <h6>{{followers}}
             <a *ngIf="followers > 0" [routerLink]="[ '/list/', user.username, 'followers' ]">
                 Followers

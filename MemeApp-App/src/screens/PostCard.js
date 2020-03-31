@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useContext} from 'react';
-import { Text, View, Image, TouchableOpacity, Dimensions, TextInput, ScrollView, ActivityIndicator } from 'react-native';
+import { Text, View, Image, TouchableOpacity, Dimensions, TextInput, ScrollView, ActivityIndicator, Alert, TouchableWithoutFeedback } from 'react-native';
 import {Overlay, ListItem, CheckBox, Button} from 'react-native-elements';
 import {Context} from './../context/AuthContext';
 import userService from './../apis/user';
@@ -21,7 +21,9 @@ const PostCard = ({
     const [searchInput, setSearchInput] = useState('');
     const [list, setList] = useState([]);
     const [searchVisible, setSearchVisible] = useState(false);
+    const [postOptionsVisible, setOptionsVisible] = useState(false);
     const [userIds, setUserIds] = useState([]);
+    let lastTap = null;
 
     TimeAgo.addLocale(en)
     const timeAgo = new TimeAgo('en-US');
@@ -41,7 +43,8 @@ const PostCard = ({
         }
     }, []);
 
-    likePost = () => {
+    const likePost = () => {
+        setTimeout(()=> null, 0);
             userService.post(`/${state.id}/like/${post.id}`, {}, {
                 headers: {
                     'Authorization': `Bearer ${state.token}`
@@ -55,7 +58,7 @@ const PostCard = ({
             ).catch(error => console.log(error));
     };
     
-    unlikePost = () => {
+    const unlikePost = () => {
             userService.post(`/${state.id}/unlike/${post.id}`, {}, {
                 headers: {
                     'Authorization': `Bearer ${state.token}`
@@ -63,13 +66,14 @@ const PostCard = ({
             })
             .then(
                 function (response) {
+                    setTimeout(()=> null, 0);
                     setLiked(false);
                     setLikes(likes - 1);
                 }
             ).catch(error => console.log(error));
     };
 
-    search = (text) => {
+    const search = (text) => {
         userService.get(`/search/${state.id}/${text}/false`, {
             headers: {
                 'Authorization': `Bearer ${state.token}`
@@ -89,7 +93,7 @@ const PostCard = ({
         ).catch(error => console.log(error));
     };
 
-    getInitialUsers = () => {
+   const getInitialUsers = () => {
         userService.get(`/${state.id}/messages/users`, {
             headers: {
                 'Authorization': `Bearer ${state.token}`
@@ -99,7 +103,7 @@ const PostCard = ({
                 response.data.forEach(element => {
                     element.checked = false;
                 });
-                setList([...response.data]);
+                setList(response.data);
             }
         ).catch(err => console.log(err));
     };
@@ -118,6 +122,29 @@ const PostCard = ({
             });
         });
     };
+
+    const deletePhoto = () => {
+        userService.delete(`/${state.id}/posts/${post.id}`, {
+            headers: {
+                'Authorization': `Bearer ${state.token}`
+            }
+        }).then(() => setOptionsVisible(false)).catch(error => console.log(error));
+    };
+
+    const handleDoubleTap = () => {
+        const now = Date.now();
+        const DOUBLE_PRESS_DELAY = 300;
+        if (lastTap && (now - lastTap) < DOUBLE_PRESS_DELAY) {
+            lastTap = null;
+            if (!liked) {
+                likePost();
+            } else {
+                unlikePost();
+            }
+        } else {
+          lastTap = now;
+        }
+      }
     
     return (
         <View style={{flex: 1}}>
@@ -130,12 +157,41 @@ const PostCard = ({
                         <TouchableOpacity onPress={() => navigation.navigate('Profile', {username: postState.username})}>
                             <Text style={styles.headerUsername}>{postState.username}</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => setOptionsVisible(true)}>
                             <Entypo style={styles.ellipsis} name="dots-three-horizontal"/>
                         </TouchableOpacity>
+                        <Overlay isVisible={postOptionsVisible} children={
+                            <>
+                            <Text style={styles.text}>
+                                Save Image
+                            </Text>
+                            {myPost ? <Text onPress={() => {
+                                Alert.alert(
+                                    'Delete Post',
+                                    'Are you sure you want to delete this post?',
+                                    [
+                                      {
+                                        text: 'Cancel',
+                                        style: 'cancel',
+                                      },
+                                      {text: 'Yes', onPress: () => {deletePhoto(); setOptionsVisible(false);}},
+                                    ],
+                                    {cancelable: false},
+                                  );
+                            }} style={[styles.text, {color: '#DC143C'}]}>
+                                Delete Post
+                            </Text> : null}
+                            <Text onPress={() => setOptionsVisible(false)} style={[styles.text, {color: '#DC143C'}]}>
+                                Cancel
+                            </Text>
+                            </>
+                            } onBackdropPress={() => setOptionsVisible(false)} height={'auto'} width={'auto'} animationType={'fade'}>
+                        </Overlay>
                     </View>
                 </View>
-                <Image style={{width: width, height: width}} source={{uri: postState.url}}/>
+                <TouchableWithoutFeedback onPress={() => handleDoubleTap()}>
+                    <Image style={{width: width, height: width}} source={{uri: postState.url}}/>
+                </TouchableWithoutFeedback>
                 <View style={styles.iconsContainer}>
                     {!liked ? 
                         (
@@ -152,7 +208,6 @@ const PostCard = ({
                     <TouchableOpacity onPress={() => setSearchVisible(true)}>
                         <SimpleLineIcons style={styles.planeIcon} name="paper-plane"/>
                     </TouchableOpacity>
-
                     <Overlay isVisible={searchVisible} onShow={() => {
                         getInitialUsers();
                     }} children={
@@ -179,6 +234,9 @@ const PostCard = ({
                                         <View style={styles.titleWrapper}>
                                                 <Text style={styles.username}>{item.username}</Text>
                                         </View>
+                                    }
+                                    subtitle= {
+                                        <Text style={{fontSize: EStyleSheet.value('.75rem'), color: 'gray'}}>{item.name}</Text>
                                     }
                                     chevron={
                                         <CheckBox 
@@ -208,7 +266,7 @@ const PostCard = ({
                                         />
                                     }
                                     />
-                                )): <ActivityIndicator size="small" animating/>}
+                                )): null}
                         </ScrollView>
                         <Button title="Send" disabled={userIds.length == 0} titleStyle={{color: 'white'}} 
                             buttonStyle={styles.sendButton} onPress={() => {
@@ -383,6 +441,12 @@ const styles = EStyleSheet.create({
     },
     sendButton: {
         backgroundColor: '$crimson'
+    },
+    text: {
+        fontSize: '1rem',
+        fontWeight: 'bold',
+        alignSelf: 'center',
+        margin: '1rem'
     }
 });
 

@@ -1,8 +1,10 @@
 import React, {useState, useContext} from 'react';
-import {View, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native';
+import {View, StyleSheet, Image, TextInput, TouchableOpacity, KeyboardAvoidingView, Dimensions} from 'react-native';
 import {Text, Button} from 'react-native-elements';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {Context as AuthContext} from './../context/AuthContext';
+
+const { height: fullHeight } = Dimensions.get('window');
 
 const SignUp = ({
     navigation,
@@ -12,11 +14,21 @@ const SignUp = ({
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirm] = useState('');
     const [email, setEmail] = useState('');
+    const [name, setName] = useState('');
     const [isLoading, setLoading] = useState(false);
     const {state, signup} = useContext(AuthContext);
+    const [offest, setOffset] = useState(0);
+
+    const onLayout = ({
+        nativeEvent: { layout: { height } },
+      }) => {
+        const off = fullHeight - height;
+        setOffset(off);
+      }
 
     return (
-        <View style={styles.container}>
+        <View style={{flex: 1}} onLayout={onLayout}>
+        <KeyboardAvoidingView keyboardVerticalOffset={offest} behavior={Platform.OS === "ios" ? "padding" : null}  enabled style={styles.container}>
             <Image style={styles.image} source={require('./img/logo.png')}/>
             <TextInput value={username} onChangeText={(text => setUsername(text))} 
                 style={styles.username} placeholder="Username" autoCapitalize="none" autoCorrect={false}
@@ -45,6 +57,9 @@ const SignUp = ({
             {!email.includes('@') || !email.includes('.') ?  
                 <Text style={[styles.validator, {color: crimson}]}>Please enter a valid email address</Text> : null}
             {state.errorMessage ? <Text style={{color: crimson}}>{state.errorMessage}</Text> : null}
+            <TextInput value={name} onChangeText={(text => setName(text))} 
+                style={styles.username} autoCapitalize="none" 
+                placeholder="Name" autoCorrect={false}/>
             <Button loading={(state.errorMessage === null && isLoading || state.token === null && isLoading)} 
                 buttonStyle={{borderRadius: 10, backgroundColor: crimson}} 
                 style={styles.login} 
@@ -52,7 +67,7 @@ const SignUp = ({
                 disabled={username === '' || password.length < 8 || confirmPassword !== password || username.length > 30 ||
                     !email.includes('@') || !email.includes('.')}
                 onPress={() => {
-                    signup({username, email, password});
+                    signup({username, email, password, name});
                     setLoading(true);
                 }}/>
             <View style={styles.textContainer}>
@@ -61,6 +76,7 @@ const SignUp = ({
                 </TouchableOpacity>
             </View>
 
+        </KeyboardAvoidingView>
         </View>
 
     );

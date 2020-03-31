@@ -113,6 +113,9 @@ const MessageList = ({
                                                 <Text style={styles.username}>{item.username}</Text>
                                         </View>
                                     }
+                                    subtitle= {
+                                        <Text style={{fontSize: EStyleSheet.value('.75rem'), color: 'gray'}}>{item.name}</Text>
+                                    }
                                     />
                                 ))}
                         </ScrollView>

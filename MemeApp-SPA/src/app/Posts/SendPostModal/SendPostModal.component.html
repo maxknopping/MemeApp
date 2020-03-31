@@ -42,10 +42,16 @@
   <div *ngFor="let user of users; index as i; tra">
     <li class="list-group-item title list">
         <img class="profile-picture mr-2" src="{{user.photoUrl || '../../../assets/user.png'}}" alt="">
-        <button class="like-button">
-          <strong>
-              {{user.username}}
-          </strong></button> 
+        <button class="like-button" [routerLink]="[ '/profile/', user.username]">
+          <div style="align-items: flex-start;">
+              <h5 style="margin-bottom: 0rem !important;">
+                  {{user.username}}
+              </h5>
+              <div style="text-align: start;">
+                  <span style="color: gray !important;">{{user.name}}</span>
+              </div>
+          </div>
+          </button>
           <div class="message">
               <input type="checkbox" [(ngModel)]="userIds[user.index].checked"/>
           </div>

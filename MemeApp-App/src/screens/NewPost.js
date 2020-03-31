@@ -28,10 +28,10 @@ const NewPost = ({
             headers: {
                 'Authorization': `Bearer ${state.token}`
             }
-        }).then(
-            function (response) {
+        }).then(() => {
                 navigation.navigate('UploadPost');
-            }
+                console.log(navigation);
+        }
         ).catch(error => console.log(error));
     };
 

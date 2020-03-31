@@ -5,6 +5,7 @@ export interface User {
     id: number;
     username: string;
     email: string;
+    name: string;
     created: Date;
     lastActive: Date;
     photoUrl: string;
@@ -12,4 +13,5 @@ export interface User {
     posts: Post[];
     followers: Follow[];
     following: Follow[];
+    followButton: string;
 }

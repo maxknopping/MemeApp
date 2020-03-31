@@ -165,7 +165,8 @@ GLOBAL.XMLHttpRequest = GLOBAL.originalXMLHttpRequest || GLOBAL.XMLHttpRequest;
 
 
 EStyleSheet.build({ // always call EStyleSheet.build() even if you don't use global variables!
-  $crimson: '#DC143C'
+  $crimson: '#DC143C',
+  $theme: 'lightTheme'
 });
 
 const styles = EStyleSheet.create({

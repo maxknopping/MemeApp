@@ -192,6 +192,9 @@ const Profile = ({
                     </View>
                 </View>
                 <View style={styles.bioView}>
+                    {user ? <Text style={[styles.bioText, {fontWeight: "bold"}]}>{user.name}</Text>: null}
+                </View>
+                <View style={styles.bioView}>
                     {user ? <Text style={styles.bioText}>{user.bio}</Text> : null}
                 </View>
                 {followButton === 'Follow' ? <Button buttonStyle={{backgroundColor: EStyleSheet.value('$crimson'), 

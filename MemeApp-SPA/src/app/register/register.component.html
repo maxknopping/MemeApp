@@ -15,6 +15,19 @@
       <div *ngIf="registerForm.get('username').hasError('spaces') && registerForm.get('username').touched" 
       class="invalid-feedback">Username cannot have any spaces</div>
     </div>
+
+    <div class="form-group">
+      <input [ngClass]="{'is-invalid': registerForm.get('email').errors && registerForm.get('email').touched}" class="form-control"
+        placeholder="Email Address" formControlName="email">
+      <div class="invalid-feedback" *ngIf="registerForm.get('email').touched && registerForm.get('email').hasError('email')">
+        Please Enter a Valid Email</div>
+      <div class="invalid-feedback" *ngIf="registerForm.get('email').touched && registerForm.get('email').hasError('required')">
+          Email is required</div> 
+    </div>
+
+    <div class="form-group">
+      <input placeholder="Name" class="form-control" formControlName="name"/>
+    </div>
   
     <div class="form-group">
       <input [ngClass]="{'is-invalid': registerForm.get('password').errors && registerForm.get('password').touched}"
@@ -39,15 +52,6 @@
         registerForm.get('confirmPassword').touched" 
         class="invalid-feedback">Passwords must match</div>
     </div>
-
-    <div class="form-group">
-        <input [ngClass]="{'is-invalid': registerForm.get('email').errors && registerForm.get('email').touched}" class="form-control"
-          placeholder="Email Address" formControlName="email">
-        <div class="invalid-feedback" *ngIf="registerForm.get('email').touched && registerForm.get('email').hasError('email')">
-          Please Enter a Valid Email</div>
-        <div class="invalid-feedback" *ngIf="registerForm.get('email').touched && registerForm.get('email').hasError('required')">
-            Email is required</div> 
-      </div>
   
     <div class="form-group text-center">
       <button [disabled]="!registerForm.valid" class="btn btn-success" type="submit">Register</button>

@@ -11,6 +11,8 @@ namespace MemeApp.API.Dtos
 
         public string Email { get; set; }
 
+        public string Name { get; set; }
+
         public DateTime Created { get; set; }
 
         public DateTime LastActive { get; set; }

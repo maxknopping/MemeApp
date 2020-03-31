@@ -23,6 +23,7 @@
     "@types/jquery": "^3.3.31",
     "alertifyjs": "^1.11.4",
     "angular-croppie": "^1.0.3",
+    "angular-feather": "^6.0.8",
     "bootstrap": "^4.3.1",
     "bootswatch": "^4.3.1",
     "croppie": "^2.6.4",

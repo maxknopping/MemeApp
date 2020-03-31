@@ -30,6 +30,8 @@ namespace MemeApp.API.Models
 
         public string Bio { get; set; }
 
+        public string Name { get; set; }
+
         public IList<Post> Posts { get; set; }
 
         public IList<Message> MessagesSent { get; set; }

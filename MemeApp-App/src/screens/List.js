@@ -116,6 +116,9 @@ const List = ({
                             </TouchableOpacity>
                         </View>
                     }
+                    subtitle= {
+                        <Text style={{fontSize: EStyleSheet.value('.75rem'), color: 'gray'}}>{item.name}</Text>
+                    }
                     chevron={
                         <>
                         {item.followButton === 'Follow' ? <Button buttonStyle={{backgroundColor: EStyleSheet.value('$crimson'), 

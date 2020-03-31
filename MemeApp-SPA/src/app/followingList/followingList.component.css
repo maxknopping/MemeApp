@@ -15,3 +15,24 @@
 .like-button:hover {
     background: transparent
 }
+
+.listItem {
+    flex-direction: row !important;
+    display: flex;
+}
+
+.following {
+    background-color: gray;
+    color: white;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: .75rem;
+}
+
+.follow {
+    background-color: crimson;
+    color: white;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: .75rem;
+}

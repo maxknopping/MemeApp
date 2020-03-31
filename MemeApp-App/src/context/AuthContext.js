@@ -40,11 +40,14 @@ const tryLocalSignIn = (dispatch) => async () => {
 };
 
 const signup = (dispatch) => {
-    return async ({username, email, password}) => {
+    return async ({username, email, password, name}) => {
         try {
-        await auth.post('/register', {username: username, email: email, password: password})
+        await auth.post('/register', {username: username, name: name, email: email, password: password})
             .then(async function (registerResponse) {
                 const response = await auth.post('/login', {username: registerResponse.data.username, password: password});
+                await AsyncStorage.setItem('token', response.data.token);
+                await AsyncStorage.setItem('username', username);
+                await AsyncStorage.setItem('password', password);
                 dispatch({type:'signin', payload: {token: response.data.token, 
                     id: response.data.user.id, username: response.data.user.username}});
                 navigate('Feed');
@@ -62,7 +65,7 @@ const signin = (dispatch) => async ({username, password}) => {
             //const response = await authFrisbee.post('/api/auth/login', {username, password});
             await AsyncStorage.setItem('token', response.data.token);
             await AsyncStorage.setItem('username', username);
-            await AsyncStorage.setItem('password', password)
+            await AsyncStorage.setItem('password', password);
             dispatch({type:'signin', payload: {token: response.data.token, 
                 id: response.data.user.id, username: response.data.user.username}});
             navigate('Feed');
