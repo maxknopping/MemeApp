@@ -22,6 +22,10 @@ import { MessageThreadComponent } from './message-thread/message-thread.componen
 import { MessageThreadResolver } from './_resolvers/messageThread.resolver';
 import { SinglePostComponent } from './Posts/singlePost/singlePost.component';
 import { SinglePostResolver } from './_resolvers/singlePost.resolver';
+import { GroupMessageThreadComponent } from './group-message-thread/group-message-thread.component';
+import { GroupMessageThreadResolver } from './_resolvers/groupMessageThread.resolver';
+import { GroupManagerComponent } from './group-manager/group-manager.component';
+import { GroupManagerResolver } from './_resolvers/groupManager.resolver';
 
 export const appRoutes: Routes = [
     {path: '', component: HomeComponent},
@@ -42,6 +46,9 @@ export const appRoutes: Routes = [
             {path: 'post/:postId', component: SinglePostComponent, resolve: {post: SinglePostResolver}},
             {path: 'messages', component: MessagesComponent, resolve: {messages: MessagesListResolver}},
             {path: 'messages/thread/:recipientId', component: MessageThreadComponent, resolve: {messages: MessageThreadResolver}},
+            {path: 'messages/thread/group/:recipientId', component: GroupMessageThreadComponent,
+                resolve: {messages: GroupMessageThreadResolver}},
+            {path: 'group/:groupId/:groupName', component: GroupManagerComponent, resolve: {users: GroupManagerResolver}}
         ]
     },
     {path: '**', redirectTo: '', pathMatch: 'full'}

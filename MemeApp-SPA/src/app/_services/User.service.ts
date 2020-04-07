@@ -107,15 +107,45 @@ export class UserService {
   }
 
   getMessages(id: number) {
-    return this.http.get(`${this.baseUrl}/${id}/messages`)
+    return this.http.get(`${this.baseUrl}/${id}/messages`);
   }
 
   getMessageThread(id: number, recipientId: number) {
     return this.http.get<Message[]>(`${this.baseUrl}/${id}/messages/thread/${recipientId}`);
   }
 
+  getGroupMessageThread(id: number, recipientId: number) {
+    return this.http.get<Message[]>(`${this.baseUrl}/${id}/messages/thread/group/${recipientId}`);
+  }
+
+  createGroup(userId: number, groupName: string, message: string, userIds: number[]) {
+    return this.http.post(`${this.baseUrl}/${userId}/messages/group`, {
+      groupName,
+      message,
+      userIds
+    });
+  }
+
+  updateGroup(userId: number, groupName: number, groupId: number, usersToAdd: number[], 
+              usersToRemove: number[]) {
+    return this.http.put(`${this.baseUrl}/${userId}/messages/group`, {
+        groupName,
+        groupId,
+        usersToAdd,
+        usersToRemove
+    });
+  }
+
+  getGroupUsers(userId: number, groupId: number) {
+    return this.http.get(`${this.baseUrl}/${userId}/group/${groupId}`);
+  }
+
   sendMessage(id: number, message: Message) {
     return this.http.post(`${this.baseUrl}/${id}/messages`, message);
+  }
+
+  sendGroupMessage(id: number, groupId: number, message) {
+    return this.http.post(`${this.baseUrl}/${id}/messages/group/${groupId}`, message);
   }
 
   sendMessageWithPost(id: number, message) {

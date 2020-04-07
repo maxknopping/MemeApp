@@ -96,6 +96,7 @@ export class ProfileEditComponent implements OnInit {
           username: res.username,
           email: res.email,
           created: res.created,
+          name: res.name,
           lastActive: res.lastActive,
           photoUrl: res.photoUrl,
           bio: res.bio,

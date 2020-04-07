@@ -21,12 +21,12 @@ namespace MemeApp.API.Controllers
     [ApiController]
     public class PostsController : ControllerBase
     {
-        private readonly IMemeHubRepository repo;
+        private readonly IMemeClubRepository repo;
         private readonly IMapper mapper;
         private readonly IOptions<CloudinarySettings> cloudinaryConfig;
         private Cloudinary cloudinary;
 
-        public PostsController(IMemeHubRepository repo,
+        public PostsController(IMemeClubRepository repo,
                               IMapper mapper,
                               IOptions<CloudinarySettings> cloudinaryConfig)
         {

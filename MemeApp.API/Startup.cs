@@ -43,9 +43,9 @@ namespace MemeApp.API
             services.AddCors();
             services.AddScoped<LogUserActivity>();
             services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
-            services.AddAutoMapper(typeof(MemeHubRepository).Assembly);
+            services.AddAutoMapper(typeof(MemeClubRepository).Assembly);
             services.AddScoped<IAuthRepository, AuthRepository>();
-            services.AddScoped<IMemeHubRepository, MemeHubRepository>();
+            services.AddScoped<IMemeClubRepository, MemeClubRepository>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options => {
                     options.TokenValidationParameters = new TokenValidationParameters

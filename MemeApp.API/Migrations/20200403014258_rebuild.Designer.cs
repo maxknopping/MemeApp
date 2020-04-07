@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MemeApp.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20200326145412_rebuild")]
+    [Migration("20200403014258_rebuild")]
     partial class rebuild
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -70,6 +70,18 @@ namespace MemeApp.API.Migrations
                     b.ToTable("Follows");
                 });
 
+            modelBuilder.Entity("MemeApp.API.Models.Group", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("GroupName");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Groups");
+                });
+
             modelBuilder.Entity("MemeApp.API.Models.Like", b =>
                 {
                     b.Property<int>("LikerId");
@@ -92,6 +104,8 @@ namespace MemeApp.API.Migrations
 
                     b.Property<DateTime?>("DateRead");
 
+                    b.Property<int?>("GroupId");
+
                     b.Property<bool>("IsRead");
 
                     b.Property<DateTime>("MessageSent");
@@ -110,6 +124,8 @@ namespace MemeApp.API.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("GroupId");
+
                     b.HasIndex("PostId");
 
                     b.HasIndex("RecipientId");
@@ -117,6 +133,42 @@ namespace MemeApp.API.Migrations
                     b.HasIndex("SenderId");
 
                     b.ToTable("Messages");
+                });
+
+            modelBuilder.Entity("MemeApp.API.Models.Notification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("CauserId");
+
+                    b.Property<int?>("CommentId");
+
+                    b.Property<DateTime>("Created");
+
+                    b.Property<bool>("Followed");
+
+                    b.Property<bool>("IsRead");
+
+                    b.Property<string>("Message");
+
+                    b.Property<int?>("PostId");
+
+                    b.Property<int>("RecipientId");
+
+                    b.Property<string>("Type");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CauserId");
+
+                    b.HasIndex("CommentId");
+
+                    b.HasIndex("PostId");
+
+                    b.HasIndex("RecipientId");
+
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("MemeApp.API.Models.Post", b =>
@@ -158,6 +210,8 @@ namespace MemeApp.API.Migrations
 
                     b.Property<DateTime>("LastActive");
 
+                    b.Property<string>("Name");
+
                     b.Property<byte[]>("PasswordHash");
 
                     b.Property<byte[]>("PasswordSalt");
@@ -171,6 +225,26 @@ namespace MemeApp.API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("MemeApp.API.Models.UserGroup", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("GroupId");
+
+                    b.Property<int>("UserId");
+
+                    b.Property<string>("UserPhotoUrl");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GroupId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserGroups");
                 });
 
             modelBuilder.Entity("MemeApp.API.Models.Value", b =>
@@ -239,6 +313,11 @@ namespace MemeApp.API.Migrations
 
             modelBuilder.Entity("MemeApp.API.Models.Message", b =>
                 {
+                    b.HasOne("MemeApp.API.Models.Group", "Group")
+                        .WithMany("Messages")
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("MemeApp.API.Models.Post", "Post")
                         .WithMany("MessagesSent")
                         .HasForeignKey("PostId")
@@ -255,12 +334,48 @@ namespace MemeApp.API.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
+            modelBuilder.Entity("MemeApp.API.Models.Notification", b =>
+                {
+                    b.HasOne("MemeApp.API.Models.User", "Causer")
+                        .WithMany("NotificationsCaused")
+                        .HasForeignKey("CauserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("MemeApp.API.Models.Comment", "Comment")
+                        .WithMany("Notifications")
+                        .HasForeignKey("CommentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("MemeApp.API.Models.Post", "Post")
+                        .WithMany("Notifications")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("MemeApp.API.Models.User", "Recipient")
+                        .WithMany("NotificationsReceived")
+                        .HasForeignKey("RecipientId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
             modelBuilder.Entity("MemeApp.API.Models.Post", b =>
                 {
                     b.HasOne("MemeApp.API.Models.User", "User")
                         .WithMany("Posts")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("MemeApp.API.Models.UserGroup", b =>
+                {
+                    b.HasOne("MemeApp.API.Models.Group", "Group")
+                        .WithMany("UserGroups")
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("MemeApp.API.Models.User", "User")
+                        .WithMany("UserGroups")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 #pragma warning restore 612, 618
         }

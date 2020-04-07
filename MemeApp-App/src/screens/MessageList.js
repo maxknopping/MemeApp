@@ -1,11 +1,11 @@
 import React, {useEffect, useState, useContext} from 'react';
-import { Text, View, ScrollView, TextInput, KeyboardAvoidingView, TouchableOpacity, Alert, Keyboard, ActivityIndicator } from 'react-native';
+import { Text, View, ScrollView, TextInput, KeyboardAvoidingView, TouchableOpacity, Alert, Keyboard, ActivityIndicator, Image } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import userService from './../apis/user';
 import { Context } from '../context/AuthContext';
 import { FlatList } from 'react-native-gesture-handler';
-import { ListItem, Overlay } from 'react-native-elements';
-import {FontAwesome, Feather} from 'react-native-vector-icons';
+import { ListItem, Overlay, CheckBox, Button } from 'react-native-elements';
+import {FontAwesome, Feather, AntDesign} from 'react-native-vector-icons';
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
 
@@ -15,7 +15,12 @@ const MessageList = ({
     const {state} = useContext(Context);
     const [messages, setMessages] = useState([]);
     const [searchInput, setSearchInput] = useState('');
+    const [messagesSearch, setMessagesSearch] = useState('');
+    const [newMessage, setNewMessage] = useState('');
     const [searchVisible, setSearchVisible] = useState(false);
+    const [userIds, setUserIds] = useState([]);
+    const [users, setUsers] = useState([]);
+
     const [list, setList] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
     TimeAgo.addLocale(en);
@@ -55,17 +60,48 @@ const MessageList = ({
             });
     };
 
-    search = (text) => {
+    const search = (text) => {
         userService.get(`/search/${state.id}/${text}/true`, {
             headers: {
                 'Authorization': `Bearer ${state.token}`
             }
         }).then(
             function(response) {
+                response.data.forEach(element => {
+                    if (userIds.indexOf(element.id) != -1) {
+                        element.checked = true;
+                    } else {
+                        element.checked = false;
+                    }
+                });
                 setList([...response.data]);
                 console.log(response.data);
             }
         ).catch(error => console.log(error));
+    };
+
+    const searchUsers = (text) => {
+        userService.get(`/search/${state.id}/${text}/true`, {
+            headers: {
+                'Authorization': `Bearer ${state.token}`
+            }
+        }).then(
+            function(response) {
+                setUsers([...response.data]);
+            }
+        ).catch(error => console.log(error));
+    };
+
+    const sendMessageToGroup = () => {
+        userService.post(`/${state.id}/messages/group`, {
+            groupName: 'Group',
+            message: newMessage,
+            userIds: userIds
+        },{
+            headers: {
+                'Authorization': `Bearer ${state.token}`
+            }
+        }).catch(error => console.log(error));
     };
 
  
@@ -76,12 +112,23 @@ const MessageList = ({
                     <ListItem 
                         contentContainerStyle={{alignItems: 'center'}}
                         title={
+                            <View style={{flexDirection: 'row', alignItems: 'center', marginRight: 10}}>
                             <View style={styles.searchBackground}>
                                 <Feather style={styles.searchIcon} name="search" />
-                                <Text onPress={() => setSearchVisible(true)} style={styles.searchText}>Search...</Text>
+                                <TextInput value={messagesSearch} onChangeText={(text) => {
+                                        setMessagesSearch(text);
+                                        searchUsers(text);
+                                    }} style={styles.searchInput} placeholder="Search..." placeholderTextColor="#A9A9A9"/>
+                            </View>
+                            <TouchableOpacity>
+                                <AntDesign style={{fontSize: 30, marginLeft: 5}} onPress={() => setSearchVisible(true)} name="addusergroup"/>
+                            </TouchableOpacity>
                             </View>
 
                         }/>
+
+
+                    
                     <Overlay isVisible={searchVisible} children={
                         <>
                             <ListItem 
@@ -96,15 +143,17 @@ const MessageList = ({
                                 </View>
 
                                 }/>
+                            <View style={styles.newMessageBackground}>
+                                <TextInput value={newMessage} onChangeText={(text) => {
+                                    setNewMessage(text);
+                                }} style={styles.searchInput} placeholder="Write a message..." placeholderTextColor="#A9A9A9"/>
+                            </View>
+
+                            
                         <ScrollView style={styles.scrollView}>
                                 {list.map((item, index) => (
+                                <View key={index}>
                                     <ListItem
-                                    onPress={() => {
-                                        navigation.navigate('MessageThread', {username: item.username, photoUrl: item.photoUrl,
-                                        recipientId: item.id});
-                                        setSearchVisible(false);
-                                    }
-                                    }
                                     key={index}
                                     leftAvatar={{source: item.photoUrl ? {uri: item.photoUrl} : 
                                         require('./../../assets/user.png')}}
@@ -116,14 +165,61 @@ const MessageList = ({
                                     subtitle= {
                                         <Text style={{fontSize: EStyleSheet.value('.75rem'), color: 'gray'}}>{item.name}</Text>
                                     }
+                                    chevron={
+                                        <CheckBox 
+                                            uncheckedIcon="circle-thin" 
+                                            size={30} 
+                                            checkedIcon="dot-circle-o"
+                                            checkedColor="black"
+                                            checked={item.checked}
+                                            onIconPress={() => {
+                                                if (!item.checked) {
+                                                    const user = item;
+                                                    const newList = list;
+                                                    user.checked = true;
+                                                    newList[index] = user;
+                                                    setList(newList);
+                                                    setUserIds([...userIds, item.id]);
+                                                } else {
+                                                    const user = item;
+                                                    user.checked = false;
+                                                    const newList = list;
+                                                    newList[index] = user;
+                                                    setList(newList);
+                                                    const newIds = userIds.filter(e => e != item.id);
+                                                    setUserIds([...newIds]);
+                                                }
+                                            }}
+                                        />
+                                    }
                                     />
+                                </View>
                                 ))}
                         </ScrollView>
+                        <View style={{margin: 10}}>
+
+                            <Button title="Send" disabled={userIds.length == 0 || newMessage.length == 0} 
+                                titleStyle={{color: 'white'}} 
+                                buttonStyle={styles.sendButton} onPress={() => {
+                                    setSearchVisible(false);
+                                    setUserIds([]);
+                                    sendMessageToGroup();
+                                    list.forEach(element => {
+                                        element.checked = false;
+                                    });
+                                }}/>
+                        </View>
                         </>
-                    } onBackdropPress={() => setSearchVisible(false)} animationType={'fade'}>
+                    } onBackdropPress={() => setSearchVisible(false)}  animationType={'fade'}>
                     </Overlay>
+
+                    
+                    {users.length == 0 ? (
+                    <View>
                     {messages.map((message, index) => (
-                        <ListItem
+                        <View key={index}>
+                        {message.groupId == 0 ? (
+                            <ListItem
                             key={index}
                             leftAvatar={{source: message.senderId == state.id ? (message.recipientPhotoUrl ? {uri: message.recipientPhotoUrl} : 
                                 require('./../../assets/user.png')) : (message.senderPhotoUrl ? {uri: message.senderPhotoUrl} : 
@@ -148,8 +244,59 @@ const MessageList = ({
                                  message.recipientUsername: message.senderUsername, photoUrl: message.senderId == state.id ?
                                  message.recipientPhotoUrl : message.senderPhotoUrl, recipientId: message.senderId == state.id ? 
                                 message.recipientId : message.senderId})}
+                            />): (
+                                <ListItem
+                            key={index}
+                            leftAvatar={
+                                <View style={styles.avatars}>
+                                    <Image source={message.groupPhotoUrls[0].photoUrl ? {uri: message.groupPhotoUrls[0].photoUrl}: require('./../../assets/user.png')} 
+                                    style={styles.avatar}/>
+                                    <Image source={message.groupPhotoUrls[1].photoUrl ? {uri: message.groupPhotoUrls[1].photoUrl}: require('./../../assets/user.png')} 
+                                    style={styles.avatar}/>
+                                </View>
+                            }
+                            title={
+                                <View style={styles.mainLineWrapper}>
+                                    <TouchableOpacity>
+                                        <Text style={styles.usernameText}>{message.groupName}</Text>
+                                    </TouchableOpacity>
+                                    {!message.isRead && message.senderId != state.id  ? <FontAwesome style={styles.circle} name="circle"/> : null}
+                                    <Text numberOfLines={1} style={styles.messageContent}>{message.content}</Text>
+                                </View>
+                            }
+                            subtitle={
+                                <Text style={styles.timeAgo}>{timeAgo.format(Date.parse(message.messageSent), 'twitter')}</Text>
+                            }
+                            onPress={() => navigation.navigate('GroupMessageThread', {groupId: message.groupId, 
+                                groupName: message.groupName, photoUrls: message.groupPhotoUrls})}
                             />
+                            )
+                        }
+                        </View>
                     ))}
+                </View>
+                     ): (
+                         <View>
+                             {users.map((item, index) => (
+                                 <ListItem
+                                 onPress={() => {
+                                     navigation.navigate('MessageThread', {username: item.username, photoUrl: item.photoUrl, recipientId: item.id});
+                                 }}
+                                 key={index}
+                                 leftAvatar={{source: item.photoUrl ? {uri: item.photoUrl} : 
+                                     require('./../../assets/user.png')}}
+                                 title={
+                                     <View style={styles.titleWrapper}>
+                                             <Text style={styles.username}>{item.username}</Text>
+                                     </View>
+                                 }
+                                 subtitle= {
+                                     <Text style={{fontSize: EStyleSheet.value('.75rem'), color: 'gray'}}>{item.name}</Text>
+                                 }
+                                 />
+                             ))}
+                         </View>
+                     )}
                 </ScrollView>
             : <ActivityIndicator animating size="small" />
             }
@@ -186,6 +333,7 @@ const styles = EStyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         borderRadius: '2rem',
+        marginLeft: '.5rem'
     },
     searchInput: {
         width: '90%',
@@ -219,6 +367,33 @@ const styles = EStyleSheet.create({
     circle: {
         color: '#0084ff',
         marginLeft: '.5rem',
+        alignSelf: 'center'
+    },
+    avatar: {
+        marginLeft: -20,
+        position: 'relative',
+        borderWidth: 3,
+        borderColor: '#fff',
+        borderRadius: 50,
+        overflow: 'hidden', 
+        width: 35,
+        height: 35,
+    },
+    avatars: {
+        position: 'relative',
+        flexDirection: 'row',
+        display: 'flex',
+        paddingLeft: 10
+    },
+    sendButton: {
+        backgroundColor: '$crimson'
+    },
+    newMessageBackground: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginLeft: '.5rem',
+        borderBottomWidth: '.05rem',
+        justifyContent: 'center',
         alignSelf: 'center'
     }
 

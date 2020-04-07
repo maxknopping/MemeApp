@@ -38,5 +38,11 @@ namespace MemeApp.API.Models
 
         public IList<Message> MessagesReceived { get; set; }
 
+        public IList<Notification> NotificationsCaused { get; set; }
+
+        public  IList<Notification> NotificationsReceived { get; set; }
+
+        public IList<UserGroup> UserGroups { get; set; }
+
     }
 }

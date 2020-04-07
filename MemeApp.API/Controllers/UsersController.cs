@@ -18,9 +18,9 @@ namespace MemeApp.API.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly IMemeHubRepository repo;
+        private readonly IMemeClubRepository repo;
         private readonly IMapper mapper;
-        public UsersController(IMemeHubRepository repo, IMapper mapper)
+        public UsersController(IMemeClubRepository repo, IMapper mapper)
         {
             this.mapper = mapper;
             this.repo = repo;
@@ -153,6 +153,34 @@ namespace MemeApp.API.Controllers
 
         }
 
+        [HttpGet("{userId}/group/{groupId}")]
+        public async Task<IActionResult> GetUsersInGroup(int groupId, int userId)
+        {
+
+            var group = await repo.GetGroup(groupId);
+
+            var users = new List<UserForListDto>();
+            foreach (var userGroup in group.UserGroups)
+            {
+                var user = await repo.GetUser(userGroup.UserId);
+                var userToReturn = mapper.Map<UserForManipulationDto>(user);
+                userToReturn.FollowButton = "Follow";
+                    if (userToReturn.Id == userId) {
+                        userToReturn.FollowButton = "Myself";
+                    }
+                    foreach(var f in userToReturn.Followers) {
+                        if (f.FollowerId == userId) {
+                          userToReturn.FollowButton = "Following";
+                        }
+                    }
+                var userWithoutFollowers = mapper.Map<UserForListDto>(userToReturn);
+                users.Add(userWithoutFollowers);
+            }
+
+            return Ok(users);
+
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(int id, UserForEditDto userForEdit) {
             if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
@@ -201,6 +229,13 @@ namespace MemeApp.API.Controllers
             };
 
             repo.Add<Follow>(follow);
+            var notification = new Notification("follow")
+            {
+                RecipientId = recipientId,
+                CauserId = id
+            };
+
+            repo.Add<Notification>(notification);
 
             if (await repo.SaveAll()) {
                 return Ok();
@@ -262,6 +297,16 @@ namespace MemeApp.API.Controllers
                 Post = recipient,
                 Liker = user
             };
+
+            var notification = new Notification("like")
+            {
+                RecipientId = recipient.UserId,
+                CauserId = id,
+                PostId = recipient.Id
+            };
+
+            repo.Add<Notification>(notification);
+
 
             repo.Add<Like>(like);
 
@@ -341,9 +386,19 @@ namespace MemeApp.API.Controllers
 
             var fullComment = mapper.Map<Comment>(comment);
             fullComment.Created = DateTime.Now;
-            recipient.Comments.Add(fullComment);
+            repo.Add<Comment>(fullComment);
+
 
             if(await repo.SaveAll()) {
+                var notification = new Notification("comment")
+                {
+                    RecipientId = recipient.UserId,
+                    CauserId = comment.CommenterId,
+                    PostId = recipient.Id,
+                    CommentId = fullComment.Id
+                };
+                repo.Add(notification);
+                await repo.SaveAll();
                 return Ok();
             }
 
@@ -407,6 +462,16 @@ namespace MemeApp.API.Controllers
                 Comment = recipient,
                 Commenter = user
             };
+
+            var notification = new Notification("commentLike")
+            {
+                RecipientId = recipient.CommenterId,
+                CauserId = id,
+                PostId = postId,
+                CommentId = recipientId
+            };
+
+            repo.Add<Notification>(notification);
 
             repo.Add<CommentLike>(like);
 
@@ -517,6 +582,61 @@ namespace MemeApp.API.Controllers
             var usersWithoutFollowers = mapper.Map<IList<UserForListDto>>(usersToReturn);
 
             return Ok(usersWithoutFollowers);
+        }
+
+        [HttpGet("notifications/{userId}")]
+        public async Task<IActionResult> GetNotifications(int userId) {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
+                return Unauthorized();
+            }
+            var notifications = await repo.GetNotifications(userId);
+
+            var notificationsToReturn = mapper.Map<IList<NotificationForListDto>>(notifications);
+
+            return Ok(notificationsToReturn);
+        }
+
+        [HttpPost("notifications/{id}/read")]
+        public async Task<IActionResult> MarkNotificationsAsRead(int id) {
+            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
+                return Unauthorized();
+            }
+
+            var notifications = await repo.GetNotifications(id);
+
+            foreach(var notification in notifications) {
+                notification.IsRead = true;
+            }
+
+            await repo.SaveAll();
+
+            return NoContent();
+        }
+
+        [HttpGet("hasNewMessages/{id}")]
+        public async Task<IActionResult> HasNewMessages(int id) {
+            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
+                return Unauthorized();
+            }
+
+            int count = await repo.HasNewMessages(id);
+
+            return Ok(new {
+                count = count
+            });
+        }
+
+        [HttpGet("hasNewNotifications/{id}")]
+        public async Task<IActionResult> HasNewNotifications(int id) {
+            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
+                return Unauthorized();
+            }
+
+            int count = await repo.HasNewNotifications(id);
+
+            return Ok(new {
+                count = count
+            });
         }
         
 

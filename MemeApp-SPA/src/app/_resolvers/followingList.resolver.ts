@@ -48,6 +48,14 @@ export class FollowingListResolver implements Resolve<User[]> {
                     return of(null);
                 })
             );
+        } else if (route.params['type'] === 'group') {
+            return this.userService.getGroupUsers(this.auth.decodedToken.nameid, route.params['username']).pipe(
+                catchError(error => {
+                    this.alertify.error('Problem retreiving data');
+                    this.router.navigate(['/feed']);
+                    return of(null);
+                })
+            );
         }
 
     }

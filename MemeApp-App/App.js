@@ -28,6 +28,8 @@ import ChangePassword from './src/screens/ChangePassword';
 import ForgotUsername from './src/screens/ForgotUsername';
 import ForgotPassword from './src/screens/ForgotPassword';
 import TemporaryPassword from './src/screens/TemporaryPassword';
+import GroupMessageThread from './src/screens/GroupMessageThread';
+import GroupManager from './src/screens/GroupManager';
 
 
 const switchNavigator = createSwitchNavigator({
@@ -54,7 +56,10 @@ const switchNavigator = createSwitchNavigator({
         Comments: Comments,
         Messages: MessageList,
         MessageThread: MessageThread,
-        SinglePost: SinglePost
+        SinglePost: SinglePost,
+        Notifications: Notifications,
+        GroupMessageThread: GroupMessageThread,
+        GroupManager: GroupManager
     },{
       initialRouteName: 'Feed',
       defaultNavigationOptions: ({navigation}) => ({

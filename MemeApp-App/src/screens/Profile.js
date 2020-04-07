@@ -192,7 +192,7 @@ const Profile = ({
                     </View>
                 </View>
                 <View style={styles.bioView}>
-                    {user ? <Text style={[styles.bioText, {fontWeight: "bold"}]}>{user.name}</Text>: null}
+                    {user ? <Text style={[styles.bioText, {fontWeight: "bold", fontSize: 18}]}>{user.name}</Text>: null}
                 </View>
                 <View style={styles.bioView}>
                     {user ? <Text style={styles.bioText}>{user.bio}</Text> : null}

@@ -45,6 +45,10 @@ import { PostCardMessageComponent } from './Posts/post-card-message/post-card-me
 import { SinglePostComponent } from './Posts/singlePost/singlePost.component';
 import { SinglePostResolver } from './_resolvers/singlePost.resolver';
 import { IconsModule } from './icons/icons.module';
+import { GroupMessageThreadComponent } from './group-message-thread/group-message-thread.component';
+import { GroupMessageThreadResolver } from './_resolvers/groupMessageThread.resolver';
+import { GroupManagerComponent } from './group-manager/group-manager.component';
+import { GroupManagerResolver } from './_resolvers/groupManager.resolver';
 
 export function tokenGetter() {
    return localStorage.getItem('token');
@@ -72,7 +76,9 @@ export function tokenGetter() {
       MessageThreadComponent,
       SendPostModalComponent,
       PostCardMessageComponent,
-      SinglePostComponent
+      SinglePostComponent,
+      GroupMessageThreadComponent,
+      GroupManagerComponent
    ],
    imports: [
       HttpClientModule,
@@ -88,11 +94,11 @@ export function tokenGetter() {
       BrowserAnimationsModule,
       NgxCroppieModule,
       JwtModule.forRoot({
-            config: {
-               tokenGetter: tokenGetter,
-               whitelistedDomains: ['localhost:5000'],
-               blacklistedRoutes: ['localhost:5000/api/auth/register']
-            }}),
+         config: {
+            tokenGetter: tokenGetter,
+            whitelistedDomains: ['localhost:5000'],
+            blacklistedRoutes: ['localhost:5000/api/auth/register']
+         }}),
       ModalModule.forRoot(),
       IconsModule
    ],
@@ -115,7 +121,9 @@ export function tokenGetter() {
       CommentListResolver,
       MessagesListResolver,
       MessageThreadResolver,
-      SinglePostResolver
+      SinglePostResolver,
+      GroupMessageThreadResolver,
+      GroupManagerResolver
    ],
    bootstrap: [
       AppComponent

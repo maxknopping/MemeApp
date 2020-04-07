@@ -6,7 +6,7 @@
           <h3>No Messages</h3>
         </div>
       </div>
-      <li class="list-group-item title">
+      <li class="list-group-item header title">
           <div dropdown class="dropdown search-dropdown" #dropdown="bs-dropdown">
             <form #searchForm="ngForm" id="searchForm" (ngSubmit)="dropdown.show(); searchPreview(query)">
               <div class="input-group">
@@ -17,7 +17,10 @@
                         [(ngModel)]="query" 
                         name="query">
                 <div class="input-group-append">
-                  <button class="search-button" [disabled]="!searchForm.valid"><i class="fa fa-search" dropdownToggle></i></button>
+                  <button class="search-button" dropdownToggle [disabled]="!searchForm.valid"><i class="fa fa-search"></i></button>
+                  <button (click)="createGroup()" type="button">
+                    <i class="fa fa-users"></i>
+                  </button>
                 </div>
               </div>
             </form>
@@ -34,7 +37,7 @@
             </div>
       </li>
       <div *ngFor="let message of messages">
-          <li class="list-group-item title list" [routerLink]="[ '/messages/thread', message.senderId == id ? message.recipientId : message.senderId]">
+          <li class="list-group-item title list" *ngIf="message.groupId === 0" [routerLink]="[ '/messages/thread', message.senderId == id ? message.recipientId : message.senderId]">
               <img *ngIf="message.senderId == id" class="profile-picture mr-2" src="{{message.recipientPhotoUrl || '../../../assets/user.png'}}" alt="">
               <img *ngIf="message.recipientId == id && message.senderId != id" class="profile-picture mr-2" src="{{message.senderPhotoUrl || '../../../assets/user.png'}}" alt="">
               <button *ngIf="message.senderId == id" class="like-button" (click)="$event.stopPropagation()" [routerLink]="[ '/profile/', message.recipientUsername]">
@@ -57,6 +60,27 @@
                 
                 
           </li>
+          <li class="list-group-item title list" *ngIf="message.groupId !== 0" [routerLink]="[ '/messages/thread/group', message.groupId]">
+            <div class="avatars">
+              <img class="avatar" src="{{message.groupPhotoUrls[0].photoUrl ||'../../../assets/user.png'}}" alt="">
+              <img class="avatar" src="{{message.groupPhotoUrls[1].photoUrl ||'../../../assets/user.png'}}" alt="">
+            </div>
+            <button class="like-button">
+            <strong>
+                {{message.groupName}}
+            </strong></button>
+              <i *ngIf="!message.isRead && message.senderId != id" class="fa fa-circle" style="color: #0084ff;"></i>
+              <p class="message">
+                {{message.content}}
+              </p>
+              <br>
+              <span class="first-bottom-line">
+                {{message.messageSent | timeAgo}}
+              </span>
+              <div style="clear: both;"></div>
+              
+              
+        </li>
       </div>
   </div>
   <div class = "col-sm-3"></div>

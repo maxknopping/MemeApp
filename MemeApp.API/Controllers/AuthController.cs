@@ -23,10 +23,10 @@ namespace MemeApp.API.Controllers
         private readonly IAuthRepository _repo;
         private readonly IConfiguration _configuration;
         private readonly IMapper mapper;
-        private readonly IMemeHubRepository userRepo;
+        private readonly IMemeClubRepository userRepo;
 
         private readonly Random random;
-        public AuthController(IAuthRepository repo, IMemeHubRepository userRepo, IConfiguration _configuration, IMapper mapper)
+        public AuthController(IAuthRepository repo, IMemeClubRepository userRepo, IConfiguration _configuration, IMapper mapper)
         {
             this.userRepo = userRepo;
             this.mapper = mapper;

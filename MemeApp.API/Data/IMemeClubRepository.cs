@@ -5,7 +5,7 @@ using MemeApp.API.Models;
 
 namespace MemeApp.API.Data
 {
-    public interface IMemeHubRepository
+    public interface IMemeClubRepository
     {
          void Add<T>(T entity) where T:class;
 
@@ -38,12 +38,19 @@ namespace MemeApp.API.Data
 
          Task<IList<Message>> GetConversationListForUser(int userId);
 
-         Task<IList<User>> GetConversationUsers(int userId);
+         Task<IList<UserForSendPostDto>> GetConversationUsers(int userId);
          Task<IList<Message>> GetMessageThread(int userId, int recipientId);
 
         Task<IList<User>> SearchForUser(string query, bool fullResult);
 
+        Task<IList<Notification>> GetNotifications(int userId);
 
+        Task<int> HasNewMessages(int userId);
 
+        Task<int> HasNewNotifications(int userId);
+
+        Task<Group> GetGroup(int groupId);
+
+        Task<IList<Message>> GetGroupMessageThread(int userId, int groupId);
     }
 }

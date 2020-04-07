@@ -19,5 +19,7 @@ namespace MemeApp.API.Models
         public Post Post { get; set; }
 
         public int PostId { get; set; }
+
+        public IList<Notification> Notifications { get; set; }
     }
 }

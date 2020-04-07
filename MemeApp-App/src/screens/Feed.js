@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import { Text, View, ScrollView, Image, ActivityIndicator, Dimensions, RefreshControl, SafeAreaView, FlatList, ListView, TouchableOpacity } from 'react-native';
-import {Button} from 'react-native-elements';
+import {Button, Badge, Icon, withBadge} from 'react-native-elements';
 import {Button as NativeButton} from 'native-base';
 import {Context} from './../context/AuthContext';
 import userService from './../apis/user';
@@ -26,7 +26,18 @@ const Feed = ({
         }).then(
             function (response) {
                 setPosts([response.data]);
-            }).catch(error => {
+                userService.get(`/hasNewMessages/${state.id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${state.token}`
+                    }
+                }).then((response) => navigation.setParams({newMessages: response.data.count})).catch(error => console.log(error));
+                userService.get(`/hasNewNotifications/${state.id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${state.token}`
+                    }
+                }).then((response) => navigation.setParams({newNotifications: response.data.count})).catch(error => console.log(error));
+            }
+            ).catch(error => {
                 console.log(error);
                 setRefreshing(false);
             });
@@ -42,6 +53,16 @@ const Feed = ({
         }).then(
             function (response) {
                 setPosts([response.data]);
+                userService.get(`/hasNewMessages/${state.id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${state.token}`
+                    }
+                }).then((response) => navigation.setParams({newMessages: response.data.count})).catch(error => console.log(error));
+                userService.get(`/hasNewNotifications/${state.id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${state.token}`
+                    }
+                }).then((response) => navigation.setParams({newNotifications: response.data.count})).catch(error => console.log(error));
                 setRefreshing(false);
             }).catch(error => {
                 console.log(error);
@@ -91,18 +112,26 @@ const Feed = ({
 };
 
 Feed.navigationOptions = ({navigation}) => {
+    const newMessages = navigation.getParam('newMessages');
+    const newNotifications = navigation.getParam('newNotifications');
     return {
         headerRight: () => (<TouchableOpacity onPress={() => {
                     navigation.navigate('Messages');
                 }}>
-                <View style={{marginRight: 10}}>
+                <View style={newMessages == 0 ? {marginRight: 10} : {marginRight: 10}}>
                     <Feather style={styles.gearIcon} name="message-circle"/>
+                    {newMessages > 0 ? <Badge value={newMessages} badgeStyle={{backgroundColor: 'crimson'}}
+                        containerStyle={{position: 'absolute', top: -4, right: -4}}/>:
+                    null}
                 </View>
             </TouchableOpacity>),
         headerLeft: () => (
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => {navigation.navigate('Notifications');}}>
                 <View style={{marginLeft: 10}}>
                     <Feather style={styles.bellIcon} name="bell"/>
+                    {newNotifications > 0 ? <Badge value={newNotifications} badgeStyle={{backgroundColor: 'crimson'}} 
+                        containerStyle={{position: 'absolute', top: -4, right: -4}}/> :
+                       null}
                 </View>
             </TouchableOpacity>
         )

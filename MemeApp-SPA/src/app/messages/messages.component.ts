@@ -4,6 +4,8 @@ import { UserService } from '../_services/User.service';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../_services/auth.service';
 import { AlertifyService } from '../_services/alertify.service';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+import { SendPostModalComponent } from '../Posts/SendPostModal/SendPostModal.component';
 
 @Component({
   selector: 'app-messages',
@@ -16,8 +18,10 @@ export class MessagesComponent implements OnInit {
   messages: Message[];
   id;
   messageContainer = 'Unread';
+  bsModalRef: BsModalRef;
+  
   constructor(private user: UserService, private auth: AuthService,
-              private route: ActivatedRoute, private alertify: AlertifyService) { }
+              private route: ActivatedRoute, private alertify: AlertifyService, private modalService: BsModalService) { }
 
   ngOnInit() {
     this.route.data.subscribe(data => {
@@ -30,6 +34,7 @@ export class MessagesComponent implements OnInit {
     this.user.getMessages(this.auth.decodedToken.nameid).subscribe((data: Message[]) => {
       this.messages = data;
       this.id = this.auth.decodedToken.nameid;
+      console.log(data);
     });
   }
 
@@ -44,6 +49,17 @@ export class MessagesComponent implements OnInit {
   searchPreview(phrase) {
     this.user.searchForUser(this.auth.decodedToken.nameid, phrase, false).subscribe(users => {
       this.searchPreviewUsers = users;
+    });
+  }
+
+  createGroup() {
+    this.bsModalRef = this.modalService.show(SendPostModalComponent, {
+      initialState: {
+        elementType: 'group'
+      }
+    });
+    this.bsModalRef.content.userToSendPostTo.subscribe(value => {
+        this.user.createGroup(this.auth.decodedToken.nameid, 'Group', value.message, value.users).subscribe();
     });
   }
 

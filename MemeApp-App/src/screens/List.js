@@ -52,6 +52,16 @@ const List = ({
                 function (response) {
                     setList(response.data);
                 }
+            ).catch(error => console.log(error)); 
+        } else if (listType === 'group') {
+            userService.get(`/${state.id}/group/${identifier}`, {
+                headers: {
+                    'Authorization': `Bearer ${state.token}`
+                }
+            }).then(
+                function (response) {
+                    setList(response.data);
+                }
             ).catch(error => console.log(error));
         }
     }, []);

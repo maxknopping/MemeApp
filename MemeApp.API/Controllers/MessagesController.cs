@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -19,9 +20,9 @@ namespace MemeApp.API.Controllers
     [ApiController]
     public class MessagesController : ControllerBase
     {
-        private readonly IMemeHubRepository repo;
+        private readonly IMemeClubRepository repo;
         private readonly IMapper mapper;
-        public MessagesController(IMemeHubRepository repo, IMapper mapper)
+        public MessagesController(IMemeClubRepository repo, IMapper mapper)
         {
             this.mapper = mapper;
             this.repo = repo;
@@ -62,9 +63,8 @@ namespace MemeApp.API.Controllers
 
             var usersFromRepo = await repo.GetConversationUsers(userId);
 
-            var usersToReturn = mapper.Map<List<UserForListDto>>(usersFromRepo);
 
-            return Ok(usersToReturn);
+            return Ok(usersFromRepo);
         }
 
         [HttpGet("thread/{recipientId}")]
@@ -74,6 +74,19 @@ namespace MemeApp.API.Controllers
             }
 
             var messagesFromRepo = await repo.GetMessageThread(userId, recipientId);
+
+            var messageThread = mapper.Map<IList<MessageForListDto>>(messagesFromRepo);
+
+            return Ok(messageThread);
+        }
+
+        [HttpGet("thread/group/{groupId}")]
+        public async Task<IActionResult> GetGroupMessageThread(int userId, int groupId) {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
+                return Unauthorized();
+            }
+
+            var messagesFromRepo = await repo.GetGroupMessageThread(userId, groupId);
 
             var messageThread = mapper.Map<IList<MessageForListDto>>(messagesFromRepo);
 
@@ -96,6 +109,13 @@ namespace MemeApp.API.Controllers
 
             var fullMessage = mapper.Map<Message>(message);
 
+            var notification = new Notification("message")
+            {
+                RecipientId = message.RecipientId,
+                CauserId = userId
+            };
+
+            repo.Add(notification);
             repo.Add(fullMessage);
 
 
@@ -103,6 +123,152 @@ namespace MemeApp.API.Controllers
                 var messageToReturn = mapper.Map<MessageForListDto>(fullMessage);
                 return CreatedAtRoute("GetMessage", new {id = fullMessage.Id}, messageToReturn);
             }
+
+            throw new Exception("Creating message failed on save");
+        }
+
+        [HttpPost("group")]
+        public async Task<IActionResult> CreateGroup(int userId, GroupForCreationDto groupForCreation) {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
+                return Unauthorized();
+            }
+
+            var group = new Group()
+            {
+                GroupName = groupForCreation.GroupName
+            };
+
+            repo.Add(group);
+
+            if (!(await repo.SaveAll())) {
+                throw new Exception("Adding a group failed on save");
+            }
+            
+            foreach(var user in groupForCreation.UserIds) {
+                if (user == userId) {
+                    continue;
+                }
+                var fulluser = await repo.GetUser(user);
+                var userGroup = new UserGroup()
+                {
+                    UserId = user,
+                    GroupId = group.Id,
+                    UserPhotoUrl = fulluser.PhotoUrl
+                };
+                repo.Add(userGroup);
+            }
+
+            var self = await repo.GetUser(userId);
+            var selfGroup = new UserGroup()
+            {
+                UserId = userId,
+                GroupId = group.Id,
+                UserPhotoUrl = self.PhotoUrl
+            };
+            repo.Add(selfGroup);
+
+            if (!(await repo.SaveAll())) {
+                throw new Exception("Adding usergroups failed on save");
+            }
+
+            var message = new MessageGroupForCreationDto(){
+                SenderId = userId,
+                Content = groupForCreation.Message,
+                GroupId = group.Id
+            };
+
+            return await CreateGroupMessage(userId, group.Id, message);
+            
+        }
+
+        [HttpPut("group")]
+        public async Task<IActionResult> UpdateGroup(int userId, GroupForUpdateDto groupForCreation) {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
+                return Unauthorized();
+            }
+
+            var group = await repo.GetGroup(groupForCreation.GroupId);
+
+            if (group == null) {
+                return BadRequest("Group doesn't exist");
+            }
+
+            group.GroupName = groupForCreation.GroupName;
+
+            foreach (var user in groupForCreation.UsersToAdd) {
+                if (group.UserGroups.Select(ug => ug.UserId).Contains(user)) {
+                    continue;
+                }
+                var fulluser = await repo.GetUser(user);
+                var userGroup = new UserGroup()
+                {
+                    UserId = user,
+                    GroupId = group.Id,
+                    UserPhotoUrl = fulluser.PhotoUrl
+                };
+                repo.Add(userGroup);
+            }
+
+            await repo.SaveAll();
+
+            foreach (var user in groupForCreation.UsersToRemove) {
+                var userGroup = group.UserGroups.FirstOrDefault(ug => ug.UserId == user);
+                repo.Delete(userGroup);
+            }
+
+            await repo.SaveAll();
+
+            return Ok();
+
+        }
+
+        [HttpPost("group/{groupId}")]
+        public async Task<IActionResult> CreateGroupMessage(int userId, int groupId, MessageGroupForCreationDto message) {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
+                return Unauthorized();
+            }
+            message.SenderId = userId;
+            var group = await repo.GetGroup(groupId);
+
+            Post post = null;
+
+            if (message.PostId != null) {
+                post = await repo.GetPost(message.PostId.Value);
+            }
+
+            var fullMessage = mapper.Map<Message>(message);
+            fullMessage.MessageSent = DateTime.Now;
+            var messages = new List<Message>();
+            foreach(var userGroup in group.UserGroups) {
+                if (userGroup.UserId == userId) {
+                    continue;
+                }
+                var individualMessage = new Message() {
+                    SenderId = fullMessage.SenderId,
+                    Content = fullMessage.Content,
+                    MessageSent = fullMessage.MessageSent,
+                    GroupId = fullMessage.GroupId
+                };
+                if (post != null) {
+                    individualMessage.Post = post;
+                }
+                individualMessage.RecipientId = userGroup.UserId;
+                var notification = new Notification("message")
+                {
+                    RecipientId = userGroup.UserId,
+                    CauserId = userId
+                };
+                repo.Add(notification);
+                repo.Add(individualMessage);
+
+                await repo.SaveAll();
+
+
+            }
+
+
+            var messageToReturn = mapper.Map<MessageForListDto>(fullMessage);
+            return CreatedAtRoute("GetMessage", new {id = fullMessage.Id}, messageToReturn);
 
             throw new Exception("Creating message failed on save");
         }
@@ -130,6 +296,14 @@ namespace MemeApp.API.Controllers
             var fullMessage = mapper.Map<Message>(message);
 
             fullMessage.Post = post;
+
+            var notification = new Notification("message")
+            {
+                RecipientId = message.RecipientId,
+                CauserId = userId
+            };
+
+            repo.Add(notification);
 
             repo.Add(fullMessage);
 

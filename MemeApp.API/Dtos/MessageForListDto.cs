@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace MemeApp.API.Dtos
 {
@@ -18,5 +19,11 @@ namespace MemeApp.API.Dtos
         public string RecipientPhotoUrl { get; set; }
 
         public string RecipientUsername { get; set; }
+
+        public IList<Object> GroupPhotoUrls { get; set; }
+
+        public int GroupId { get; set; }
+
+        public string GroupName { get; set; }
     }
 }

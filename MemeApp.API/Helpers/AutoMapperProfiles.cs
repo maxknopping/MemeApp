@@ -27,10 +27,20 @@ namespace MemeApp.API.Helpers
                 opt.MapFrom(src => src.Post.User.Username));
             CreateMap<CommentLike, CommentLikeDto>();
             CreateMap<MessageForCreationDto, Message>().ReverseMap();
-            CreateMap<Message, MessageForListDto>();
+            CreateMap<Message, MessageForListDto>().ForMember(dest => dest.GroupName, opt =>
+                opt.MapFrom(src => src.Group.GroupName)).ForMember(dest => dest.GroupPhotoUrls, opt =>
+                opt.MapFrom(src => src.Group.UserGroups.Select(ug => 
+                new {id = ug.UserId, photoUrl =  ug.UserPhotoUrl})));
             CreateMap<User, UserForManipulationDto>();
             CreateMap<UserForManipulationDto, UserForListDto>();
             CreateMap<MessageForCreationPostDto, Message>();
+            CreateMap<Notification, NotificationForListDto>().ForMember(n => n.CauserUsername, opt => 
+                opt.MapFrom(src => src.Causer.Username)).ForMember(n => n.PostUrl, opt => 
+                opt.MapFrom(src => src.Post.Url)).ForMember(n => n.CommentText, opt => 
+                opt.MapFrom(src => src.Comment.Text)).ForMember(n => n.CauserPhotoUrl, opt => 
+                opt.MapFrom(src => src.Causer.PhotoUrl));
+            CreateMap<MessageGroupForCreationDto, Message>();
+            CreateMap<User, UserForSendPostDto>();
 
         }
     }

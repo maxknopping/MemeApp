@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useContext} from 'react';
+import React, {useEffect, useState, useContext, useRef} from 'react';
 import { Text, View, ScrollView, TextInput, KeyboardAvoidingView, TouchableOpacity, Alert, Keyboard, Dimensions, Image } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import userService from './../apis/user';
@@ -20,9 +20,13 @@ const MessageThread = ({
     const [offest, setOffset] = useState(0);
     const [messageInput, changeInput] = useState('');
     const recipientId = navigation.getParam('recipientId');
-    console.log(messages);
+    const scrollView = useRef(null);
     TimeAgo.addLocale(en)
     const timeAgo = new TimeAgo('en-US');
+
+    useEffect(() => {
+        scrollView.current && scrollView.current.scrollToEnd({animated: true});
+     }, [messages]);
 
     useEffect(() => {
         userService.get(`/${state.id}/messages/thread/${recipientId}`, {
@@ -129,7 +133,7 @@ const MessageThread = ({
     return (
         <View style={{flex: 1}} onLayout={onLayout}>
         <KeyboardAvoidingView keyboardVerticalOffset={offest} behavior={Platform.OS === "ios" ? "padding" : null} style={{flex: 1}} enabled>
-            <ScrollView style={{marginTop: 10}}>
+            <ScrollView ref={scrollView} style={{marginTop: 10}}>
                 {messages.map((message, i) => (
                     <View key={i} style={renderchatBubbleStyles(message, i)}>
                         {message.post ? (

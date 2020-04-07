@@ -1,0 +1,49 @@
+<div  class="row">
+  <div class = "col-sm-3"></div>
+  <div class="col-sm-6">
+      <li class="list-group-item title" style="flex-direction: row; display: flex; align-items: center;">
+        <span style="color: crimson; font-weight: bolder; margin-right: 10px;">
+          Name
+        </span>
+        <form id="nameForm" (submit)="changeName()">
+          <div class="input-group" style="width: 100%;">
+            <input name="name" type="text" [(ngModel)]="groupName">
+          <div>
+            <button type="submit" [disabled]="originalName === groupName || groupName === ''" 
+              class="input-group-append submit">
+              Submit
+            </button>
+          </div>
+        </div>
+        </form>
+      </li>
+      <div *ngFor="let user of users">
+          <li class="list-group-item title listItem">
+              <img class="profile-picture mr-2" src="{{user.photoUrl || '../../../assets/user.png'}}" alt="">
+              
+              <button class="like-button">
+              <div style="align-items: flex-start;">
+                  <h4 style="margin-bottom: 0rem !important;">
+                      {{user.username}}
+                  </h4>
+                  <div style="text-align: start;">
+                      <span style="color: gray !important;">{{user.name}}</span>
+                  </div>
+              </div>
+              </button>
+
+              <button (click)="removeUser(user)"
+                class="following" style="margin-left: auto; align-self: center;">
+                  <span>Remove</span>
+              </button>
+          </li>
+      </div>
+      <li class="list-group-item title" style="display: flex; justify-content: center;">
+        <button (click)="addUser()" style="background-color: transparent; border: 0px;">
+          <span style="font-size: larger;">
+            Add User <i class="fa fa-plus"></i>
+          </span>
+        </button>
+      </li>
+  </div>
+  <div class = "col-sm-3"></div>

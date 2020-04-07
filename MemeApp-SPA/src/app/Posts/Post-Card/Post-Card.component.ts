@@ -69,9 +69,17 @@ export class PostCardComponent implements OnInit {
   }
 
   messagePost() {
-    this.bsModalRef = this.modalService.show(SendPostModalComponent, {});
-    this.bsModalRef.content.userToSendPostTo.subscribe(userIds => {
-      userIds.forEach(element => {
+    this.bsModalRef = this.modalService.show(SendPostModalComponent, {
+      initialState: {
+        elementType: 'sendPost'
+      }
+    });
+    this.bsModalRef.content.userToSendPostTo.subscribe(value => {
+      value.groups.forEach(element => {
+        const message = {senderId: this.authService.decodedToken.nameid, postId: this.post.id, groupId: element};
+        this.user.sendGroupMessage(message.senderId, message.groupId, message).subscribe();
+      });
+      value.users.forEach(element => {
         const message = {senderId: this.authService.decodedToken.nameid, recipientId: element, postId: this.post.id};
         this.user.sendMessageWithPost(this.authService.decodedToken.nameid, message).subscribe();
       });

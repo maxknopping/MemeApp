@@ -13,5 +13,5 @@ export interface User {
     posts: Post[];
     followers: Follow[];
     following: Follow[];
-    followButton: string;
+    followButton?: string;
 }

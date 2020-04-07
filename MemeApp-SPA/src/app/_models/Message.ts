@@ -14,4 +14,7 @@ export interface Message {
     messageSent: Date;
     post?: Post;
     postId?: number;
+    groupId?: number;
+    groupPhotoUrls?: Array<GroupPhotoUrl>;
+    groupName?: string;
 }

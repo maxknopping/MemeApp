@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -8,11 +10,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MemeApp.API.Data
 {
-    public class MemeHubRepository : IMemeHubRepository
+    public class MemeClubRepository : IMemeClubRepository
     {
         public DataContext context { get; set; }
         private readonly IMapper mapper;
-        public MemeHubRepository(DataContext context, IMapper mapper)
+        public MemeClubRepository(DataContext context, IMapper mapper)
         {
             this.mapper = mapper;
             this.context = context;
@@ -35,6 +37,8 @@ namespace MemeApp.API.Data
                 .Include(p => p.Followers)
                 .Include(p => p.MessagesReceived)
                 .Include(p => p.MessagesSent)
+                .Include(p => p.NotificationsReceived)
+                .Include(u => u.UserGroups)
                 .FirstOrDefaultAsync(x => x.Id == id);
             
             var posts = context.Posts
@@ -202,25 +206,36 @@ namespace MemeApp.API.Data
             //get all the users who there is a conversation with
             var conversationUsers = new List<User>();
             foreach(var message in user.MessagesReceived) {
-                if (!conversationUsers.Contains(message.Sender)) {
+                if (!conversationUsers.Contains(message.Sender) && message.GroupId == null) {
                     conversationUsers.Add(message.Sender);
                 }
             }
             foreach(var message in user.MessagesSent) {
-                if (!conversationUsers.Contains(message.Recipient)) {
+                if (!conversationUsers.Contains(message.Recipient) && message.GroupId == null) {
                     conversationUsers.Add(message.Recipient);
                 }
             }
             var conversations = new List<Message>();
+
+            //get the most recent messages from all group chats
+            foreach(var userGroup in user.UserGroups) {
+                var group = await GetGroup(userGroup.GroupId);
+
+                var messages = group.Messages.OrderByDescending(m => m.MessageSent).ToList();
+
+                conversations.Add(messages.ElementAtOrDefault(0));
+
+            }
+
             //get the most recent message in the conversation from each user
             foreach(var person in conversationUsers) {
                 var messageList = new List<Message>();
                 if (person.Id == userId) {
                     messageList = allMessages.Where(m => (m.RecipientId == person.Id && m.SenderDeleted == false) && 
-                    (m.SenderId == person.Id && m.RecipientDeleted == false)).ToList();
+                    (m.SenderId == person.Id && m.RecipientDeleted == false) && m.GroupId == null).ToList();
                 } else {
                     messageList = allMessages.Where(m => (m.RecipientId == person.Id && m.SenderDeleted == false) || 
-                    (m.SenderId == person.Id && m.RecipientDeleted == false)).ToList();
+                    (m.SenderId == person.Id && m.RecipientDeleted == false) && m.GroupId == null).ToList();
                 }
                 messageList = messageList.OrderByDescending(m => m.MessageSent).ToList();
                 conversations.Add(messageList[0]);
@@ -236,8 +251,8 @@ namespace MemeApp.API.Data
         {
             var messages = await context.Messages.Include(m => m.Sender).ThenInclude(u => u.Posts)
                 .Include(m => m.Recipient).ThenInclude(u => u.Posts).Include(m => m.Post).ThenInclude(p => p.User)
-                .Where(m => (m.RecipientId == userId && m.SenderId == recipientId && m.RecipientDeleted == false) ||
-                    (m.RecipientId == recipientId && m.SenderId == userId && m.SenderDeleted == false))
+                .Where(m => ((m.RecipientId == userId && m.SenderId == recipientId && m.RecipientDeleted == false) ||
+                    (m.RecipientId == recipientId && m.SenderId == userId && m.SenderDeleted == false)) && (m.GroupId == null))
                 .OrderBy(m => m.MessageSent)
                 .ToListAsync();
 
@@ -293,10 +308,10 @@ namespace MemeApp.API.Data
             return maxMatches;
         }
 
-        public async Task<IList<User>> GetConversationUsers(int userId)
+        public async Task<IList<UserForSendPostDto>> GetConversationUsers(int userId)
         {
             var messages = await GetConversationListForUser(userId);
-            var userList = new List<User>();
+            var userList = new List<UserForSendPostDto>();
             foreach (var message in messages) {
                 var idToSend = 0;
                 if (message.SenderId == userId) 
@@ -304,11 +319,97 @@ namespace MemeApp.API.Data
                 else 
                     idToSend = message.SenderId;
                 
-                var user = await GetUser(idToSend);
-                userList.Add(user);
+                UserForSendPostDto user;
+                if (message.GroupId > 0) {
+                    user = new UserForSendPostDto()
+                    {
+                        Username = message.Group.GroupName,
+                        GroupPhotoUrls = message.Group.UserGroups.Select(ug => ug.UserPhotoUrl).ToList(),
+                        GroupUsernames = message.Group.UserGroups.Select(ug => ug.User.Username).ToList(),
+                        GroupName = message.Group.GroupName,
+                        GroupId = message.GroupId.Value
+
+                    };
+                    userList.Add(user);
+                } else {
+                   var fullUser = await GetUser(idToSend);
+                   user = mapper.Map<UserForSendPostDto>(fullUser);
+
+                   userList.Add(user);
+                }
             }
 
+            
             return userList;
+        }
+
+        public async Task<IList<Notification>> GetNotifications(int userId)
+        {
+            var notificationQueryable = context.Notifications.Include(n => n.Recipient).Include(n => n.Causer)
+                .Include(n => n.Post).Include(n => n.Comment).AsQueryable();
+
+            var notificationsToReturn = await notificationQueryable.Where(n => n.RecipientId == userId).ToListAsync();
+
+            notificationsToReturn = notificationsToReturn.OrderByDescending(n => n.Created).ToList();
+
+            return notificationsToReturn;
+        }
+
+        public async Task<int> HasNewMessages(int userId)
+        {
+            var user = await GetUser(userId);
+            int count = 0;
+            foreach (var message in user.MessagesReceived) {
+                if (!message.IsRead) {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+
+        public async Task<int> HasNewNotifications(int userId)
+        {
+            var user = await GetUser(userId);
+            int count = 0;
+            foreach (var notification in user.NotificationsReceived) {
+                if (!notification.IsRead) {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+
+        public async Task<Group> GetGroup(int groupId)
+        {
+            var group = await context.Groups.Include(g => g.UserGroups)
+            .Include(g => g.Messages).ThenInclude(m => m.Sender)
+            .Include(g => g.Messages).ThenInclude(m => m.Post).FirstOrDefaultAsync(g => g.Id == groupId);
+
+            return group;
+        }
+
+        public async Task<IList<Message>> GetGroupMessageThread(int userId, int groupId)
+        {
+            var group = await GetGroup(groupId);
+            var allMessages = group.Messages.OrderBy(m => m.MessageSent).ToList();
+            var messages = new List<Message>();
+            DateTime lastTime = new DateTime(1200, 1,1);
+
+            for (int i = 0; i < allMessages.Count; i++) {
+                var message = allMessages.ElementAt(i);
+                if (i > 0) {
+                    lastTime = allMessages.ElementAt(i -1).MessageSent;
+                }
+                if (message.RecipientId == userId || (message.SenderId == userId && lastTime != message.MessageSent)) {
+                    messages.Add(message);
+                }
+            }
+
+            messages = messages.OrderBy(m => m.MessageSent).ToList();
+
+            return messages;
         }
     }
 }

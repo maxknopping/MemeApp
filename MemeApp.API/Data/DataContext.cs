@@ -22,6 +22,12 @@ namespace MemeApp.API.Data
 
         public DbSet<Message> Messages { get; set; }
 
+        public DbSet<Notification> Notifications { get; set; }
+
+        public DbSet<UserGroup> UserGroups { get; set; }
+
+        public DbSet<Group> Groups { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder) {
             builder.Entity<Follow>().HasKey(p => new {p.FollowerId, p.FolloweeId});
 
@@ -80,6 +86,51 @@ namespace MemeApp.API.Data
                 .WithMany(p => p.MessagesSent)
                 .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired(false);
+
+            builder.Entity<Message>()
+                .HasOne(m => m.Group)
+                .WithMany(p => p.Messages)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasForeignKey(m => m.GroupId)
+                .IsRequired(false);
+
+            builder.Entity<UserGroup>()
+                .HasOne(ug => ug.Group)
+                .WithMany(g => g.UserGroups)
+                .HasForeignKey(ug => ug.GroupId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<UserGroup>()
+                .HasOne(ug => ug.User)
+                .WithMany(g => g.UserGroups)
+                .HasForeignKey(ug => ug.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Notification>()
+                .HasOne(n => n.Causer)
+                .WithMany(u => u.NotificationsCaused)
+                .HasForeignKey(n => n.CauserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Notification>()
+                .HasOne(n => n.Recipient)
+                .WithMany(u => u.NotificationsReceived)
+                .HasForeignKey(n => n.RecipientId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Notification>()
+                .HasOne(n => n.Comment)
+                .WithMany(c => c.Notifications)
+                .HasForeignKey(n => n.CommentId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Notification>()
+                .HasOne(n => n.Post)
+                .WithMany(c => c.Notifications)
+                .HasForeignKey(n => n.PostId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

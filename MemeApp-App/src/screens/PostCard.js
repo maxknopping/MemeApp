@@ -20,6 +20,7 @@ const PostCard = ({
     const [likes, setLikes] = useState(0);
     const [searchInput, setSearchInput] = useState('');
     const [list, setList] = useState([]);
+    const [groupIds, setGroupIds] = useState([]);
     const [searchVisible, setSearchVisible] = useState(false);
     const [postOptionsVisible, setOptionsVisible] = useState(false);
     const [userIds, setUserIds] = useState([]);
@@ -119,7 +120,19 @@ const PostCard = ({
                 headers: {
                     'Authorization': `Bearer ${state.token}`
                 }
-            });
+            }).catch(error => console.log(error));
+        });
+
+        groupIds.forEach(element => {
+            userService.post(`/${state.id}/messages/group/${element}`, {
+                senderId: state.id,
+                groupId: element,
+                postId: postState.id
+            }, {
+                headers: {
+                    'Authorization': `Bearer ${state.token}`
+                }
+            }).catch(error => console.log(error));
         });
     };
 
@@ -226,6 +239,8 @@ const PostCard = ({
                                 }/>
                         <ScrollView style={styles.scrollView}>
                                 {list.length !== 0 ? list.map((item, index) => (
+                                    <View key={index}>
+                                    {item.groupId == 0 ? (
                                     <ListItem
                                     key={index}
                                     leftAvatar={{source: item.photoUrl ? {uri: item.photoUrl} : 
@@ -265,7 +280,55 @@ const PostCard = ({
                                             }}
                                         />
                                     }
+                                    />) : (
+                                        <ListItem
+                                    key={index}
+                                    leftAvatar={
+                                        <View style={styles.avatars}>
+                                            <Image source={item.groupPhotoUrls[0] ? {uri: item.groupPhotoUrls[0]}: require('./../../assets/user.png')} 
+                                                style={styles.avatar}/>
+                                            <Image source={item.groupPhotoUrls[1] ? {uri: item.groupPhotoUrls[1]}: require('./../../assets/user.png')} 
+                                                style={styles.avatar}/>
+                                        </View>
+                                    }
+                                    title={
+                                        <View style={styles.titleWrapper}>
+                                                <Text style={styles.username}>{item.username}</Text>
+                                        </View>
+                                    }
+                                    subtitle= {
+                                        <Text numberOfLines={1} style={{fontSize: EStyleSheet.value('.75rem'), color: 'gray', flexWrap: 'wrap'}}>{item.groupUsernames.join(', ')}</Text>
+                                    }
+                                    chevron={
+                                        <CheckBox 
+                                            uncheckedIcon="circle-thin" 
+                                            size={30} 
+                                            checkedIcon="dot-circle-o"
+                                            checkedColor="black"
+                                            checked={item.checked}
+                                            onIconPress={() => {
+                                                if (!item.checked) {
+                                                    const user = item;
+                                                    const newList = list;
+                                                    user.checked = true;
+                                                    newList[index] = user;
+                                                    setList(newList);
+                                                    setGroupIds([...groupIds, item.groupId]);
+                                                } else {
+                                                    const user = item;
+                                                    user.checked = false;
+                                                    const newList = list;
+                                                    newList[index] = user;
+                                                    setList(newList);
+                                                    const newIds = groupIds.filter(e => e != item.groupId);
+                                                    setGroupIds([...newIds]);
+                                                }
+                                            }}
+                                        />
+                                    }
                                     />
+                                    )}
+                                    </View>
                                 )): null}
                         </ScrollView>
                         <Button title="Send" disabled={userIds.length == 0} titleStyle={{color: 'white'}} 
@@ -447,6 +510,22 @@ const styles = EStyleSheet.create({
         fontWeight: 'bold',
         alignSelf: 'center',
         margin: '1rem'
+    },
+    avatar: {
+        marginLeft: -20,
+        position: 'relative',
+        borderWidth: 3,
+        borderColor: '#fff',
+        borderRadius: 50,
+        overflow: 'hidden', 
+        width: 35,
+        height: 35,
+    },
+    avatars: {
+        position: 'relative',
+        flexDirection: 'row',
+        display: 'flex',
+        paddingLeft: 10
     }
 });
 

@@ -60,4 +60,26 @@
 
 .list {
     cursor: pointer;
+    flex-direction: row;
+}
+
+.avatar {
+    margin-left: -25px;
+    position: relative;
+    border:3px solid #fff;
+    border-radius: 50%;
+    overflow:hidden;
+    width:50px;
+    height:50px;
+}
+
+.avatars {
+    display: inline-flex;
+    flex-direction: row;
+    padding-left: 25px;
+    margin-right: 10px;
+}
+
+.header {
+    flex-direction: row;
 }

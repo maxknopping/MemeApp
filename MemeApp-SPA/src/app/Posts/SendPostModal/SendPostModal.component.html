@@ -19,18 +19,26 @@
 <div *ngIf="users == null" class="modal-body">
   <div *ngFor="let message of messages; index as i">
     <li class="list-group-item title list">
-        <img *ngIf="message.senderId == id" class="profile-picture mr-2" src="{{message.recipientPhotoUrl || '../../../assets/user.png'}}" alt="">
-        <img *ngIf="message.recipientId == id && message.senderId != id" class="profile-picture mr-2" src="{{message.senderPhotoUrl || '../../../assets/user.png'}}" alt="">
-        <button *ngIf="message.senderId == id" class="like-button">
+        <img *ngIf="message.senderId == id && message.groupId == 0" class="profile-picture mr-2" src="{{message.recipientPhotoUrl || '../../../assets/user.png'}}" alt="">
+        <img *ngIf="message.recipientId == id && message.senderId != id && message.groupId == 0" class="profile-picture mr-2" src="{{message.senderPhotoUrl || '../../../assets/user.png'}}" alt="">
+        <div *ngIf="message.groupId != 0" class="avatars">
+          <img class="avatar" src="{{message.groupPhotoUrls[0].photoUrl ||'../../../assets/user.png'}}" alt="">
+          <img class="avatar" src="{{message.groupPhotoUrls[1].photoUrl ||'../../../assets/user.png'}}" alt="">
+        </div>
+        <button *ngIf="message.senderId == id && message.groupId == 0" class="like-button">
         <strong>
             {{message.recipientUsername}}
         </strong></button>
-        <button *ngIf="message.recipientId == id && message.senderId != id" class="like-button">
+        <button *ngIf="message.groupId != 0" class="like-button">
+          <strong>
+              {{message.groupName}}
+          </strong></button>
+        <button *ngIf="message.recipientId == id && message.senderId != id && message.groupId == 0" class="like-button">
           <strong>
               {{message.senderUsername}}
           </strong></button> 
           <div class="message">
-              <input type="checkbox" [(ngModel)]="userIds[i].checked"/>
+          <input type="checkbox" (ngModelChange)="handleCheckboxChangeMessage(message)" [(ngModel)]="message.checked"/>
           </div>
           <br>
           <div style="clear: both;"></div>     
@@ -53,7 +61,7 @@
           </div>
           </button>
           <div class="message">
-              <input type="checkbox" [(ngModel)]="userIds[user.index].checked"/>
+              <input type="checkbox" (ngModelChange)="handleCheckboxChangeUser(user)" [(ngModel)]="user.checked"/>
           </div>
           <br>
           <div style="clear: both;"></div>     
@@ -63,8 +71,15 @@
 
 
 <div class="modal-footer">
-  <button class="btn btn-primary" (click)="submit()">
-    Send
-    <i class="fa fa-paper-plane"></i>
-  </button>
+  <form id="submit-form">
+    <div class="input-group">
+    <input name="messageInput" *ngIf="elementType === 'group'" type="text" class="input" 
+      placeholder="Message..." [(ngModel)]="message">
+    <button class="btn btn-primary" [disabled]="usersToSend.length === 0 && groupsToSend.length === 0 || 
+      (elementType === 'group' ? (message.length === 0 ? true: false) : false)" (click)="submit()">
+      Send
+      <i class="fa fa-paper-plane"></i>
+    </button>
+  </div>
+</form>
 </div>

@@ -16,46 +16,75 @@ export class SendPostModalComponent implements OnInit {
   elementType;
   userIds = [];
   usersToSend = [];
-  query;
+  groupsToSend = [];
+  query
   id;
+  message = '';
 
 
   constructor(public bsModalRef: BsModalRef, private auth: AuthService, private user: UserService) { }
 
   ngOnInit() {
     this.id = this.auth.decodedToken.nameid;
-    this.elementType = 'user';
-    this.user.getMessages(this.id).subscribe(messages => {
-      this.messages = messages;
-      console.log(this.messages);
-      this.messages.forEach(element => {
-        // tslint:disable-next-line: triple-equals
-        this.userIds.push({id: element.senderId == this.id ? element.recipientId : element.senderId, checked: false});
+    if (this.elementType === 'sendPost') {
+      this.user.getMessages(this.id).subscribe(messages => {
+        this.messages = messages;
+        this.messages.forEach(element => {
+          // tslint:disable-next-line: triple-equals
+          element.checked = false;
+        });
+        console.log(this.userIds);
       });
-      console.log(this.userIds);
-    });
+    }
 
   }
 
   searchPreview(phrase) {
+    console.log(this.usersToSend);
     this.user.searchForUser(this.auth.decodedToken.nameid, phrase, false).subscribe(users => {
       this.users = users;
       this.users.forEach(element => {
-        this.userIds.push({id: element.id, checked: false});
-        element.index = this.userIds.length - 1;
+        if (this.usersToSend.some(e => e == element.id)) {
+          element.checked = true;
+        } else {
+          element.checked = false;
+        }
       });
     });
   }
 
-  submit() {
-    this.userIds.forEach(user => {
-      if (user.checked === true) {
-        this.usersToSend.push(user.id);
+  handleCheckboxChangeMessage(item) {
+    if (!item.checked) {
+      if (item.groupId > 0) {
+        this.groupsToSend.push(item.groupId);
+      } else {
+        this.usersToSend.push(item.senderId == this.id ? item.recipientId : item.senderId);
+        console.log(this.usersToSend);
       }
-    });
-    this.userToSendPostTo.emit(this.usersToSend);
+    } else {
+      if (item.groupId > 0) {
+        this.groupsToSend =  this.groupsToSend.filter(i => i != item.groupId);
+      } else {
+        this.usersToSend = this.usersToSend.filter(i => item.senderId == this.id ? item.recipientId != i : item.senderId != i);
+      }
+    }
+  }
+
+  handleCheckboxChangeUser(item) {
+    if (!item.checked) {
+        this.usersToSend.push(item.id);
+    } else {
+        this.usersToSend = this.usersToSend.filter(i => item.id !== i);
+    }
+  }
+
+  submit() {
+    this.userToSendPostTo.emit({users: this.usersToSend, groups: this.groupsToSend, message: this.message});
     this.bsModalRef.hide();
+    this.messages = [];
+    this.users = [];
     this.userIds = [];
     this.usersToSend = [];
+    this.message = '';
   }
 }

@@ -16,6 +16,7 @@ export class NavComponent implements OnInit {
   query: string;
   searchPreviewUsers;
   @ViewChild('dropdown', {static: true}) private dropdown: ElementRef;
+  collapsed = true;
 
   constructor(
     public authService: AuthService,
@@ -69,6 +70,10 @@ export class NavComponent implements OnInit {
     this.user.searchForUser(this.authService.decodedToken.nameid, phrase, false).subscribe(users => {
       this.searchPreviewUsers = users;
     });
+  }
+
+  toggleCollapsed() {
+      this.collapsed = !this.collapsed;
   }
 
 }
