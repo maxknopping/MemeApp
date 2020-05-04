@@ -152,7 +152,7 @@ const GroupMessageThread = ({
             </ScrollView>
             <View style={styles.bottomBorder}>
                 <View style={styles.inputContainer}>
-                    <TextInput style={styles.input} value={messageInput} 
+                    <TextInput placeholderTextColor="gray" style={styles.input} value={messageInput} 
                         onChangeText={(text) => changeInput(text)} onSubmitEditing={() => sendMessage(messageInput)} 
                         returnKeyType="send" placeholder="Message..."/>
                     <TouchableOpacity onPress={() => sendMessage(messageInput)}>
@@ -174,16 +174,17 @@ const styles = EStyleSheet.create({
     bottomBorder: {
         borderTopWidth: '.03rem',
         borderColor: 'gray',
-        backgroundColor: 'white'
+        backgroundColor: '$backgroundColor'
     },
     input: {
         fontSize: '1rem',
         borderWidth: '.03rem',
-        borderColor: 'black',
+        borderColor: '$textColor',
         paddingVertical: '.5rem',
         paddingHorizontal: '1rem',
         borderRadius: '2rem',
-        flex: 1
+        flex: 1,
+        color: '$textColor'
     },
     postButton: {
         color: '$crimson',
@@ -212,7 +213,7 @@ const styles = EStyleSheet.create({
         paddingBottom: '1rem'
     },
     headerText: {
-        color: 'black',
+        color: '$textColor',
         fontWeight: 'bold',
         fontSize: '1rem'
     },
@@ -266,7 +267,7 @@ const styles = EStyleSheet.create({
         marginLeft: -15,
         position: 'relative',
         borderWidth: 3,
-        borderColor: '#fff',
+        borderColor: 'transparent',
         borderRadius: 50,
         overflow: 'hidden', 
         width: '2rem',

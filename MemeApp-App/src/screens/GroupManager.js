@@ -102,6 +102,7 @@ const GroupManager = ({
                     {list.map((item, index) => (
                         <ListItem
                         key={index}
+                        containerStyle={{backgroundColor: EStyleSheet.value('$backgroundColor')}}
                         leftAvatar={{source: item.photoUrl ? {uri: item.photoUrl} : 
                             require('./../../assets/user.png')}}
                         title={
@@ -144,7 +145,9 @@ const GroupManager = ({
                                 <Feather style={styles.addUser} name="plus"/>
                             </TouchableOpacity>
                         </View>
-                    }/>
+                    }
+                    containerStyle={{backgroundColor: EStyleSheet.value('$backgroundColor')}}
+                    />
                 </ScrollView>
                 <Overlay isVisible={searchVisible} children={
                         <>
@@ -192,7 +195,8 @@ const styles = EStyleSheet.create({
     username: {
         fontSize: '1rem',
         fontWeight: 'bold',
-        marginRight: '.75rem'
+        marginRight: '.75rem',
+        color: '$textColor'
     },
     titleWrapper: {
         flexDirection: 'row',
@@ -205,7 +209,7 @@ const styles = EStyleSheet.create({
         backgroundColor: '$crimson'
     },
     headerView: {
-        backgroundColor: 'white',
+        backgroundColor: '$backgroundColor',
         padding: '1rem'
     },
     nameLabel: {
@@ -216,7 +220,8 @@ const styles = EStyleSheet.create({
     nameInput: {
         paddingVertical: '.5rem',
         width: '100%',
-        fontSize: '1rem'
+        fontSize: '1rem',
+        color: '$textColor'
     },
     addUser: {
         color: '$crimson',

@@ -1,0 +1,27 @@
+<div class="row">
+  <div class="col-sm-3"></div>
+  <div class="col-sm-6">
+    <li *ngFor="let notification of notifications" class="list-group-item title listItem">
+      <img class="profile-picture mr-2" src="{{notification.causerPhotoUrl || '../../../assets/user.png'}}" alt="">
+                
+                <button class="like-button" [routerLink]="[ '/profile/', notification.causerUsername]">
+                <div style="align-items: flex-start;">
+                    <span style="margin-bottom: 0rem !important; font-size: larger; color: crimson; text-align: start;">
+                        @{{notification.causerUsername}}
+                    </span>
+                    <div style="text-align: start;">
+                        <span style="color: gray !important;">{{notification.created | timeAgo}}</span>
+                    </div>
+                </div>
+                </button>
+                <span style="margin-top: 0.25rem; color: black;">
+                  {{notification.message}}
+                  <span *ngIf="notification.commentText"> 
+                    "{{notification.commentText}}"
+                  </span>
+                </span>
+                <img class="post" style="margin-left: auto; align-self: center;" *ngIf="notification.postUrl" src={{notification.postUrl}} alt="">
+    </li>
+  </div>
+  <div class="col-sm-3"></div>
+</div>

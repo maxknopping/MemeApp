@@ -49,6 +49,10 @@ import { GroupMessageThreadComponent } from './group-message-thread/group-messag
 import { GroupMessageThreadResolver } from './_resolvers/groupMessageThread.resolver';
 import { GroupManagerComponent } from './group-manager/group-manager.component';
 import { GroupManagerResolver } from './_resolvers/groupManager.resolver';
+import { NotificationsComponent } from './notifications/notifications.component';
+import { NotificationsResolver } from './_resolvers/notifications.resolver';
+import { SearchComponent } from './search/search.component';
+import {NgxSpinnerModule} from 'ngx-spinner';
 
 export function tokenGetter() {
    return localStorage.getItem('token');
@@ -78,7 +82,9 @@ export function tokenGetter() {
       PostCardMessageComponent,
       SinglePostComponent,
       GroupMessageThreadComponent,
-      GroupManagerComponent
+      GroupManagerComponent,
+      NotificationsComponent,
+      SearchComponent
    ],
    imports: [
       HttpClientModule,
@@ -93,14 +99,15 @@ export function tokenGetter() {
       ButtonsModule.forRoot(),
       BrowserAnimationsModule,
       NgxCroppieModule,
-      JwtModule.forRoot({
-         config: {
-            tokenGetter: tokenGetter,
-            whitelistedDomains: ['localhost:5000'],
-            blacklistedRoutes: ['localhost:5000/api/auth/register']
-         }}),
       ModalModule.forRoot(),
-      IconsModule
+      JwtModule.forRoot({
+        config: {
+           tokenGetter: tokenGetter,
+          whitelistedDomains: ['localhost:5000'],
+           blacklistedRoutes: ['localhost:5000/api/auth/register']
+        }}),
+      IconsModule,
+      NgxSpinnerModule
    ],
    //JwtModule.forRoot({
    //   config: {
@@ -123,7 +130,8 @@ export function tokenGetter() {
       MessageThreadResolver,
       SinglePostResolver,
       GroupMessageThreadResolver,
-      GroupManagerResolver
+      GroupManagerResolver,
+      NotificationsResolver
    ],
    bootstrap: [
       AppComponent

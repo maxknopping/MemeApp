@@ -26,5 +26,9 @@ namespace MemeApp.API.Dtos
 
         public string ProfilePictureUrl { get; set; }
 
+        public bool InJoust { get; set; }
+
+        public int JoustRating { get; set; }
+
     }
 }

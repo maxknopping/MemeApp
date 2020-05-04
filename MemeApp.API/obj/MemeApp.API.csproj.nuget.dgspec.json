@@ -47,6 +47,10 @@
               "target": "Package",
               "version": "[1.8.0, )"
             },
+            "ExponentServerSdk": {
+              "target": "Package",
+              "version": "[1.1.1, )"
+            },
             "Microsoft.AspNetCore.App": {
               "suppressParent": "All",
               "target": "Package",

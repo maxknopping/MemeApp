@@ -30,7 +30,11 @@ import ForgotPassword from './src/screens/ForgotPassword';
 import TemporaryPassword from './src/screens/TemporaryPassword';
 import GroupMessageThread from './src/screens/GroupMessageThread';
 import GroupManager from './src/screens/GroupManager';
+import {AppearanceProvider, Appearance} from 'react-native-appearance';
+import JoustHome from './src/screens/JoustHome';
+import Joust from './src/screens/Joust';
 
+const theme = Appearance.getColorScheme();
 
 const switchNavigator = createSwitchNavigator({
   Loading: LoadingScreen,
@@ -73,7 +77,10 @@ const switchNavigator = createSwitchNavigator({
         Featured: Featured,
         List: List,
         Profile: Profile,
-        Comments: Comments
+        Comments: Comments,
+        JoustHome: JoustHome,
+        SinglePost: SinglePost,
+        Joust: Joust
     },
     {
       initialRouteName: 'Featured',
@@ -153,10 +160,10 @@ const switchNavigator = createSwitchNavigator({
       }
     }),
     tabBarOptions: {
-      activeBackgroundColor: 'white',
-      inactiveBackgroundColor: 'white',
+      activeBackgroundColor: theme === "light" ? 'white' : 'black',
+      inactiveBackgroundColor: theme === "light" ? 'white' : 'black',
       activeTintColor: '#DC143C',
-      inactiveTintColor: 'black',
+      inactiveTintColor: theme === "light" ? 'black' : 'white',
       showIcons: true,
       showLabel: false
 
@@ -171,7 +178,8 @@ GLOBAL.XMLHttpRequest = GLOBAL.originalXMLHttpRequest || GLOBAL.XMLHttpRequest;
 
 EStyleSheet.build({ // always call EStyleSheet.build() even if you don't use global variables!
   $crimson: '#DC143C',
-  $theme: 'lightTheme'
+  $textColor: theme === "light" ? 'black' : 'white',
+  $backgroundColor: theme === "light" ? 'white' : 'black',
 });
 
 const styles = EStyleSheet.create({
@@ -180,18 +188,25 @@ const styles = EStyleSheet.create({
   },
   backIcon: {
     fontSize: '1.7rem',
-    marginLeft: '.5rem'
+    marginLeft: '.5rem',
+    color: '$textColor'
   }
 });
 
-StatusBar.setBarStyle('dark-content', true);
+if (theme === "light") {
+  StatusBar.setBarStyle('dark-content', true);
+} else {
+  StatusBar.setBarStyle('light-content', true);
+}
 
 const App = createAppContainer(switchNavigator);
 
 export default () => {
   return (
+    <AppearanceProvider>
       <AuthProvider>
-        <App ref={(navigator) => {setNavigator(navigator)}}/>
+        <App theme={theme} ref={(navigator) => {setNavigator(navigator)}}/>
       </AuthProvider>
+    </AppearanceProvider>
   );
 };

@@ -242,7 +242,8 @@ const styles = EStyleSheet.create({
         aspectRatio: 7 /1,
         padding: '.5rem',
         borderRadius: '.5rem',
-        fontSize: '1rem'
+        fontSize: '1rem',
+        color: '$textColor'
     },
     usernameLabel: {
         paddingVertical: '.7rem',
@@ -256,6 +257,7 @@ const styles = EStyleSheet.create({
         padding: '.5rem',
         borderRadius: '.5rem',
         fontSize: '1rem',
+        color: '$textColor'
     },
     changePassword: {
         width: '80%',

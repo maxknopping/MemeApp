@@ -31,6 +31,10 @@ namespace MemeApp.API.Models
 
         public IList<Notification> Notifications { get; set; }
 
+        public bool inJoust { get; set; }
+
+        public int JoustRating { get; set; }
+
 
         
     }

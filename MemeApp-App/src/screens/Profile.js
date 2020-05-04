@@ -30,7 +30,6 @@ const Profile = ({
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
-
         userService.get(`/username/${username}`, {
             headers: {
                 'Authorization': `Bearer ${state.token}`
@@ -72,6 +71,7 @@ const Profile = ({
         ).catch(error => console.log(error));
 
     }, []);
+
 
     const renderGridSection = () => {
         return user.posts.map((post, index) => {
@@ -140,7 +140,7 @@ const Profile = ({
 
     return (
             <ScrollView refreshControl={
-                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                <RefreshControl refreshing={refreshing} colors={EStyleSheet.value('$textColor')} tintColor={EStyleSheet.value('$textColor')} onRefresh={onRefresh} />
             } style={{flex: 1}}>
                 {user ? <View>
                 <View style={styles.headerView}>
@@ -156,8 +156,8 @@ const Profile = ({
                                     {user ? (
                                     <Text style={styles.follow}>
                                         {followers}
-                                    </Text>) : <Text>0</Text> }
-                                    <Text>Followers</Text>
+                                    </Text>) : <Text style={styles.follow}>0</Text> }
+                                    <Text style={styles.label}>Followers</Text>
                                 </View>
                             </TouchableOpacity>
                         ) : (
@@ -165,8 +165,8 @@ const Profile = ({
                                 {user ? (
                                 <Text style={styles.follow}>
                                     {followers}
-                                </Text>) : <Text>0</Text> }
-                                <Text>Followers</Text>
+                                </Text>) : <Text style={styles.follow}>0</Text> }
+                                <Text style={styles.label}>Followers</Text>
                             </View>
                         )}
                         {user.following.length > 0 ? (
@@ -176,8 +176,8 @@ const Profile = ({
                                     {user ? (
                                     <Text style={styles.follow}>
                                         {user.following.length}
-                                    </Text>) : <Text>0</Text> }
-                                    <Text>Following</Text>
+                                    </Text>) : <Text style={styles.follow}>0</Text> }
+                                    <Text style={styles.label}>Following</Text>
                                 </View>
                             </TouchableOpacity>
                         ) : (
@@ -185,8 +185,8 @@ const Profile = ({
                                     {user ? (
                                     <Text style={styles.follow}>
                                         {user.following.length}
-                                    </Text>) : <Text>0</Text> }
-                                    <Text>Following</Text>
+                                    </Text>) : <Text style={styles.follow}>0</Text> }
+                                    <Text style={styles.label}>Following</Text>
                             </View>
                         )}
                     </View>
@@ -210,11 +210,11 @@ const Profile = ({
                 <View style={styles.tabView}>
                     <NativeButton onPress={() => segmentClicked(0)} active={activeIndex === 0} transparent>
                         <MaterialIcons style={[styles.icons, activeIndex === 0 ?
-                            {color: EStyleSheet.value('$crimson')} : {color: 'black'}]} name="apps"></MaterialIcons>
+                            {color: EStyleSheet.value('$crimson')} : {color: EStyleSheet.value('$textColor')}]} name="apps"></MaterialIcons>
                     </NativeButton>
                     <NativeButton onPress={() => segmentClicked(1)} active={activeIndex === 1} transparent>
                         <MaterialIcons style={[styles.icons, activeIndex === 1 ? 
-                            {color: EStyleSheet.value('$crimson')} : {color: 'black'}]} name="format-list-bulleted"></MaterialIcons>
+                            {color: EStyleSheet.value('$crimson')} : {color: EStyleSheet.value('$textColor')}]} name="format-list-bulleted"></MaterialIcons>
                     </NativeButton>
                 </View>
                 {renderSection()}
@@ -246,7 +246,8 @@ const styles = EStyleSheet.create({
     },
     follow: {
         fontWeight: 'bold',
-        fontSize: '1.4rem'
+        fontSize: '1.4rem',
+        color: '$textColor'
     },
     followView: {
         alignItems: 'center',
@@ -259,7 +260,8 @@ const styles = EStyleSheet.create({
         flexDirection: 'row'
     },
     bioText: {
-        fontSize: '1rem'
+        fontSize: '1rem',
+        color: '$textColor'
     },
     followButton: {
         marginHorizontal: '5%',
@@ -273,6 +275,7 @@ const styles = EStyleSheet.create({
     },
     icons: {
         fontSize: '1.7rem',
+        color: '$textColor'
     },
     gridView: {
         flexDirection: 'row',
@@ -284,7 +287,10 @@ const styles = EStyleSheet.create({
     },
     gearIcon: {
         fontSize: '1.7rem',
-        color: 'black'
+        color: '$textColor'
+    },
+    label: {
+        color: '$textColor'
     }
 
 });

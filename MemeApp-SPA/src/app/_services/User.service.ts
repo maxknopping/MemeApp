@@ -164,4 +164,12 @@ export class UserService {
     return this.http.get(`${this.baseUrl}/search/${userId}/${query}/${fullResult}`);
   }
 
+  getNotifications(userId: number) {
+    return this.http.get(`${this.baseUrl}/notifications/${userId}`);
+  }
+
+  markNotificationsAsRead(userId: number) {
+    return this.http.post(`${this.baseUrl}/notifications/${userId}/read`, {});
+  }
+
 }

@@ -392,7 +392,8 @@ const styles = EStyleSheet.create({
     headerUsername: {
         marginTop: '.5rem',
         fontWeight: 'bold',
-        fontSize: '1rem'
+        fontSize: '1rem',
+        color: '$textColor'
     },
     usernameWrapper: {
         justifyContent: 'space-between',
@@ -403,7 +404,8 @@ const styles = EStyleSheet.create({
         fontSize: '1rem',
         marginRight: '1rem',
         marginTop: '.5rem',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        color: '$textColor'
     },
     iconsContainer: { 
         flexDirection: 'row',
@@ -415,21 +417,24 @@ const styles = EStyleSheet.create({
         fontSize: '1.5rem'
     },
     likeButtonO: {
-        color: 'black',
+        color: '$textColor',
         fontSize: '1.5rem'
     },
     commentIcon: {
         fontSize: '1.5rem', 
-        marginHorizontal: '1.4rem'
+        marginHorizontal: '1.4rem',
+        color: '$textColor'
     },
     planeIcon: {
-        fontSize: '1.5rem'
+        fontSize: '1.5rem',
+        color: '$textColor'
     },
     likeCount: {
         fontSize: '1rem',
         fontWeight: 'bold',
         marginHorizontal: '3%',
-        marginTop: '2%'
+        marginTop: '2%',
+        color: '$textColor'
     },
     captionWrapper: {
         marginHorizontal: '3%',
@@ -441,14 +446,17 @@ const styles = EStyleSheet.create({
     captionUsername: {
         fontWeight: 'bold',
         fontSize: '1rem',
-        marginRight: '.5rem'
+        marginRight: '.5rem',
+        color: '$textColor'
     },
     caption: {
-        fontSize: '1rem'
+        fontSize: '1rem',
+        color: '$textColor'
     },
     comments: {
         fontSize: '1rem',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        color: '$textColor'
     },
     commentWrapper: {
         marginHorizontal: '3%',

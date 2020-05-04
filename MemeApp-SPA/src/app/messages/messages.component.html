@@ -8,16 +8,16 @@
       </div>
       <li class="list-group-item header title">
           <div dropdown class="dropdown search-dropdown" #dropdown="bs-dropdown">
-            <form #searchForm="ngForm" id="searchForm" (ngSubmit)="dropdown.show(); searchPreview(query)">
+            <form autocomplete="off" #searchForm="ngForm" id="searchForm" (keyup)="onKey($event); dropdown.show()">
               <div class="input-group">
                 <input type="text"
-                        required 
+                        required
                         class="form-control" 
                         placeholder="Search" 
                         [(ngModel)]="query" 
                         name="query">
                 <div class="input-group-append">
-                  <button class="search-button" dropdownToggle [disabled]="!searchForm.valid"><i class="fa fa-search"></i></button>
+                  <button class="search-button" id="search-dropdown" dropdownToggle [disabled]="!searchForm.valid"><i class="fa fa-search"></i></button>
                   <button (click)="createGroup()" type="button">
                     <i class="fa fa-users"></i>
                   </button>

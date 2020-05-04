@@ -78,6 +78,7 @@ const Search = ({
                 {list.map((item, index) => (
                     <ListItem
                     key={index}
+                    containerStyle={{backgroundColor: EStyleSheet.value('$backgroundColor')}}
                     leftAvatar={{source: item.photoUrl ? {uri: item.photoUrl} : 
                         require('./../../assets/user.png')}}
                     title={
@@ -131,7 +132,8 @@ const styles = EStyleSheet.create({
     username: {
         fontSize: '1rem',
         fontWeight: 'bold',
-        marginRight: '.75rem'
+        marginRight: '.75rem',
+        color: '$textColor'
     },
     titleWrapper: {
         flexDirection: 'row',

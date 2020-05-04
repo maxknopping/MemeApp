@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import { Text, View, ScrollView, Image, ActivityIndicator, FlatList, ListView, TouchableOpacity } from 'react-native';
+import { Text, View, ScrollView, Image, ActivityIndicator, FlatList, ListView, TouchableOpacity, RefreshControl } from 'react-native';
 import {Button} from 'react-native-elements';
 import {Button as NativeButton} from 'native-base';
 import {Context} from './../context/AuthContext';
@@ -84,8 +84,10 @@ const Featured = ({
             onEndReached={() => loadMore()}
             onEndReachedThreshold={0.5}
             initialNumToRender={3}
-            onRefresh={onRefresh}
-            refreshing={refreshing}
+            refreshControl={
+                <RefreshControl onRefresh={onRefresh}
+                refreshing={refreshing} colors={EStyleSheet.value('$textColor')} tintColor={EStyleSheet.value('$textColor')}/>
+            }
             ListFooterComponent={() => loadingMore ? <ActivityIndicator animating size="small" /> : null}
         />);
 };
@@ -99,14 +101,15 @@ const styles = EStyleSheet.create({
         color: 'black'
     },
     joustIcon: {
-        fontSize: '1.7rem'
+        fontSize: '1.7rem',
+        color: '$textColor'
     }
 });
 
 Featured.navigationOptions = ({navigation}) => {
     return {
         headerRight: () => (
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('JoustHome')}>
                 <View style={{marginRight: 10}}>
                     <MaterialCommunityIcons style={styles.joustIcon} name="sword-cross"/>
                 </View>

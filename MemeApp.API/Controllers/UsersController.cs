@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
+using Floxdc.ExponentServerSdk;
+using Floxdc.ExponentServerSdk.Enums;
 using MemeApp.API.Data;
 using MemeApp.API.Dtos;
 using MemeApp.API.Helpers;
@@ -237,7 +239,31 @@ namespace MemeApp.API.Controllers
 
             repo.Add<Notification>(notification);
 
+
+
             if (await repo.SaveAll()) {
+                var notificationCount = await repo.HasNewNotifications(recipient.Id);
+
+                if (recipient.PushToken != null) {
+                    var client = new PushClient();
+                    var pushNotification = new PushMessage(recipient.PushToken, 
+                        data: new {type = "follow"},
+                        title: "MemeClub", 
+                        body: $"@{follower.Username} {notification.Message}", 
+                        sound: PushSounds.Default, 
+                        badge: notificationCount,
+                        displayInForeground: true
+                    );
+
+                    try
+                    {
+                        await client.Publish(pushNotification);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                }
                 return Ok();
             }
 
@@ -307,6 +333,31 @@ namespace MemeApp.API.Controllers
 
             repo.Add<Notification>(notification);
 
+            var notificationCount = await repo.HasNewNotifications(id);
+
+
+            var userRecipient = await repo.GetUser(recipient.UserId);
+
+            if (userRecipient.PushToken != null) {
+                var client = new PushClient();
+                var pushNotification = new PushMessage(userRecipient.PushToken, 
+                    data: new {type = "like"},
+                    title: "MemeClub", 
+                    body: $"@{userRecipient.Username} {notification.Message}", 
+                    sound: PushSounds.Default, 
+                    badge: notificationCount,
+                    displayInForeground: true
+                );
+
+                try
+                {
+                    await client.Publish(pushNotification);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
 
             repo.Add<Like>(like);
 
@@ -390,14 +441,39 @@ namespace MemeApp.API.Controllers
 
 
             if(await repo.SaveAll()) {
-                var notification = new Notification("comment")
-                {
-                    RecipientId = recipient.UserId,
-                    CauserId = comment.CommenterId,
-                    PostId = recipient.Id,
-                    CommentId = fullComment.Id
-                };
-                repo.Add(notification);
+                if (recipient.UserId != comment.CommenterId) {
+                    var notification = new Notification("comment")
+                    {
+                        RecipientId = recipient.UserId,
+                        CauserId = comment.CommenterId,
+                        PostId = recipient.Id,
+                        CommentId = fullComment.Id
+                    };
+                    repo.Add(notification);
+                    var notificationCount = await repo.HasNewNotifications(recipient.UserId);
+                    var userRecipient = await repo.GetUser(recipient.UserId);
+
+                    if (userRecipient.PushToken != null) {
+                        var client = new PushClient();
+                        var pushNotification = new PushMessage(userRecipient.PushToken, 
+                            data: new {type = "like"},
+                            title: "MemeClub", 
+                            body: $"@{userRecipient.Username} {notification.Message}\"{notification.Comment.Text}\"", 
+                            sound: PushSounds.Default, 
+                            badge: notificationCount,
+                            displayInForeground: true
+                        );
+
+                        try
+                        {
+                            await client.Publish(pushNotification);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
+                    }
+                }
                 await repo.SaveAll();
                 return Ok();
             }
@@ -476,6 +552,31 @@ namespace MemeApp.API.Controllers
             repo.Add<CommentLike>(like);
 
             if (await repo.SaveAll()) {
+                if (id != recipient.CommenterId) {
+                    var notificationCount = await repo.HasNewNotifications(recipient.CommenterId);
+                    var userRecipient = await repo.GetUser(recipient.CommenterId);
+
+                    if (userRecipient.PushToken != null) {
+                        var client = new PushClient();
+                        var pushNotification = new PushMessage(userRecipient.PushToken, 
+                            data: new {type = "like"},
+                            title: "MemeClub", 
+                            body: $"@{userRecipient.Username} {notification.Message}\"{notification.Comment.Text}\"", 
+                            sound: PushSounds.Default, 
+                            badge: notificationCount,
+                            displayInForeground: true
+                        );
+
+                        try
+                        {
+                            await client.Publish(pushNotification);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
+                    }
+                }
                 return Ok();
             }
 
@@ -552,6 +653,11 @@ namespace MemeApp.API.Controllers
             foreach(var like in comment.LikeList) {
                 repo.Delete<CommentLike>(like);
             }
+
+            foreach(var notification in comment.Notifications) {
+                repo.Delete<Notification>(notification);
+            }
+            
             repo.Delete<Comment>(comment);
 
             if (await repo.SaveAll()) {
@@ -638,7 +744,30 @@ namespace MemeApp.API.Controllers
                 count = count
             });
         }
-        
+
+        [HttpGet("joust/NewPosts")]
+        public async Task<IActionResult> GetNewJoustPosts() {
+            var posts = await repo.GetJoustPosts();
+
+            var postToReturn = mapper.Map<IList<PostForDetailedDto>>(posts);
+            return Ok(postToReturn);
+
+        }
+
+        [HttpGet("joust/top/{index}")]
+        public async Task<IActionResult> GetTopJoustPosts(int index) {
+            var post = await repo.getTopJoustPosts(index);
+
+            var postToReturn = mapper.Map<PostForDetailedDto>(post);
+            return Ok(postToReturn);
+        }
+
+        [HttpPost("joust/result/{winner}/{loser}")]
+        public IActionResult JoustResult(int winner, int loser) {
+            repo.JoustResult(winner, loser);
+
+            return Ok();
+        }
 
 
     }

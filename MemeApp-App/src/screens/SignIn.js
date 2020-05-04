@@ -3,6 +3,7 @@ import {View, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-nativ
 import {Text, Button} from 'react-native-elements';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {Context as AuthContext} from './../context/AuthContext';
+import { Appearance } from 'react-native-appearance';
 
 const SignIn = ({
     navigation,
@@ -12,6 +13,7 @@ const SignIn = ({
     const [password, setPassword] = useState('');
     const [isLoading, setLoading] = useState(false);
     const {state, signin, tryLocalSignIn} = useContext(AuthContext);
+    const theme = EStyleSheet.value('$backgroundColor');
     
     useEffect(() => {
         tryLocalSignIn();
@@ -19,10 +21,10 @@ const SignIn = ({
 
     return (
         <View style={styles.container}>
-            <Image style={styles.image} source={require('./img/logo.png')}/>
-            <TextInput value={username} onChangeText={(text => setUsername(text))} 
+            <Image style={styles.image} source={theme === 'white' ? require('./img/logo.png') : require('./img/MemeClub.png')}/>
+            <TextInput value={username} placeholderTextColor="gray" onChangeText={(text => setUsername(text))} 
                 style={styles.username} placeholder="Username" autoCapitalize="none" autoCorrect={false}/>
-            <TextInput value={password} onChangeText={(text => setPassword(text))} 
+            <TextInput value={password} placeholderTextColor="gray" onChangeText={(text => setPassword(text))} 
                 secureTextEntry={true} style={styles.username} autoCapitalize="none" 
                 placeholder="Password" autoCorrect={false}/>
             {state.errorMessage ? <Text style={{color: crimson}}>{state.errorMessage}</Text> : null}
@@ -73,19 +75,21 @@ const styles = EStyleSheet.create({
         borderColor: 'grey',
         padding: 10,
         borderRadius: 10,
+        color: '$textColor'
     },
     login: {
         marginTop: '.5rem',
         width: "80%",
         aspectRatio: 7/ 1,
         alignSelf: 'center',
-        fontSize: '1.1rem'
+        fontSize: '1.1rem',
     },
     textContainer: {
         flexDirection: 'row'
     },
     text: {
-        fontSize: '1.1rem'
+        fontSize: '1.1rem',
+        color: '$textColor'
     }, forgot: {
         color: '$crimson'
     }

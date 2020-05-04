@@ -19,33 +19,14 @@
         <li class="nav-item" routerLinkActive="active">
           <a class="nav-link" [routerLink]="[ '/messages']"><i-feather name="message-circle"></i-feather></a>
         </li>
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link" [routerLink]="[ '/notifications']"><i-feather name="bell"></i-feather></a>
+        </li>
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link" [routerLink]="[ '/search']"><i-feather name="search"></i-feather></a>
+        </li>
       </ul>
-  
-      <div *ngIf="loggedIn()" dropdown class="dropdown search-dropdown" #dropdown="bs-dropdown">
-        <form #searchForm="ngForm" id="searchForm" (ngSubmit)="dropdown.show(); searchPreview(query)">
-          <div class="input-group">
-            <input type="text"
-                    required 
-                    class="form-control" 
-                    placeholder="Search" 
-                    [(ngModel)]="query" 
-                    name="query">
-            <div class="input-group-append">
-              <button class="search-button" [disabled]="!searchForm.valid"><i class="fa fa-search" dropdownToggle></i></button>
-            </div>
-          </div>
-        </form>
-        <div class="dropdown-menu" role="menu" *dropdownMenu>
-          <div *ngFor="let user of searchPreviewUsers">
-            <a class="dropdown-item" role="menuitem"
-              [routerLink]="[ '/profile/', user.username]" 
-              href="#">
-                <img class="profile-picture mr-1" src="{{user.photoUrl || '../../../assets/user.png'}}">
-                {{user.username}}</a>
-            <div class="dropdown-divider"></div>
-            </div>
-          </div>
-        </div>
+
 
       <div *ngIf="loggedIn()" class="dropdown profile-dropdown" dropdown>
           <span class="mr-2"></span>

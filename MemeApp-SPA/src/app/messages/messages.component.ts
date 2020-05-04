@@ -42,8 +42,10 @@ export class MessagesComponent implements OnInit {
     this.user.searchForUser(this.auth.decodedToken.nameid ,phrase, true).subscribe(users => {
       this.searchPreviewUsers = users;
     });
+  }
 
-    //eventually, router navigate to search results
+  onKey(event: any) { // without type info
+    this.searchPreview(event.target.value);
   }
 
   searchPreview(phrase) {

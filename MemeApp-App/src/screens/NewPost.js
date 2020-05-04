@@ -6,7 +6,6 @@ import { Button } from 'react-native-elements';
 import userService from './../apis/user';
 import { Context } from '../context/AuthContext';
 import axios from 'axios';
-import { FileUploader, FileItem } from 'ng2-file-upload';
 import {Buffer} from 'buffer';
 
 
@@ -39,7 +38,7 @@ const NewPost = ({
         <SafeAreaView style={styles.safeArea}>
         <View style={styles.container}>
             <Image source={{uri: image}} style={styles.image}/>
-            <TextInput style={styles.textInput} placeholder="Add a caption..." multiline 
+            <TextInput style={styles.textInput} placeholderTextColor="gray" placeholder="Add a caption..." multiline 
                 value={caption}
                 onChangeText={(text) => setCaption(text)}/>
         </View>
@@ -88,7 +87,8 @@ const styles = EStyleSheet.create({
     textInput: {
         width: '60%',
         aspectRatio: 1.7143/1,
-        marginLeft: '1rem'
+        marginLeft: '1rem',
+        color: '$textColor'
     }
 });
 

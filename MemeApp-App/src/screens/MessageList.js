@@ -111,6 +111,7 @@ const MessageList = ({
                 <ScrollView style={{flex: 1}}>
                     <ListItem 
                         contentContainerStyle={{alignItems: 'center'}}
+                        containerStyle={{backgroundColor: EStyleSheet.value('$backgroundColor')}}
                         title={
                             <View style={{flexDirection: 'row', alignItems: 'center', marginRight: 10}}>
                             <View style={styles.searchBackground}>
@@ -121,7 +122,7 @@ const MessageList = ({
                                     }} style={styles.searchInput} placeholder="Search..." placeholderTextColor="#A9A9A9"/>
                             </View>
                             <TouchableOpacity>
-                                <AntDesign style={{fontSize: 30, marginLeft: 5}} onPress={() => setSearchVisible(true)} name="addusergroup"/>
+                                <AntDesign style={{fontSize: 30, marginLeft: 5, color: EStyleSheet.value('$textColor')}} onPress={() => setSearchVisible(true)} name="addusergroup"/>
                             </TouchableOpacity>
                             </View>
 
@@ -221,6 +222,7 @@ const MessageList = ({
                         {message.groupId == 0 ? (
                             <ListItem
                             key={index}
+                            containerStyle={{backgroundColor: EStyleSheet.value('$backgroundColor')}}
                             leftAvatar={{source: message.senderId == state.id ? (message.recipientPhotoUrl ? {uri: message.recipientPhotoUrl} : 
                                 require('./../../assets/user.png')) : (message.senderPhotoUrl ? {uri: message.senderPhotoUrl} : 
                                 require('./../../assets/user.png'))}
@@ -247,6 +249,7 @@ const MessageList = ({
                             />): (
                                 <ListItem
                             key={index}
+                            containerStyle={{backgroundColor: EStyleSheet.value('$backgroundColor')}}
                             leftAvatar={
                                 <View style={styles.avatars}>
                                     <Image source={message.groupPhotoUrls[0].photoUrl ? {uri: message.groupPhotoUrls[0].photoUrl}: require('./../../assets/user.png')} 
@@ -293,6 +296,7 @@ const MessageList = ({
                                  subtitle= {
                                      <Text style={{fontSize: EStyleSheet.value('.75rem'), color: 'gray'}}>{item.name}</Text>
                                  }
+                                 containerStyle={{backgroundColor: EStyleSheet.value('$backgroundColor')}}
                                  />
                              ))}
                          </View>
@@ -308,6 +312,7 @@ const styles = EStyleSheet.create({
     usernameText: {
         fontWeight: 'bold',
         fontSize: '1rem',
+        color: '$textColor'
     },
     mainLineWrapper: {
         flexDirection: 'row'
@@ -316,7 +321,7 @@ const styles = EStyleSheet.create({
         marginLeft: '1rem',
         fontSize: '1rem',
         flex: 1,
-        color: 'gray'
+        color: 'gray',
     },
     timeAgo: {
         fontSize: '.75rem',
@@ -356,7 +361,8 @@ const styles = EStyleSheet.create({
     username: {
         fontSize: '1rem',
         fontWeight: 'bold',
-        marginRight: '.75rem'
+        marginRight: '.75rem',
+        color: '$textColor'
     },
     titleWrapper: {
         flexDirection: 'row',
@@ -373,7 +379,7 @@ const styles = EStyleSheet.create({
         marginLeft: -20,
         position: 'relative',
         borderWidth: 3,
-        borderColor: '#fff',
+        borderColor: '$backgroundColor',
         borderRadius: 50,
         overflow: 'hidden', 
         width: 35,

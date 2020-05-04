@@ -13,6 +13,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Net.Mail;
 using Microsoft.AspNetCore.Authorization;
 using System.Linq;
+using Floxdc.ExponentServerSdk;
 
 namespace MemeApp.API.Controllers
 {
@@ -119,7 +120,8 @@ namespace MemeApp.API.Controllers
             return Ok(new
             {
                 token = tokenHandler.WriteToken(token),
-                user
+                user,
+                pushToken = userFromRepo.PushToken
 
             });
 
@@ -258,6 +260,21 @@ namespace MemeApp.API.Controllers
 
             if (await _repo.ChangePassword(userFromRepo, userForLogin.NewPassword))
             {
+                return Ok();
+            }
+
+            return BadRequest();
+
+        }
+
+        [HttpPost("pushToken/{id}")]
+        public async Task<IActionResult> SetPushToken(int id, PushTokenDto push) {
+            var user = await userRepo.GetUser(id);
+
+            user.PushToken = push.PushToken;
+
+
+            if (await userRepo.SaveAll()) {
                 return Ok();
             }
 

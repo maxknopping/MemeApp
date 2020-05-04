@@ -44,5 +44,7 @@ namespace MemeApp.API.Models
 
         public IList<UserGroup> UserGroups { get; set; }
 
+        public string PushToken { get; set; }
+
     }
 }

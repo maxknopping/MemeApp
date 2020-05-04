@@ -147,6 +147,7 @@ const Comments = ({
                 {comments.map((comment, index) => (
                     <ListItem
                     key={index}
+                    containerStyle={{backgroundColor: EStyleSheet.value('$backgroundColor')}}
                     leftAvatar={{source: comment.photoUrl ? {uri: comment.photoUrl} : 
                         require('./../../assets/user.png')}}
                     title={
@@ -203,7 +204,7 @@ const Comments = ({
             </ScrollView>
             <View style={styles.bottomBorder}>
                 <View style={styles.inputContainer}>
-                    <TextInput style={styles.input} value={commentInput} 
+                    <TextInput placeholderTextColor="gray" style={styles.input} value={commentInput} 
                         onChangeText={(text) => changeInput(text)} onSubmitEditing={() => sendComment(commentInput)} 
                         returnKeyType="send" placeholder="Leave a comment..."/>
                     <TouchableOpacity onPress={() => sendComment(commentInput)}>
@@ -225,16 +226,17 @@ const styles = EStyleSheet.create({
     bottomBorder: {
         borderTopWidth: '.03rem',
         borderColor: 'gray',
-        backgroundColor: 'white'
+        backgroundColor: '$backgroundColor'
     },
     input: {
         fontSize: '1rem',
         borderWidth: '.03rem',
-        borderColor: 'black',
+        borderColor: '$textColor',
         paddingVertical: '.5rem',
         paddingHorizontal: '1rem',
         borderRadius: '2rem',
-        flex: 1
+        flex: 1,
+        color: '$textColor'
     },
     postButton: {
         color: '$crimson',
@@ -245,13 +247,15 @@ const styles = EStyleSheet.create({
     username: {
         fontSize: '1rem',
         fontWeight: 'bold',
-        marginRight: '.75rem'
+        marginRight: '.75rem',
+        color: '$textColor'
     },
     commentWrapper: {
         flexDirection: 'row',
     },
     commentText: {
-        fontSize: '1rem'
+        fontSize: '1rem',
+        color: '$textColor'
     },
     likeButton: {
         fontSize: '1rem',
@@ -273,7 +277,8 @@ const styles = EStyleSheet.create({
         marginTop: '.5rem'
     },
     trashIcon: {
-        fontSize: '1rem'
+        fontSize: '1rem',
+        color: 'gray'
     }
 });
 

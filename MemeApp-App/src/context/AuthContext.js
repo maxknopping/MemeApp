@@ -1,17 +1,20 @@
 import createDataContext from './createDataContext';
 import auth from './../apis/auth';
-import {AsyncStorage} from 'react-native';
+import {AsyncStorage, Platform} from 'react-native';
 import {navigate} from './../helpers/navigationRef';
 import authFrisbee from './../apis/authFrisbee';
+import { Notifications } from 'expo';
+import * as Permissions from 'expo-permissions';
+import Constants from 'expo-constants';
 
 const authReducer = (state, action) => {
     switch(action.type) {
         case 'add_error':
             return {...state, errorMessage: action.payload};
         case 'signin':
-            return {token: action.payload.token, id: action.payload.id, username: action.payload.username, errorMessage: ''};
+            return {token: action.payload.token, id: action.payload.id, username: action.payload.username, expoPushToken: action.payload.expoPushToken, errorMessage: ''};
         case 'signout':
-            return {token: null, id: 0, username: '', errorMessage: null};
+            return {token: null, id: 0, username: '', errorMessage: null, expoPushToken: null};
         case 'changeUsername':
             return {...state, username: action.payload};
         case 'changePassword':
@@ -26,10 +29,21 @@ const tryLocalSignIn = (dispatch) => async () => {
     const username = await AsyncStorage.getItem('username');
     const password = await AsyncStorage.getItem('password');
     if (username && password) {
-        const response = await auth.post('/login', {username: username, password: password});
+        const response = await auth.post('/login?isIos=true', {username: username, password: password});
+        let pushToken;
+            if (response.data.pushToken == null) {
+                pushToken = await registerForNotifications(response.data.user.id);
+                //await AsyncStorage.setItem('pushToken', pushToken);
+            } else {
+                //await AsyncStorage.setItem('pushToken', pushToken);
+            }
         dispatch({type:'signin', payload: {token: response.data.token, 
-            id: response.data.user.id, username: response.data.user.username}});
+            id: response.data.user.id, username: response.data.user.username, expoPushToken: 
+            response.data.pushToken == null ? pushToken : response.data.pushToken}});
         await AsyncStorage.setItem('token', response.data.token);
+        if (Platform.OS === 'ios') {
+            Notifications.setBadgeNumberAsync(0);
+        }
         navigate('Feed');
     } else {
         navigate('SignIn');
@@ -48,8 +62,10 @@ const signup = (dispatch) => {
                 await AsyncStorage.setItem('token', response.data.token);
                 await AsyncStorage.setItem('username', username);
                 await AsyncStorage.setItem('password', password);
+                const pushToken = await registerForNotifications(registerResponse.data.id);
+                //await AsyncStorage.setItem('pushToken', pushToken);
                 dispatch({type:'signin', payload: {token: response.data.token, 
-                    id: response.data.user.id, username: response.data.user.username}});
+                    id: response.data.user.id, username: response.data.user.username, expoPushToken: pushToken}});
                 navigate('Feed');
             });
         } catch (err) {
@@ -61,13 +77,22 @@ const signup = (dispatch) => {
 
 const signin = (dispatch) => async ({username, password}) => {
         try {
-            const response = await auth.post('/login', {username: username, password: password});
+            const response = await auth.post(`/login?isIos=true`, {username: username, password: password});
             //const response = await authFrisbee.post('/api/auth/login', {username, password});
             await AsyncStorage.setItem('token', response.data.token);
             await AsyncStorage.setItem('username', username);
             await AsyncStorage.setItem('password', password);
+            let pushToken;
+            if (response.data.pushToken == null) {
+                pushToken = await registerForNotifications(response.data.user.id);
+                //await AsyncStorage.setItem('pushToken', pushToken);
+            }
             dispatch({type:'signin', payload: {token: response.data.token, 
-                id: response.data.user.id, username: response.data.user.username}});
+                id: response.data.user.id, username: response.data.user.username, expoPushToken: 
+                response.data.pushToken == null ? pushToken : response.data.pushToken}});
+            if (Platform.OS === 'ios') {
+                Notifications.setBadgeNumberAsync(0);
+            }
             navigate('Feed');
         } catch (err) {
             dispatch({type:'add_error', payload:'Incorrect Username or Password'});
@@ -93,5 +118,45 @@ const changePassword = (dispatch) => async ({newPassword}) => {
     dispatch({type: 'changePassword', payload: newPassword});
 }
 
+const registerForNotifications = async (id) => {
+    let token;
+    if (Constants.isDevice) {
+        const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+        let finalStatus = existingStatus;
+        if (existingStatus !== 'granted') {
+          const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+          finalStatus = status;
+        }
+        if (finalStatus !== 'granted') {
+          return;
+        }
+        token = await Notifications.getExpoPushTokenAsync().catch(err => console.log(error));
+ 
+        
+      }
+  
+      if (Platform.OS === 'android') {
+        Notifications.createChannelAndroidAsync('default', {
+          name: 'MemeClub',
+          sound: true,
+          priority: 'max',
+          vibrate: [0, 250, 250, 250],
+        });
+      }
+
+    try {
+        if (Constants.isDevice) {
+            auth.post(`/pushToken/${id}`, {
+                pushToken: token
+            }).catch(error => console.log(error));
+        }
+    } catch (err){
+        console.log(err);
+    }
+    
+
+    return token;
+};
+
 export const {Context, Provider} = createDataContext(authReducer, {signin, changeUsername, changePassword, signout, signup, tryLocalSignIn},
-     {token: null, id: 0, username: '', errorMessage: null});
+     {token: null, id: 0, username: '', errorMessage: null, expoPushToken: null});

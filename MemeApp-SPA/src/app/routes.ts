@@ -26,6 +26,9 @@ import { GroupMessageThreadComponent } from './group-message-thread/group-messag
 import { GroupMessageThreadResolver } from './_resolvers/groupMessageThread.resolver';
 import { GroupManagerComponent } from './group-manager/group-manager.component';
 import { GroupManagerResolver } from './_resolvers/groupManager.resolver';
+import { NotificationsComponent } from './notifications/notifications.component';
+import { NotificationsResolver } from './_resolvers/notifications.resolver';
+import { SearchComponent } from './search/search.component';
 
 export const appRoutes: Routes = [
     {path: '', component: HomeComponent},
@@ -48,7 +51,9 @@ export const appRoutes: Routes = [
             {path: 'messages/thread/:recipientId', component: MessageThreadComponent, resolve: {messages: MessageThreadResolver}},
             {path: 'messages/thread/group/:recipientId', component: GroupMessageThreadComponent,
                 resolve: {messages: GroupMessageThreadResolver}},
-            {path: 'group/:groupId/:groupName', component: GroupManagerComponent, resolve: {users: GroupManagerResolver}}
+            {path: 'group/:groupId/:groupName', component: GroupManagerComponent, resolve: {users: GroupManagerResolver}},
+            {path: 'notifications', component: NotificationsComponent, resolve: {notifications: NotificationsResolver}},
+            {path: 'search', component: SearchComponent}
         ]
     },
     {path: '**', redirectTo: '', pathMatch: 'full'}

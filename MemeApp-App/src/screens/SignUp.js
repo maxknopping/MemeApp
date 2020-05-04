@@ -18,6 +18,7 @@ const SignUp = ({
     const [isLoading, setLoading] = useState(false);
     const {state, signup} = useContext(AuthContext);
     const [offest, setOffset] = useState(0);
+    const theme = EStyleSheet.value('$backgroundColor');
 
     const onLayout = ({
         nativeEvent: { layout: { height } },
@@ -29,8 +30,8 @@ const SignUp = ({
     return (
         <View style={{flex: 1}} onLayout={onLayout}>
         <KeyboardAvoidingView keyboardVerticalOffset={offest} behavior={Platform.OS === "ios" ? "padding" : null}  enabled style={styles.container}>
-            <Image style={styles.image} source={require('./img/logo.png')}/>
-            <TextInput value={username} onChangeText={(text => setUsername(text))} 
+            <Image style={styles.image} source={theme === 'white' ? require('./img/logo.png') : require('./img/MemeClub.png')}/>
+            <TextInput value={username} placeholderTextColor="gray" onChangeText={(text => setUsername(text))} 
                 style={styles.username} placeholder="Username" autoCapitalize="none" autoCorrect={false}
             />
             {username === '' ? 
@@ -39,25 +40,25 @@ const SignUp = ({
                 <Text style={[styles.validator, {color: crimson}]}>Username must be less than 30 characters</Text> : 
                 username.indexOf(' ') != -1 ? 
                 <Text style={[styles.validator, {color: crimson}]}>Username cannot contain any spaces</Text>: null}
-            <TextInput value={password} onChangeText={(text => setPassword(text))} 
+            <TextInput value={password} placeholderTextColor="gray" onChangeText={(text => setPassword(text))} 
                 secureTextEntry={true} style={styles.username} autoCapitalize="none" 
                 placeholder="Password" autoCorrect={false}/>
             {password.length < 8 ?  
                 <Text style={[styles.validator, {color: crimson}]}>Password must be at least 8 characters</Text> : null}
-            <TextInput value={confirmPassword} onChangeText={(text => setConfirm(text))} 
+            <TextInput value={confirmPassword} placeholderTextColor="gray" onChangeText={(text => setConfirm(text))} 
                 secureTextEntry={true} style={styles.username} autoCapitalize="none" 
                 placeholder="Confirm Password" autoCorrect={false}/>
             {confirmPassword !== password ?  
                 <Text style={[styles.validator, {color: crimson}]}>Passwords must match</Text> 
                 : null
             }
-            <TextInput value={email} onChangeText={(text => setEmail(text))} 
+            <TextInput value={email} placeholderTextColor="gray" onChangeText={(text => setEmail(text))} 
                 style={styles.username} autoCapitalize="none" 
                 placeholder="Email Address" autoCorrect={false}/>
             {!email.includes('@') || !email.includes('.') ?  
                 <Text style={[styles.validator, {color: crimson}]}>Please enter a valid email address</Text> : null}
             {state.errorMessage ? <Text style={{color: crimson}}>{state.errorMessage}</Text> : null}
-            <TextInput value={name} onChangeText={(text => setName(text))} 
+            <TextInput value={name} placeholderTextColor="gray" onChangeText={(text => setName(text))} 
                 style={styles.username} autoCapitalize="none" 
                 placeholder="Name" autoCorrect={false}/>
             <Button loading={(state.errorMessage === null && isLoading || state.token === null && isLoading)} 
@@ -102,6 +103,7 @@ const styles = EStyleSheet.create({
         borderColor: 'grey',
         padding: 10,
         borderRadius: 10,
+        color: '$textColor'
     },
     login: {
         marginTop: '.5rem',

@@ -153,7 +153,7 @@ namespace MemeApp.API.Data
         }
 
         public async Task<Post> GetPost(int id) {
-            var post = await context.Posts.Include(p => p.LikeList).Include(p => p.Comments).Include(p => p.User).FirstOrDefaultAsync(p => p.Id == id);
+            var post = await context.Posts.Include(p => p.LikeList).Include(p => p.Comments).Include(p => p.User).Include(c => c.Notifications).FirstOrDefaultAsync(p => p.Id == id);
             return post;
         }
 
@@ -186,7 +186,7 @@ namespace MemeApp.API.Data
 
         public async Task<Comment> GetComment(int commentId)
         {
-            var comment = await context.Comments.Include(p => p.LikeList).FirstOrDefaultAsync(p => p.Id == commentId);
+            var comment = await context.Comments.Include(p => p.LikeList).Include(c => c.Notifications).FirstOrDefaultAsync(p => p.Id == commentId);
             return comment;
         }
 
@@ -410,6 +410,47 @@ namespace MemeApp.API.Data
             messages = messages.OrderBy(m => m.MessageSent).ToList();
 
             return messages;
+        }
+
+        public async Task<IList<Post>> GetJoustPosts()
+        {
+            var allJoustPosts = await context.Posts.Where(p => p.inJoust == true).ToListAsync();
+            var random = new Random();
+            var randomOne = random.Next(0, allJoustPosts.Count);
+            var randomTwo = random.Next(0, allJoustPosts.Count);
+            var postOne = await GetPost(allJoustPosts[randomOne].Id);
+            var postTwo = await GetPost(allJoustPosts[randomTwo].Id);
+            var postsToReturn = new List<Post>();
+            postsToReturn.Add(postOne);
+            postsToReturn.Add(postTwo);
+            return postsToReturn;
+        }
+
+        public async void JoustResult(int winningPostId, int losingPostId)
+        {
+            var winningPost = await GetPost(winningPostId);
+            var losingPost = await GetPost(losingPostId);
+
+            var winnerExpected = (1.0 / (1.0 + Math.Pow(10, ((losingPost.JoustRating - winningPost.JoustRating)/ 400.0))));
+            var loserExpected = (1.0 / (1.0 + Math.Pow(10, ((winningPost.JoustRating - losingPost.JoustRating)/ 400.0))));
+
+            var newWinnerRating = (int)Math.Round(winningPost.JoustRating + 25*(1 - winnerExpected));
+            var newLoserRating = (int)Math.Round(losingPost.JoustRating + 25*(0 - loserExpected));
+            winningPost.JoustRating = newWinnerRating;
+            losingPost.JoustRating = newLoserRating;
+
+            await SaveAll();
+        }
+
+        public async Task<Post> getTopJoustPosts(int index)
+        {
+            var allJoustPosts = await context.Posts.Where(p => p.inJoust == true).ToListAsync();
+
+            var sortedPosts = allJoustPosts.OrderByDescending(p => p.JoustRating).ToList();
+
+            var postToReturn = await GetPost(sortedPosts[index].Id);
+
+            return postToReturn;
         }
     }
 }

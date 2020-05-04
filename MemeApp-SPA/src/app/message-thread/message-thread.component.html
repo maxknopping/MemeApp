@@ -12,7 +12,7 @@
         <li #scrollBottom class="list-group-item message-thread">
             <ul class="chat">
                 <li *ngFor="let message of messages; let i = index"
-                [ngClass]="{'chat__bubble': true, 
+                [ngClass]="{'chat__bubble': message.post === null, 
                             'post_bubble': message.post != null,
                             'chat__bubble--sent': message.senderId == id, 
                             'chat__bubble--rcvd': message.senderId != id,

@@ -105,8 +105,10 @@ const Feed = ({
             onEndReached={() => loadMore()}
             onEndReachedThreshold={0.5}
             initialNumToRender={3}
-            onRefresh={onRefresh}
-            refreshing={refreshing}
+            refreshControl={
+                <RefreshControl onRefresh={onRefresh}
+                refreshing={refreshing} colors={EStyleSheet.value('$textColor')} tintColor={EStyleSheet.value('$textColor')}/>
+            }
             ListFooterComponent={() => loadingMore ? <ActivityIndicator animating size="small" /> : null}
         />);
 };
@@ -144,10 +146,11 @@ const styles = EStyleSheet.create({
     },
     gearIcon: {
         fontSize: '1.7rem',
-        color: 'black'
+        color: '$textColor'
     },
     bellIcon: {
-        fontSize: '1.7rem'
+        fontSize: '1.7rem',
+        color: '$textColor'
     }
 });
 

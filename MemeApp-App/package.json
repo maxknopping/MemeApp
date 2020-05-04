@@ -1,7 +1,7 @@
 {
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "start": "expo start",
+    "start": "npx expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
@@ -9,8 +9,6 @@
     "react-devtools": "react-devtools"
   },
   "dependencies": {
-    "@angular/common": "^9.0.5",
-    "@angular/core": "^9.0.5",
     "@freakycoder/react-native-helpers": "^0.1.2",
     "@react-native-community/image-editor": "^2.2.0",
     "@react-native-community/masked-view": "0.1.5",
@@ -31,11 +29,11 @@
     "frisbee": "^3.1.2",
     "javascript-time-ago": "^2.0.7",
     "native-base": "^2.13.8",
-    "ng2-file-upload": "^1.4.0",
     "react": "~16.9.0",
     "react-dom": "~16.9.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
     "react-native-androw": "0.0.34",
+    "react-native-appearance": "^0.3.3",
     "react-native-elements": "^1.2.7",
     "react-native-extended-stylesheet": "^0.12.0",
     "react-native-gesture-handler": "~1.5.0",

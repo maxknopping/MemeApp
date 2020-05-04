@@ -180,6 +180,8 @@ namespace MemeApp.API.Migrations
 
                     b.Property<bool>("IsProfilePicture");
 
+                    b.Property<int>("JoustRating");
+
                     b.Property<int>("Likes");
 
                     b.Property<string>("PublicId");
@@ -187,6 +189,8 @@ namespace MemeApp.API.Migrations
                     b.Property<string>("Url");
 
                     b.Property<int>("UserId");
+
+                    b.Property<bool>("inJoust");
 
                     b.HasKey("Id");
 
@@ -217,6 +221,8 @@ namespace MemeApp.API.Migrations
                     b.Property<string>("PhotoUrl");
 
                     b.Property<string>("PublicIdForPhoto");
+
+                    b.Property<string>("PushToken");
 
                     b.Property<string>("Username");
 

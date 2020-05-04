@@ -36,19 +36,23 @@
     clear: both;
     border-radius: 30px 30px 5px 5px ;
     max-width: 300px;
+    padding-left: 20px;
+    padding-right: 20px;
   }
 
   .post_bubble {
     max-width: 400px;
+    margin-bottom: 3px;
+    padding: 5px 0px;
+    clear: both;
+    border-radius: 30px 30px 5px 5px ;
   }
   
   .chat__bubble--rcvd {
-    background: #f2f2f2;
-    color: black;
+    background: #707070;
+    color: white;
     float: left;
     border-bottom-right-radius: 30px;
-    padding-right: 20px;
-    padding-left: 20px;
   }
   
   .chat__bubble--sent {
@@ -56,8 +60,6 @@
     color: white;
     float: right;
     border-bottom-left-radius: 30px;
-    padding-left: 20px;
-    padding-right: 20px;
   }
   
   .chat__bubble--sent + .chat__bubble--sent {
@@ -89,7 +91,7 @@
     border-bottom-left-radius: 5px;
   }
 
-  .chat__bubble .tooltiptext {
+  .tooltiptext {
     visibility: hidden;
     background-color: black;
     color: #fff;
@@ -112,6 +114,7 @@
     height: 30px;
     border-radius: 30px;
     margin-right: 5px;
+    margin-left: 5px;
   }
 
   .avatar {

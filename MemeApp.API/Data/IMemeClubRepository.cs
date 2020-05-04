@@ -52,5 +52,11 @@ namespace MemeApp.API.Data
         Task<Group> GetGroup(int groupId);
 
         Task<IList<Message>> GetGroupMessageThread(int userId, int groupId);
+
+        Task<IList<Post>> GetJoustPosts();
+
+        void JoustResult(int winningPostId, int losingPostId);
+
+        Task<Post> getTopJoustPosts(int index);
     }
 }

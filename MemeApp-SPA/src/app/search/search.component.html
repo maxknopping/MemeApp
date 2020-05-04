@@ -1,0 +1,36 @@
+<div class="row">
+  <div class = "col-sm-3"></div>
+  <div class="col-sm-6">
+      <div style="width: 100%; border-radius: 50rem; border-width: 2px; border-style: solid; margin-bottom: 10px;">
+        <input type="text" style="background-color: transparent; margin-left: 20px; margin-right: 20px;
+        border-width: 0px; height: 100%; width: 94%; font-size: larger; padding: 10px;" 
+          [(ngModel)]="query"
+          placeholder="Search..."
+          (keyup)="onKey($event)">
+      </div>
+      <div *ngFor="let user of users">
+          <li class="list-group-item title listItem">
+              <img class="profile-picture mr-2" src="{{user.photoUrl || '../../../assets/user.png'}}" alt="">
+              
+              <button class="like-button" [routerLink]="[ '/profile/', user.username]">
+              <div style="align-items: flex-start;">
+                  <h4 style="margin-bottom: 0rem !important;">
+                      {{user.username}}
+                  </h4>
+                  <div style="text-align: start;">
+                      <span style="color: gray !important;">{{user.name}}</span>
+                  </div>
+              </div>
+              </button>
+
+              <button (click)="unfollow(user)" *ngIf="user.followButton == 'Following'" class="following" style="margin-left: auto; align-self: center;">
+                  <span>{{user.followButton}}</span>
+              </button>
+
+              <button (click)="follow(user)" *ngIf="user.followButton == 'Follow'" class="follow" style="margin-left: auto; align-self: center;">
+                  <span>{{user.followButton}}</span>
+              </button>
+          </li>
+      </div>
+  </div>
+  <div class = "col-sm-3"></div>

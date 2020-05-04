@@ -6,6 +6,8 @@ import { Context } from '../context/AuthContext';
 import userService from './../apis/user';
 import { ActivityIndicator } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import TimeAgo from 'javascript-time-ago';
+import en from 'javascript-time-ago/locale/en';
 
 
 
@@ -16,6 +18,8 @@ const Notifications = ({
     const [list, setList] = useState([]);
     const [loading, setLoading] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
+    TimeAgo.addLocale(en);
+    const timeAgo = new TimeAgo('en-US');
 
     console.log(list);
     useEffect(() => {
@@ -67,8 +71,8 @@ const Notifications = ({
                         <TouchableOpacity>
                             <Text style={styles.username}>{'@'}{item.causerUsername}</Text>
                         </TouchableOpacity>
-                        <Text>{' '}{item.message}</Text>
-                {item.commentText ? <Text>{"\""}{item.commentText}{"\""}</Text>: null}
+                        <Text style={styles.message}>{' '}{item.message}</Text>
+                {item.commentText ? <Text style={styles.message}>{"\""}{item.commentText}{"\""}</Text>: null}
                     </View>
                 }
                 leftAvatar={{source: item.causerPhotoUrl ? {uri: item.causerPhotoUrl} : 
@@ -79,6 +83,10 @@ const Notifications = ({
                     {item.postUrl ? <Image style={styles.post} source={{uri: item.postUrl}}/> : null}
                     </>
                 }
+                subtitle={
+                    <Text style={styles.timeAgo}>{timeAgo.format(Date.parse(item.created), 'twitter')}</Text>
+                }
+                containerStyle={styles.containerStyle}
                 
                 
                 />
@@ -98,6 +106,17 @@ const styles = EStyleSheet.create({
     post: {
         width: '3rem',
         height: '3rem'
+    },
+    timeAgo: {
+        fontSize: '.75rem',
+        color: 'gray',
+        marginRight: '.75rem'
+    },
+    containerStyle: {
+        backgroundColor: '$backgroundColor'
+    },
+    message: {
+        color: '$textColor'
     }
 });
 

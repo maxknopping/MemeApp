@@ -83,7 +83,8 @@ const styles = EStyleSheet.create({
         width: "50%",
         padding: '.5rem',
         borderRadius: '.5rem',
-        fontSize: '1rem'
+        fontSize: '1rem',
+        color: '$textColor'
     },
     submitButton: {
         backgroundColor: '$crimson',

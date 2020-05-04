@@ -76,6 +76,12 @@ namespace MemeApp.API.Controllers
                 foreach(var like in post.LikeList) {
                     repo.Delete<Like>(like);
                 }
+                foreach(var notification in post.Notifications) {
+                    repo.Delete<Notification>(notification);
+                }
+                foreach( var message in post.MessagesSent) {
+                    repo.Delete<Message>(message);
+                }
 
                 repo.Delete(post);
                 }
@@ -141,6 +147,11 @@ namespace MemeApp.API.Controllers
 
             userFromRepo.PhotoUrl = uploadResult.Uri.ToString();
             userFromRepo.PublicIdForPhoto = uploadResult.PublicId;
+
+            foreach (var group in userFromRepo.UserGroups) {
+                group.UserPhotoUrl = userFromRepo.PhotoUrl;
+            }
+
 
             if (await repo.SaveAll()) {
                 return CreatedAtRoute("GetUser", new {id = userFromRepo.Id}, userFromRepo);

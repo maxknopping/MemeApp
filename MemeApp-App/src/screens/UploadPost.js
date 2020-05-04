@@ -87,6 +87,7 @@ const styles = EStyleSheet.create({
       fontSize: 18,
       fontWeight: 'bold',
       textAlign: 'center',
+      color: '$textColor'
     }
   });
 
