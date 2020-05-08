@@ -69,8 +69,8 @@ namespace MemeApp.API.Controllers
                     var fullComment = await repo.GetComment(comment.Id);
                     foreach(var like in fullComment.LikeList) {
                     repo.Delete<CommentLike>(like);
-                }
-                repo.Delete<Comment>(comment);
+                    }
+                    repo.Delete<Comment>(comment);
                 }
 
                 foreach(var like in post.LikeList) {
@@ -98,6 +98,12 @@ namespace MemeApp.API.Controllers
                 foreach(var like in post.LikeList) {
                     repo.Delete<Like>(like);
                 }
+                foreach(var notification in post.Notifications) {
+                    repo.Delete<Notification>(notification);
+                }
+                foreach( var message in post.MessagesSent) {
+                    repo.Delete<Message>(message);
+                }
                 repo.Delete(post);
             }
             if (await repo.SaveAll()) {
@@ -112,6 +118,10 @@ namespace MemeApp.API.Controllers
                 return Unauthorized();
             }
             var post = await repo.GetPost(id);
+
+            if (postForUpdate.InJoust) {
+                post.JoustRating = 1000;
+            }
 
             mapper.Map(postForUpdate, post);
 
@@ -213,6 +223,8 @@ namespace MemeApp.API.Controllers
             postTemp.Url = uploadResult.Uri.ToString();
             postTemp.PublicId = uploadResult.PublicId;
             postTemp.Caption = postForCreation.Caption;
+            postTemp.InJoust = postForCreation.InJoust;
+            postTemp.JoustRating = 1000;
 
 
             var post = mapper.Map<Post>(postTemp);

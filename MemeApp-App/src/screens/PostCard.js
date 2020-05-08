@@ -4,7 +4,7 @@ import {Overlay, ListItem, CheckBox, Button} from 'react-native-elements';
 import {Context} from './../context/AuthContext';
 import userService from './../apis/user';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {Entypo, FontAwesome, Feather, SimpleLineIcons} from 'react-native-vector-icons';
+import {Entypo, FontAwesome, Feather, SimpleLineIcons, EvilIcons} from 'react-native-vector-icons';
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
 
@@ -345,9 +345,13 @@ const PostCard = ({
                     </Overlay>
 
                 </View>
-                <TouchableOpacity onPress={() => navigation.navigate('List', {type: 'likers', identifier: post.id})}>
-                    <Text style={styles.likeCount}>{likes} Likes</Text>
-                </TouchableOpacity>
+                <View style={{flexDirection: 'row', marginLeft: '3%'}}>
+                    <TouchableOpacity onPress={() => navigation.navigate('List', {type: 'likers', identifier: post.id})}>
+                        <Text style={styles.likeCount}>{likes} Likes</Text>
+                    </TouchableOpacity>
+                    {postState.inJoust ? (<><EvilIcons name="trophy" style={styles.trophyIcon}/>
+                        <Text style={styles.caption}>{' '}{postState.joustRating}</Text></>): null}
+                </View>
                 <View style={styles.captionWrapper}>
                         
                         <Text style={styles.caption}>
@@ -432,7 +436,7 @@ const styles = EStyleSheet.create({
     likeCount: {
         fontSize: '1rem',
         fontWeight: 'bold',
-        marginHorizontal: '3%',
+        marginLeft: '3%',
         marginTop: '2%',
         color: '$textColor'
     },
@@ -534,6 +538,11 @@ const styles = EStyleSheet.create({
         flexDirection: 'row',
         display: 'flex',
         paddingLeft: 10
+    },
+    trophyIcon: {
+        fontSize: '1.5rem',
+        color: '$textColor',
+        marginLeft: '.25rem'
     }
 });
 

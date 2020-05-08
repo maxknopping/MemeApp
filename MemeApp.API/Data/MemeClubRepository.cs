@@ -153,7 +153,8 @@ namespace MemeApp.API.Data
         }
 
         public async Task<Post> GetPost(int id) {
-            var post = await context.Posts.Include(p => p.LikeList).Include(p => p.Comments).Include(p => p.User).Include(c => c.Notifications).FirstOrDefaultAsync(p => p.Id == id);
+            var post = await context.Posts.Include(p => p.LikeList).Include(p => p.Comments).Include(p => p.User).Include(c => c.Notifications)
+            .Include(p => p.MessagesSent).FirstOrDefaultAsync(p => p.Id == id);
             return post;
         }
 
@@ -418,6 +419,9 @@ namespace MemeApp.API.Data
             var random = new Random();
             var randomOne = random.Next(0, allJoustPosts.Count);
             var randomTwo = random.Next(0, allJoustPosts.Count);
+            while (randomOne == randomTwo) {
+                randomTwo = random.Next(0, allJoustPosts.Count);
+            }
             var postOne = await GetPost(allJoustPosts[randomOne].Id);
             var postTwo = await GetPost(allJoustPosts[randomTwo].Id);
             var postsToReturn = new List<Post>();
@@ -442,7 +446,7 @@ namespace MemeApp.API.Data
             await SaveAll();
         }
 
-        public async Task<Post> getTopJoustPosts(int index)
+        public async Task<Post> GetTopJoustPosts(int index)
         {
             var allJoustPosts = await context.Posts.Where(p => p.inJoust == true).ToListAsync();
 
@@ -451,6 +455,26 @@ namespace MemeApp.API.Data
             var postToReturn = await GetPost(sortedPosts[index].Id);
 
             return postToReturn;
+        }
+
+        public async Task<Post> GetSwipePost()
+        {
+            var allJoustPosts = await context.Posts.Where(p => p.inJoust == true).ToListAsync();
+            var random = new Random();
+            var randomOne = random.Next(0, allJoustPosts.Count);
+            var postOne = await GetPost(allJoustPosts[randomOne].Id);
+            return postOne;
+        }
+
+        public async void SwipeResult(int postId, bool liked)
+        {
+            var post = await GetPost(postId);
+            if (liked) {
+                post.JoustRating += 10;
+            } else {
+                post.JoustRating -= 2;
+            }
+            await SaveAll();
         }
     }
 }

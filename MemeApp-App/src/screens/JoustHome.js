@@ -9,10 +9,11 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import {MaterialIcons, Ionicons, Feather} from 'react-native-vector-icons';
 import Constants from 'expo-constants';
 import PostCard from './PostCard';
+import user from './../apis/user';
 
 
 const JoustHome = ({
-    navigation,
+    navigation
 }) => {
     const {state} = useContext(Context);
     const [activeIndex, setActiveIndex] = useState(0);
@@ -136,7 +137,11 @@ const JoustHome = ({
                     buttonStyle={{borderRadius: EStyleSheet.value('.8rem')}} 
                     titleStyle={{color: 'black'}}
                     style={[styles.followButton, {marginTop: '5%'}]} 
-                    title="Start Jousting"/>
+                    title="Start Jousting"
+                    onPress={() => {
+                        navigation.navigate('Joust');
+                    }}
+                    />
                 <Button 
                     linearGradientProps={{
                         colors: ['#FD3177', '#FE6D61'],
@@ -147,7 +152,9 @@ const JoustHome = ({
                     buttonStyle={{borderRadius: EStyleSheet.value('.8rem')}} 
                     style={styles.followButton} 
                     title="Start Swiping"
-                    //titleStyle={{color: 'black'}}
+                    onPress={() => {
+                        navigation.navigate('Swipe');
+                    }}
                     />
                 <Text style={styles.headerLabel}>Top Ranked Posts</Text>
                 <View style={styles.tabView}>

@@ -11,6 +11,10 @@ namespace MemeApp.API.Dtos
         
         public string Caption { get; set; }
 
+        public bool InJoust { get; set; }
+
+        public int JoustRating { get; set; }
+
         public DateTime DateCreated { get; set; }
 
         public string PublicId { get; set; }

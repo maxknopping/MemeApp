@@ -754,9 +754,18 @@ namespace MemeApp.API.Controllers
 
         }
 
+        [HttpGet("swipe/nextPost")]
+        public async Task<IActionResult> GetNextSwipePost() {
+            var post = await repo.GetSwipePost();
+
+            var postToReturn = mapper.Map<PostForDetailedDto>(post);
+            return Ok(postToReturn);
+
+        }
+
         [HttpGet("joust/top/{index}")]
         public async Task<IActionResult> GetTopJoustPosts(int index) {
-            var post = await repo.getTopJoustPosts(index);
+            var post = await repo.GetTopJoustPosts(index);
 
             var postToReturn = mapper.Map<PostForDetailedDto>(post);
             return Ok(postToReturn);
@@ -765,6 +774,13 @@ namespace MemeApp.API.Controllers
         [HttpPost("joust/result/{winner}/{loser}")]
         public IActionResult JoustResult(int winner, int loser) {
             repo.JoustResult(winner, loser);
+
+            return Ok();
+        }
+
+        [HttpPost("swipe/result/{postId}/{liked}")]
+        public IActionResult SwipeResult(int postId, bool liked) {
+            repo.SwipeResult(postId, liked);
 
             return Ok();
         }

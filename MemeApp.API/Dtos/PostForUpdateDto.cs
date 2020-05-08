@@ -7,6 +7,8 @@ namespace MemeApp.API.Dtos
     public class PostForUpdateDto
     {
         public string Caption { get; set; }
+
+        public bool InJoust { get; set; }
         
          public IList<Comment> Comments {get; set; }
 

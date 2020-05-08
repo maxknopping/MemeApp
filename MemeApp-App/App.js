@@ -33,6 +33,7 @@ import GroupManager from './src/screens/GroupManager';
 import {AppearanceProvider, Appearance} from 'react-native-appearance';
 import JoustHome from './src/screens/JoustHome';
 import Joust from './src/screens/Joust';
+import Swipe from './src/screens/Swipe';
 
 const theme = Appearance.getColorScheme();
 
@@ -80,7 +81,8 @@ const switchNavigator = createSwitchNavigator({
         Comments: Comments,
         JoustHome: JoustHome,
         SinglePost: SinglePost,
-        Joust: Joust
+        Joust: Joust,
+        Swipe: Swipe
     },
     {
       initialRouteName: 'Featured',

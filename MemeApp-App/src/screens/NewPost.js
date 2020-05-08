@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { Text, View, TouchableOpacity, Image, TextInput, SafeAreaView } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
-import { Button } from 'react-native-elements';
+import { Button, CheckBox } from 'react-native-elements';
 import userService from './../apis/user';
 import { Context } from '../context/AuthContext';
 import axios from 'axios';
@@ -17,12 +17,13 @@ const NewPost = ({
     const image = navigation.getParam('image');
     const base64 = navigation.getParam('base64')
     const [caption, setCaption] = useState('');
-    const [stateUploader, setUploader] = useState({});
+    const [inJoust, setInJoust] = useState(false);
 
     const post = (photo) => {
         userService.post(`${state.id}/posts/ios` , {
             file: photo,
-            caption: caption
+            caption: caption,
+            inJoust: inJoust
         }, {
             headers: {
                 'Authorization': `Bearer ${state.token}`
@@ -43,6 +44,14 @@ const NewPost = ({
                 onChangeText={(text) => setCaption(text)}/>
         </View>
         <View style={styles.containerBottom}>
+            <CheckBox containerStyle={{backgroundColor: 'transparent', marginBottom: 20, marginTop: -10, borderWidth: 0}} 
+                title="Include in Joust/Swipe" checked={inJoust}
+                textStyle={{color: EStyleSheet.value('$textColor')}}
+                onIconPress={() => setInJoust(!inJoust)}
+                checkedIcon="dot-circle-o"
+                uncheckedIcon="circle-thin"
+                uncheckedColor={EStyleSheet.value('$crimson')}
+                checkedColor={EStyleSheet.value('$crimson')}/>
             <Button onPress={() => post(base64)} title="Post" buttonStyle={styles.postButton} style={styles.postButton}>
                     <Text>{'Post'}</Text>
             </Button>
@@ -62,7 +71,7 @@ const styles = EStyleSheet.create({
         flex: 1,
     },
     containerBottom: {
-        flex: 4
+        flex: 5
     },
     shareIcon: {
         fontSize: '1.7rem',

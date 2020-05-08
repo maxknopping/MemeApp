@@ -57,6 +57,10 @@ namespace MemeApp.API.Data
 
         void JoustResult(int winningPostId, int losingPostId);
 
-        Task<Post> getTopJoustPosts(int index);
+        Task<Post> GetTopJoustPosts(int index);
+
+        Task<Post> GetSwipePost();
+
+        void SwipeResult(int postId, bool liked);
     }
 }

@@ -1,6 +1,10 @@
 <div class="row row-wrapper">
   <div class="col-sm-6 caption-wrapper">
       <div class="text-left">
+        <div class="input-group" style="margin-bottom: 2rem;">
+          <input style="font-size: xx-large;" type="checkbox" [(ngModel)]="post.inJoust">
+          <span style="color: black; margin-left: 1rem; margin-top: -3px; font-size: larger;">Include in Joust/Swipe?</span>
+        </div>
         <h4>Caption</h4>
         <textarea name="bio" rows="4" class="form-control" [(ngModel)]="post.caption"></textarea>
         <div class="post-wrapper">

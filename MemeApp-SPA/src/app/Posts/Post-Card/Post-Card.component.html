@@ -12,11 +12,6 @@
         <div class="btn-group" dropdown [dropup]="true" placement="top right">
           <button class="like-button" style="border-color: transparent" *ngIf="!liked" (click)="like()"><i class="fa fa-heart-o like-icon"></i></button>
           <button class="like-button" *ngIf="liked" (click)="unlike()"><i class="fa fa-heart like-icon"></i></button> 
-          {{likes}} 
-          <a class="ml-1" *ngIf="likes > 0" [routerLink]="[ '/list/', post.id, 'likers' ]">
-            Likes
-          </a>
-          <span class="ml-1" *ngIf="likes === 0">Likes</span>
           <button class="like-button" (click)="messagePost()"><i class="fa fa-envelope like-icon"></i></button>
           <button type="button" class="dropup" dropdownToggle>
             <i class="fa fa-ellipsis-h ellipse-icon"></i>
@@ -26,6 +21,17 @@
             <li role="menuitem"><a [href]="post.url" download="" class="dropdown-item">Save Image</a></li>
           </ul>
         </div>
+        <p style="margin-bottom: 0px; margin-left: 7px;">
+          {{likes}} 
+          <a class="ml-1" *ngIf="likes > 0" [routerLink]="[ '/list/', post.id, 'likers' ]">
+            Likes
+          </a>
+          <span class="ml-1" *ngIf="likes === 0">Likes</span>
+          <span class="ml-3">
+            <i class="fa fa-trophy"></i>
+            {{post.joustRating}}
+          </span>
+        </p>
         <p>
           <button class="like-button" [routerLink]="[ '/profile/', post.username]">{{post.username}}
           <span class="ml-2" style="color: white">{{post.caption}}</span></button>

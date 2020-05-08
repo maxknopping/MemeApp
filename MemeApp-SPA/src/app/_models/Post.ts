@@ -13,4 +13,6 @@ export interface Post {
     comments: Comment[];
     created: Date;
     profilePictureUrl: string;
+    inJoust: boolean;
+    joustRating: number;
 }

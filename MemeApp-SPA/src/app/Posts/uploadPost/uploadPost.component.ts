@@ -31,7 +31,8 @@ export class UploadPostComponent implements OnInit  {
   post = {
     id: 0,
     caption: '',
-    url: ''
+    url: '',
+    inJoust: false
   };
   uploader: FileUploader;
   baseURL = environment.apiUrl;
@@ -68,6 +69,7 @@ export class UploadPostComponent implements OnInit  {
           url: res.url,
           created: res.created,
           isProfilePicture: res.isProfilePicture,
+          inJoust: this.post.inJoust,
           caption: this.post.caption
         };
         this.post = newPost;
