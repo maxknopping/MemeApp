@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { User } from '../_models/User';
 import { UserService } from '../_services/User.service';
 import { AuthService } from '../_services/auth.service';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { SendPostModalComponent } from '../Posts/SendPostModal/SendPostModal.component';
 
 @Component({

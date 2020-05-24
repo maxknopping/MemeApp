@@ -9,7 +9,11 @@ import { AuthService } from './_services/auth.service';
 import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
 import { ErrorInterceptorProvider } from './_services/error.interceptor';
-import { BsDropdownModule, TabsModule, BsDatepickerModule, ModalModule, ButtonsModule } from 'ngx-bootstrap';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { TabsModule } from 'ngx-bootstrap/tabs';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { FeedComponent } from './Posts/feed/feed.component';
 import { MessagesComponent } from './messages/messages.component';
 import { RouterModule, ActivatedRouteSnapshot } from '@angular/router';
@@ -52,7 +56,6 @@ import { GroupManagerResolver } from './_resolvers/groupManager.resolver';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { NotificationsResolver } from './_resolvers/notifications.resolver';
 import { SearchComponent } from './search/search.component';
-import {NgxSpinnerModule} from 'ngx-spinner';
 import { MessagesTimePipe } from './_pipes/messages-time.pipe';
 import { TermsAndConditionsComponent } from './Terms and privacy/terms-and-conditions/terms-and-conditions.component';
 import { PrivacyPolicyComponent } from './Terms and privacy/privacy-policy/privacy-policy.component';
@@ -113,7 +116,6 @@ export function tokenGetter() {
            blacklistedRoutes: ['localhost:5000/api/auth/register']
         }}),
       IconsModule,
-      NgxSpinnerModule
    ],
    //JwtModule.forRoot({
    //   config: {

@@ -9,14 +9,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MemeApp.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20200417191505_joust")]
-    partial class joust
+    [Migration("20200524203824_rebuild")]
+    partial class rebuild
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.11-servicing-32099");
+                .HasAnnotation("ProductVersion", "2.1.14-servicing-32113")
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("MemeApp.API.Models.Comment", b =>
                 {
@@ -211,6 +212,8 @@ namespace MemeApp.API.Migrations
                     b.Property<DateTime>("Created");
 
                     b.Property<string>("Email");
+
+                    b.Property<bool>("IsAdmin");
 
                     b.Property<DateTime>("LastActive");
 

@@ -64,7 +64,7 @@
             },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
-              "version": "[2.1.11, )"
+              "version": "[2.1.14, )"
             },
             "Microsoft.EntityFrameworkCore.Sqlite": {
               "target": "Package",

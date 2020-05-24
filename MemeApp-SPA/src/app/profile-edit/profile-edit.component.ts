@@ -10,7 +10,7 @@ import { FileUploader } from 'ng2-file-upload';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer } from '@angular/platform-browser';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { CroppingModalComponent } from '../Posts/CroppingModal/CroppingModal.component';
 import { PasswordModalComponent } from '../PasswordModal/PasswordModal.component';
 

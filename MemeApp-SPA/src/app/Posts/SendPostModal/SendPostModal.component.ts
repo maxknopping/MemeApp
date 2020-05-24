@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { BsModalRef } from 'ngx-bootstrap';
+import { BsModalRef } from 'ngx-bootstrap/modal';
 import { AuthService } from 'src/app/_services/auth.service';
 import { UserService } from 'src/app/_services/User.service';
 import { Message } from '@angular/compiler/src/i18n/i18n_ast';

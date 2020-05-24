@@ -4,7 +4,7 @@ import { UserService } from '../_services/User.service';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../_services/auth.service';
 import { AlertifyService } from '../_services/alertify.service';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { SendPostModalComponent } from '../Posts/SendPostModal/SendPostModal.component';
 
 @Component({

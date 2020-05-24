@@ -20,7 +20,6 @@
                             'post_bubble': message.post != null,
                             'chat__bubble--sent': message.senderId == id, 
                             'chat__bubble--rcvd': message.senderId != id,
-                            'chat__bubble--stop': i == (messages.length - 1) || messages[i+1].senderId != message.senderId,
                             'two-received': i > 0 ? messages[i-1].senderId == message.senderId && message.senderId != id && twoSameBubbleStyle(message, i): false,
                             'two-sent': renderTwoSentStyle(message, i),
                             'chat__bubble--stop': i == (messages.length - 1) || messages[i+1].senderId != message.senderId || renderChatBubbleStop(message, i)}">

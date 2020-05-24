@@ -11,7 +11,7 @@ export interface Post {
     likes: number;
     likeList: Like[];
     comments: Comment[];
-    created: Date;
+    created: any;
     profilePictureUrl: string;
     inJoust: boolean;
     joustRating: number;

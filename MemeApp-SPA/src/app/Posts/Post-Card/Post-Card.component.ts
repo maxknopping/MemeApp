@@ -6,7 +6,7 @@ import { AuthService } from 'src/app/_services/auth.service';
 import { User } from 'src/app/_models/User';
 import { NgForm } from '@angular/forms';
 import {Router} from '@angular/router';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { SendPostModalComponent } from '../SendPostModal/SendPostModal.component';
 import { Message } from 'src/app/_models/Message';
 

@@ -11,7 +11,7 @@ import * as Croppie from 'node_modules/croppie/croppie.js';
 import { CroppieOptions } from 'croppie';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { NgxCroppieComponent } from 'ngx-croppie';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { CroppingModalComponent } from '../CroppingModal/CroppingModal.component';
 
 @Component({

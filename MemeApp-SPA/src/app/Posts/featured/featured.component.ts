@@ -3,7 +3,6 @@ import { Post } from '../../_models/Post';
 import { UserService } from '../../_services/User.service';
 import { AlertifyService } from '../../_services/alertify.service';
 import { ActivatedRouteSnapshot, ActivatedRoute, Router } from '@angular/router';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from 'src/app/_services/auth.service';
 
 @Component({
@@ -16,7 +15,7 @@ export class FeaturedComponent implements OnInit {
   index: number;
 
   constructor(private user: UserService, private route: ActivatedRoute, private alertify: AlertifyService, 
-              private spinner: NgxSpinnerService, private authService: AuthService) { }
+              private authService: AuthService) { }
 
   ngOnInit() {
     this.index = 0;
@@ -29,10 +28,8 @@ export class FeaturedComponent implements OnInit {
   }
 
   loadPosts() {
-    this.showSpinner(this.index + 1);
     this.user.getFeatured(this.index).subscribe((post: Post) => {
       this.posts.push(post);
-      this.hideSpinner(this.index + 1);
       this.index++;
     }, error => {
     });
@@ -54,14 +51,6 @@ export class FeaturedComponent implements OnInit {
     if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
       this.loadPosts();
     }
-  }
-
-  showSpinner(name) {
-    this.spinner.show(name);
-  }
-
-  hideSpinner(name) {
-    this.spinner.hide(name);
   }
 
   deletePost(id) {
