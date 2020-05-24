@@ -10,15 +10,17 @@ import {MaterialIcons, Ionicons, Feather} from 'react-native-vector-icons';
 import Constants from 'expo-constants';
 import PostCard from './PostCard';
 import user from './../apis/user';
+import {Interactable} from 'react-native-redash';
 
 const Swipe = ({
     navigation
 }) => {
     const {state} = useContext(Context);
     const {width, height} = Dimensions.get('window');
-    const [posts, setPosts] = useState([]);
-    const [refreshing, setRefreshing] = useState(false);
+    const posts = useRef([]).current;
+    const [initialRender, setInitialRender] = useState(false);
     const position = useRef(new Animated.ValueXY()).current;
+    console.log(posts);
     let rotate = position.x.interpolate({
         inputRange: [-width/2, 0, width/2],
         outputRange: ['-10deg', '0deg', '10deg'],
@@ -79,7 +81,7 @@ const Swipe = ({
 
     useEffect(()=> {
         position.setValue({x: 0, y: 0});
-    }, [currentIndex])
+    }, [currentIndex]);
 
     let rotateAndTranslate = {
         transform:[{
@@ -95,7 +97,7 @@ const Swipe = ({
             }
         }).then(
             function (response) {
-                setPosts([...posts, response.data]);
+                posts.push(response.data);
             }
         ).catch(err => console.log(err));
     };
@@ -111,12 +113,12 @@ const Swipe = ({
     useEffect( () => {
 
         async function load() {
-            let newPosts = [];
             for (var i = 0; i < 5; i++) {
                 var response = await getInitialPost(i);
-                newPosts.push(response.data);
+                posts.push(response.data);
+            
             }
-            setPosts(newPosts);
+            setInitialRender(true);
         }
 
         load();
@@ -131,46 +133,56 @@ const Swipe = ({
     };
     
     const renderPosts = () => {
-
-        return posts.map((post, i) => {
-            if (i < currentIndex) {
-                return null
-            } else if (i == currentIndex) {
-                return (
-                    <Animated.View {...panResponder.panHandlers} key={i} style={[rotateAndTranslate, 
-                        {height: width, width: width, padding: 10, position: 'absolute', bottom: '25%'}]}>
-                            <Animated.View style={{position: 'absolute', left: 30, top: 30, zIndex: 1000, transform: [{rotate: '-15deg'}], opacity: likeOpacity}}>
-                                <Text style={{borderWidth: 1, borderColor: '#3AE295', color: '#3AE295', fontSize: 32, 
-                                    fontWeight: 'bold', padding: 10}}>LIKE</Text>
-                            </Animated.View>
-                            <Animated.View style={{opacity: dislikeOpacity, position: 'absolute', right: 30, top: 30, zIndex: 1000, transform: [{rotate: '15deg'}]}}>
-                                <Text style={{borderWidth: 1, borderColor: '#DC143C', color: '#DC143C', fontSize: 32, 
-                                    fontWeight: 'bold', padding: 10}}>Nope</Text>
-                            </Animated.View>
-                            <Image source={{uri: post.url}} style={{flex: 1, borderRadius: 20}}/>
+        const post = posts[currentIndex];
+        return (
+            <Animated.View {...panResponder.panHandlers} style={[rotateAndTranslate, 
+                {height: width, width: width, padding: 10, position: 'absolute', bottom: '25%'}]}>
+                    <Animated.View style={{position: 'absolute', left: 30, top: 30, zIndex: 1000, transform: [{rotate: '-15deg'}], opacity: likeOpacity}}>
+                        <Feather style={{borderWidth: 1, borderColor: '#3AE295', color: '#3AE295', fontSize: 32, 
+                            fontWeight: 'bold', padding: 10}} name="thumbs-up"/>
                     </Animated.View>
-                );
-            } else {
-                return (
-                    <Animated.View key={i} style={
-                        {height: width, width: width, padding: 10, position: 'absolute', bottom: '25%', opacity: nextCardOpacity, transform: [{scale: nextCardSize}]}}>
-                            <Image source={{uri: post.url}} style={{flex: 1, borderRadius: 20}}/>
+                    <Animated.View style={{opacity: dislikeOpacity, position: 'absolute', right: 30, top: 30, zIndex: 1000, transform: [{rotate: '15deg'}]}}>
+                        <Feather style={{borderWidth: 1, borderColor: '#DC143C', color: '#DC143C', fontSize: 32, 
+                            fontWeight: 'bold', padding: 10}} name="thumbs-down"/>
                     </Animated.View>
-                );
-            }
-        }).reverse();
+                    <Image source={{uri: post.url}} style={{flex: 1, borderRadius: 20}}/>
+            </Animated.View>
+        );
     };
 
 
     return (
-        <View style={{flex: 1}}>
+        <View key={initialRender} style={{flex: 1}}>
             {posts.length > 0 ?
                 <View style={{flex: 1}}>
                     <View>
                     </View>
                     {renderPosts()}
-                    <View>
-
+                    <View style={{flex: 1, position: 'absolute', top: '85%'}}>
+                        <View style={{flexDirection: 'row', justifyContent: 'space-around', width: width}}>
+                            <TouchableOpacity onPress={() => {
+                                Animated.spring(position, {
+                                    toValue: {x: -width-200, y: 0}
+                                }).start(() => {
+                                    swipeResult(false);
+                                    setCurrentIndex(currentIndex+1);
+                                    getNextPost();
+                                });
+                            }}>
+                                <Feather name="x" style={styles.x}/>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => {
+                                Animated.spring(position, {
+                                    toValue: {x: width+200, y: 0}
+                                }).start(() => {
+                                    swipeResult(true);
+                                    setCurrentIndex(currentIndex+1);
+                                    getNextPost();
+                                });
+                            }}>
+                                <Feather name="heart" style={styles.heart}/>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
             : null}
@@ -180,20 +192,14 @@ const Swipe = ({
 };
 
 const styles = EStyleSheet.create({
-    bottomView: {
-        flexDirection: 'row',
-        margin: '.5rem',
-        flexWrap: 'wrap'
+    x: {
+        color: '#ec5288',
+        fontSize: '2rem'
     },
-    bottomUsername: {
-        color: 'white',
-        fontWeight: 'bold',
-        fontSize: '1rem'
-    },
-    caption: {
-        color: 'white',
-        fontSize: '1rem'
-    },
+    heart: {
+        color: '#6ee3b4',
+        fontSize: '2rem'
+    }
 });
 
 export default Swipe;

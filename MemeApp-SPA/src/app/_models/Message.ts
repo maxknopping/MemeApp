@@ -11,7 +11,7 @@ export interface Message {
     content: string;
     isRead: boolean;
     dateRead: Date;
-    messageSent: Date;
+    messageSent: string;
     post?: Post;
     postId?: number;
     groupId?: number;

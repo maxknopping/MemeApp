@@ -29,9 +29,14 @@ import { GroupManagerResolver } from './_resolvers/groupManager.resolver';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { NotificationsResolver } from './_resolvers/notifications.resolver';
 import { SearchComponent } from './search/search.component';
+import { TermsAndConditionsComponent } from './Terms and privacy/terms-and-conditions/terms-and-conditions.component';
+import { PrivacyPolicyComponent } from './Terms and privacy/privacy-policy/privacy-policy.component';
 
 export const appRoutes: Routes = [
     {path: '', component: HomeComponent},
+    {path: 'post/:postId', component: SinglePostComponent, resolve: {post: SinglePostResolver}},
+    {path: 'terms', component: TermsAndConditionsComponent},
+    {path: 'privacy', component: PrivacyPolicyComponent},
     {
         path: '',
         runGuardsAndResolvers: 'always',

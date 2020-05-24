@@ -235,8 +235,8 @@ namespace MemeApp.API.Data
                     messageList = allMessages.Where(m => (m.RecipientId == person.Id && m.SenderDeleted == false) && 
                     (m.SenderId == person.Id && m.RecipientDeleted == false) && m.GroupId == null).ToList();
                 } else {
-                    messageList = allMessages.Where(m => (m.RecipientId == person.Id && m.SenderDeleted == false) || 
-                    (m.SenderId == person.Id && m.RecipientDeleted == false) && m.GroupId == null).ToList();
+                    messageList = allMessages.Where(m => ((m.RecipientId == person.Id && m.SenderDeleted == false) || 
+                    (m.SenderId == person.Id && m.RecipientDeleted == false)) && m.GroupId == null).ToList();
                 }
                 messageList = messageList.OrderByDescending(m => m.MessageSent).ToList();
                 conversations.Add(messageList[0]);
@@ -253,11 +253,11 @@ namespace MemeApp.API.Data
             var messages = await context.Messages.Include(m => m.Sender).ThenInclude(u => u.Posts)
                 .Include(m => m.Recipient).ThenInclude(u => u.Posts).Include(m => m.Post).ThenInclude(p => p.User)
                 .Where(m => ((m.RecipientId == userId && m.SenderId == recipientId && m.RecipientDeleted == false) ||
-                    (m.RecipientId == recipientId && m.SenderId == userId && m.SenderDeleted == false)) && (m.GroupId == null))
-                .OrderBy(m => m.MessageSent)
-                .ToListAsync();
+                    (m.RecipientId == recipientId && m.SenderId == userId && m.SenderDeleted == false)) && (m.GroupId == null)).ToListAsync();
+            var messagesToReturn = messages.OrderBy(m => m.MessageSent);
+                
 
-            return messages;
+            return messagesToReturn.ToList();
         }
 
         public async Task<IList<User>> SearchForUser(string query, bool fullResult)

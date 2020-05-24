@@ -27,7 +27,6 @@ export class MessageThreadComponent implements OnInit {
     this.route.data.subscribe(data => {
       this.messages = data['messages'];
       this.id = this.auth.decodedToken.nameid;
-      console.log(this.messages);
       if (this.messages.length == 0) {
         this.user.getUser(this.route.snapshot.params['recipientId']).subscribe(user => {
           this.photoUrlOtherPerson = user.photoUrl;
@@ -51,6 +50,7 @@ export class MessageThreadComponent implements OnInit {
         }
       }
       this.scrollToBottom();
+      console.log(this.messages);
     });
   }
 
@@ -73,6 +73,34 @@ export class MessageThreadComponent implements OnInit {
     }, error => {
       this.alertify.error(error);
     });
+  }
+
+  renderCenteredText(message: Message, i) {
+    if (i === 0) {
+      return true;
+    } else {
+    return Date.parse(this.messages[i - 1].messageSent) - Date.parse(message.messageSent)  < -1 * 2 * 60 * 60 * 1000;
+    }
+  }
+
+  renderChatBubbleStop(message: Message, i ) {
+    if (i === this.messages.length - 1) {
+      return true;
+    } else {
+      return Date.parse(this.messages[i + 1].messageSent) - Date.parse(message.messageSent)  > 2 * 60 * 60 * 1000;
+    }
+  }
+
+  twoSameBubbleStyle(message: Message, i) {
+    return Date.parse(this.messages[i-1].messageSent) - Date.parse(message.messageSent)  > -1 * 2 * 60 * 60 * 1000;
+  }
+
+  renderTwoSentStyle(message: Message, i) {
+    if (i == 0) {
+      return false;
+    }
+    return this.messages[i - 1].senderId == message.senderId && message.senderId == this.id && Date.parse(this.messages[i - 1].messageSent) - Date.parse(message.messageSent)
+    > -1 * 2 * 60 * 60 * 1000;
   }
 
   deleteMessage(id: number) {

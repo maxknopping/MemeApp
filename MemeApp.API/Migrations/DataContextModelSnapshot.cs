@@ -210,6 +210,8 @@ namespace MemeApp.API.Migrations
 
                     b.Property<string>("Email");
 
+                    b.Property<bool>("IsAdmin");
+
                     b.Property<DateTime>("LastActive");
 
                     b.Property<string>("Name");

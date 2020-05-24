@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState, useRef} from 'react';
 import { Text, View, ScrollView, Image, ActivityIndicator, 
         FlatList, Dimensions, RefreshControl, SafeAreaView, TouchableOpacity, Modal } from 'react-native';
 import {Button, Overlay} from 'react-native-elements';
@@ -9,6 +9,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import {MaterialIcons, Ionicons, Feather} from 'react-native-vector-icons';
 import Constants from 'expo-constants';
 import PostCard from './PostCard';
+import WelcomeModal from './WelcomeModal';
 
 const Profile = ({
     navigation
@@ -20,7 +21,7 @@ const Profile = ({
     const [followButton, setFollowButton] = useState('Follow');
     const [followers, setFollowers] = useState(0); 
     const [modalVisible, setModalVisible] = useState(false);
-    let username = state.username;
+    var username = useRef(state.username);
     const segmentClicked = (index) => {
         setActiveIndex(index);
     };
@@ -30,33 +31,63 @@ const Profile = ({
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
-        userService.get(`/username/${username}`, {
+        userService.get(`/username/${username.current}`, {
             headers: {
                 'Authorization': `Bearer ${state.token}`
             }
         }).then(
             function (response) {
-                setUser(response.data);
+                response.data.posts = [];
                 setRefreshing(false);
                 setFollowers(response.data.followers.length);
+                async function load() {
+                    let newPosts = [];
+                    for (var i = 0; i < 9; i++) {
+                        var responseTwo = await loadInitialPost(i);
+                        if (typeof responseTwo !== 'undefined') {
+                            newPosts.push(responseTwo.data);
+                        }
+                    }
+                    setUser({...response.data, posts: newPosts});
+                    setRefreshing(false);
+                }
+        
+                load();
             }).catch(error => {console.log(error); setRefreshing(false)});
     }, [refreshing]);
+
+    const loadInitialPost = (index) => {
+        return userService.get(`/username/${username.current}/${index}`,  {
+            headers: {
+                'Authorization': `Bearer ${state.token}`
+            }
+        }).catch(error => console.log(error));
+    }
+
+    const loadPost = (index) => {
+        return userService.get(`/username/${username.current}/${index}`,  {
+           headers: {
+               'Authorization': `Bearer ${state.token}`
+           }
+       }).catch(error => console.log(error));
+   }
     
     useEffect(() => {
         if (navigation.getParam('username')) {
-            username = navigation.getParam('username');
+            username.current = navigation.getParam('username');
             navigation.setParams({otherUsername: state.username});
+            console.log(username);
         } else {
             navigation.setParams({username: state.username, id: state.id});
             navigation.setParams({otherUsername: state.username});
         }
-        userService.get(`/username/${username}`, {
+        userService.get(`/username/${username.current}`, {
             headers: {
                 'Authorization': `Bearer ${state.token}`
             }
         }).then(
             function (response) {
-                setUser(response.data);
+                response.data.posts = [];
                 setFollowers(response.data.followers.length);
                 if (response.data.username === state.username) {
                     setFollowButton('Edit Profile');
@@ -67,6 +98,22 @@ const Profile = ({
                         }
                     }
                 }
+                async function load() {
+                    let newPosts = [];
+                    for (var i = 0; i < 9; i++) {
+                        var responseTwo = await loadInitialPost(i);
+                        if (typeof responseTwo === 'undefined') {
+                            break;
+                        }
+                        if (typeof responseTwo !== 'undefined') {
+                            newPosts.push(responseTwo.data);
+                        }
+                    }
+                    setUser({...response.data, posts: newPosts});
+                    setRefreshing(false);
+                }
+        
+                load();
             }
         ).catch(error => console.log(error));
 
@@ -138,12 +185,26 @@ const Profile = ({
         ).catch(error => console.log(error));
     };
 
+    const description = "This is your profile! You can come here to see your posts, check how many followers you have, or edit your profile. The gear icon in the top right leads to the settings page.";
+
+
     return (
-            <ScrollView refreshControl={
-                <RefreshControl refreshing={refreshing} colors={EStyleSheet.value('$textColor')} tintColor={EStyleSheet.value('$textColor')} onRefresh={onRefresh} />
-            } style={{flex: 1}}>
-                {user ? <View>
-                <View style={styles.headerView}>
+        <View style={{flex: 1}}>
+            {followButton === 'Edit Profile' ?
+            <View>
+                <WelcomeModal pagekey={"Profile"} title={"Profile Page"} description={description}/>
+            </View>
+            : null}
+        {user ? 
+        <FlatList
+        style={{flex: 1}} 
+        refreshControl={
+            <RefreshControl refreshing={refreshing} colors={EStyleSheet.value('$textColor')} tintColor={EStyleSheet.value('$textColor')} onRefresh={onRefresh} />
+        }
+        ListHeaderComponentStyle={{flex: 1}}
+        ListHeaderComponent={(
+            <View>
+            <View style={styles.headerView}>
                     {user ? (
                         <Image rounded style={styles.profilePicture} source={user.photoUrl ? {uri: user.photoUrl} : 
                         require('./../../assets/user.png')}/>
@@ -217,9 +278,51 @@ const Profile = ({
                             {color: EStyleSheet.value('$crimson')} : {color: EStyleSheet.value('$textColor')}]} name="format-list-bulleted"></MaterialIcons>
                     </NativeButton>
                 </View>
-                {renderSection()}
-                </View> : <ActivityIndicator size="large" color={EStyleSheet.value('$crimson')}/>}
-            </ScrollView>
+            </View>
+        )}
+        renderItem={({item, index}) => {
+            if (activeIndex === 1) {
+                return <PostCard post={item} navigation={navigation}/>
+            } else {
+                return (
+                    <TouchableOpacity onPress={() => navigation.navigate('SinglePost', {postId: item.id})}>
+                        <View style={[ {width: width / 3} , {height: width/3}, {marginBottom: EStyleSheet.value('.1rem')}, index % 3 !== 0 ? 
+                            {paddingLeft: EStyleSheet.value('.1rem')} : {paddingLeft: 0}]} >
+                                <Image style={{flex: 1, width: undefined, height: undefined}} source={{uri: item.url}}/>
+                        </View>
+                    </TouchableOpacity>
+                )
+            }
+        }}
+        data={user.posts}
+        numColumns={activeIndex === 0 ? 3 : 1}
+        key={activeIndex === 0 ? '0' : '1'}
+        keyExtractor={(item, i) => item.id.toString()}
+        onEndReached={() => {
+
+            async function load() {
+                let newPosts = user.posts;
+                const responseOne = await loadPost(user.posts.length);
+                if (typeof responseOne !== 'undefined') {
+                    newPosts.push(responseOne.data);
+                }
+                const responseTwo = await loadPost(user.posts.length+1);
+                if (typeof responseTwo !== 'undefined') {
+                    newPosts.push(responseTwo.data);
+                }
+                const responseThree = await loadPost(user.posts.length+2);
+                if (typeof responseThree !== 'undefined') {
+                    newPosts.push(responseThree.data);
+                }
+                setUser({...user, posts: newPosts});
+                console.log(newPosts);
+            }
+
+            load();
+        }}
+        
+        />: <ActivityIndicator color={EStyleSheet.value('$crimson')}/>}
+        </View>
     );
 };
 

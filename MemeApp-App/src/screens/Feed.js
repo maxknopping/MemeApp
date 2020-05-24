@@ -9,6 +9,7 @@ import {MaterialIcons, Feather} from 'react-native-vector-icons';
 import Constants from 'expo-constants';
 import PostCard from './PostCard';
 import InfiniteScrollView from 'react-native-infinite-scroll-view';
+import WelcomeModal from './WelcomeModal';
 
 const Feed = ({
     navigation,
@@ -94,7 +95,18 @@ const Feed = ({
         });
     };
 
+    const description = "Welcome to MemeClub! This tab is your feed. Here you will see posts from the accounts that you follow." +
+        " To see your messages, click on the message icon in the top right corner. To see any notifications, click on " +
+        "the bell icon in the top left corner.";
+
     return (
+        <>
+            <View>
+                <WelcomeModal pagekey={"Feed"} title={"Welcome to MemeClub"} description={description}/>
+            </View>
+            {posts.length === 0 ? <View style={{flex: 1, alignItems: 'center', marginTop: 10}}>
+                    <Text style={styles.text}>When you follow other users, their posts will appear here.</Text>
+                </View>: 
             <FlatList
             contentContainerStyle={{
                 flexDirection: 'column'
@@ -110,12 +122,15 @@ const Feed = ({
                 refreshing={refreshing} colors={EStyleSheet.value('$textColor')} tintColor={EStyleSheet.value('$textColor')}/>
             }
             ListFooterComponent={() => loadingMore ? <ActivityIndicator animating size="small" /> : null}
-        />);
+            />
+            }
+        </>);
 };
 
 Feed.navigationOptions = ({navigation}) => {
     const newMessages = navigation.getParam('newMessages');
     const newNotifications = navigation.getParam('newNotifications');
+    const theme = EStyleSheet.value('$backgroundColor');
     return {
         headerRight: () => (<TouchableOpacity onPress={() => {
                     navigation.navigate('Messages');
@@ -136,13 +151,16 @@ Feed.navigationOptions = ({navigation}) => {
                        null}
                 </View>
             </TouchableOpacity>
+        ),
+        headerTitle: () => (
+            <Image style={styles.image} source={theme === 'white' ? require('./img/logo.png') : require('./img/MemeClub.png')}/>
         )
     };
 };
 
 const styles = EStyleSheet.create({
-    container: {
-
+    text: {
+        color: '$textColor'
     },
     gearIcon: {
         fontSize: '1.7rem',
@@ -151,6 +169,11 @@ const styles = EStyleSheet.create({
     bellIcon: {
         fontSize: '1.7rem',
         color: '$textColor'
+    },
+    image: {
+        width: '8rem',
+        height: '6rem',
+        resizeMode: 'contain'
     }
 });
 

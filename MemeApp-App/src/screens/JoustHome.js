@@ -9,7 +9,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import {MaterialIcons, Ionicons, Feather} from 'react-native-vector-icons';
 import Constants from 'expo-constants';
 import PostCard from './PostCard';
-import user from './../apis/user';
+import WelcomeModal from './WelcomeModal';
 
 
 const JoustHome = ({
@@ -20,6 +20,7 @@ const JoustHome = ({
     const {width, height} = Dimensions.get('window');
     const [postIndex, setPostIndex] = useState(0);
     const [posts, setPosts] = useState([]);
+    const [loadingMore, setLoadingMore] = useState(false);
 
     const segmentClicked = (index) => {
         setActiveIndex(index);
@@ -32,9 +33,16 @@ const JoustHome = ({
         setRefreshing(true);
         async function load() {
             let newPosts = [];
-            for (var i = 0; i < 10; i++) {
+            for (var i = 0; i < 12; i++) {
+                try {
+
                 var response = await loadInitialPost(i);
+
                 newPosts.push(response.data);
+                }
+                catch (e) {
+                    console.log(e);
+                }
             }
             setPosts(newPosts);
             setRefreshing(false);
@@ -48,7 +56,7 @@ const JoustHome = ({
 
         async function load() {
             let newPosts = [];
-            for (var i = 0; i < 10; i++) {
+            for (var i = 0; i < 12; i++) {
                 var response = await loadInitialPost(i);
                 newPosts.push(response.data);
             }
@@ -60,18 +68,11 @@ const JoustHome = ({
     }, []);
 
     const loadPost = (index) => {
-        userService.get(`/joust/top/${index}`,  {
+         return userService.get(`/joust/top/${index}`,  {
             headers: {
                 'Authorization': `Bearer ${state.token}`
             }
-        }).then(
-            function (response) {
-                let newPosts = posts;
-                newPosts.push(response.data);
-                setPosts(newPosts);
-                setPostIndex(postIndex + 1);
-            }
-        ).catch(error => console.log(error));
+        }).catch(error => console.log(error));
     }
 
     const loadInitialPost = (index) => {
@@ -82,45 +83,18 @@ const JoustHome = ({
         });
     }
 
-    const renderGridSection = () => {
-        return posts.map((post, index) => {
-            return (
-                <TouchableOpacity key={index.toString()} onPress={() => navigation.navigate('SinglePost', {postId: post.id})}>
-                <View style={[ {width: width / 3} , {height: width/3}, {marginBottom: EStyleSheet.value('.1rem')}, index % 3 !== 0 ? 
-                    {paddingLeft: EStyleSheet.value('.1rem')} : {paddingLeft: 0}]} >
-                        <Image style={{flex: 1, width: undefined, height: undefined}} source={{uri: post.url}}/>
-                </View>
-                </TouchableOpacity>
-            );
-        });
-    }
-
-    const renderListSection = () => {
-        return posts.map((post, index) => {
-            return (
-                <PostCard post={post} key={index.toString()} navigation={navigation}/>
-            )
-        })
-    };
-
-    const renderSection = () => {
-        if (activeIndex === 0) {
-            return (
-                <View style={styles.gridView}>
-                    {renderGridSection()}
-                </View>
-            );
-        } else if (activeIndex === 1) {
-            return (
-                <View style={{flex: 1}}>
-                    {renderListSection()}
-                </View>
-            );
-        }
-    }
+    const description = "This is the Joust Home page, a place where you can interact with popular posts. Under Top Ranked Posts, you will see the posts with the highest amount of trophies. Trophies are a metric to measure how popular a post is." +
+        " Every post starts at 1000 trophies, which can go up or down.\n\n" +
+        " Here you can also enter Joust mode and Swipe mode. In Joust mode, you are shown two posts, and you can decide which one is better." +
+        " In Swipe mode, you can like a post or dislike a post by swiping, similar to Tinder. If a post gets liked in either of these modes, its trophies will increase, and if it's disliked, its trophies will decrease.";
 
     return (
-        <FlatList 
+        <View style={{flex: 1}}>
+            <View>
+                <WelcomeModal pagekey={"JoustHome"} title={"Joust Home"} description={description}/>
+            </View>
+        <FlatList
+        style={{flex: 1}} 
         refreshControl={
             <RefreshControl refreshing={refreshing} colors={EStyleSheet.value('$textColor')} tintColor={EStyleSheet.value('$textColor')} onRefresh={onRefresh} />
         }
@@ -187,10 +161,32 @@ const JoustHome = ({
         numColumns={activeIndex === 0 ? 3 : 1}
         key={activeIndex === 0 ? '0' : '1'}
         keyExtractor={(item, i) => item.id.toString()}
-        onEndReached={() => loadPost(posts.length)}
-        onEndReachedThreshold={0.9}
-        initialNumToRender={12}
+        onEndReached={() => {
+
+            async function load() {
+                let newPosts = posts;
+                const responseOne = await loadPost(posts.length);
+                if (typeof responseOne !== 'undefined') {
+                    newPosts.push(responseOne.data);
+                }
+                const responseTwo = await loadPost(posts.length+1);
+                if (typeof responseTwo !== 'undefined') {
+                    newPosts.push(responseTwo.data);
+                }
+                const responseThree = await loadPost(posts.length+2);
+                if (typeof responseThree !== 'undefined') {
+                    newPosts.push(responseThree.data);
+                }
+                setPosts(newPosts);
+                console.log(newPosts);
+            }
+
+            load();
+        }}
+        loadingMore={loadingMore}
+        
         />
+        </View>
     );
 }
 

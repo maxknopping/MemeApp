@@ -5,7 +5,8 @@ import { map } from 'rxjs/operators';
 import {JwtHelperService } from '@auth0/angular-jwt';
 import { environment } from 'src/environments/environment';
 import { User } from '../_models/User';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { Post } from '../_models/Post';
 
 @Injectable({
   providedIn: 'root'
@@ -71,5 +72,9 @@ export class AuthService {
       currentPassword: currentPassword,
       newPassword: newPassword
     });
+  }
+
+  getPost(id: number): Observable<Post> {
+    return this.http.get<Post>(`${this.baseUrl}post/${id}`);
   }
 }

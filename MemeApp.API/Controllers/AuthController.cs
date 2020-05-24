@@ -282,6 +282,16 @@ namespace MemeApp.API.Controllers
 
         }
 
+        [HttpGet("post/{postId}")]
+        public async Task<IActionResult> GetPost(int postId)
+        {
+            var user = await userRepo.GetPost(postId);
+
+            var userToReturn = mapper.Map<PostForDetailedDto>(user);
+
+            return Ok(userToReturn);
+        }
+
 
 
 

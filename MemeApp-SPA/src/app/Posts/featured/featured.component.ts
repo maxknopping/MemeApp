@@ -4,6 +4,7 @@ import { UserService } from '../../_services/User.service';
 import { AlertifyService } from '../../_services/alertify.service';
 import { ActivatedRouteSnapshot, ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { AuthService } from 'src/app/_services/auth.service';
 
 @Component({
   selector: 'app-featured',
@@ -15,7 +16,7 @@ export class FeaturedComponent implements OnInit {
   index: number;
 
   constructor(private user: UserService, private route: ActivatedRoute, private alertify: AlertifyService, 
-              private spinner: NgxSpinnerService) { }
+              private spinner: NgxSpinnerService, private authService: AuthService) { }
 
   ngOnInit() {
     this.index = 0;
@@ -61,6 +62,17 @@ export class FeaturedComponent implements OnInit {
 
   hideSpinner(name) {
     this.spinner.hide(name);
+  }
+
+  deletePost(id) {
+    this.alertify.confirm('Are you sure you want to delete this post?', () => {
+      this.user.deletePost(this.authService.decodedToken.nameid, id).subscribe(() => {
+        this.posts.splice(this.posts.findIndex(p => p.id === id), 1);
+        this.alertify.success('Post has been deleted');
+      }, error => {
+        this.alertify.error('Failed to delete the post');
+      });
+    });
   }
 
 }

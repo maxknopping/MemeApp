@@ -107,7 +107,8 @@ const GroupMessageThread = ({
         if (message.senderId != state.id) {
             array.push(styles.chatBubbleRcvd);
             if (i != 0) {
-                if (messages[i-1].senderId != state.id && messages[i-1].senderId == message.senderId) {
+                if (messages[i-1].senderId != state.id && messages[i-1].senderId == message.senderId &&
+                        Date.parse(messages[i-1].messageSent) - Date.parse(message.messageSent)  > -1 * 2 * 60 * 60 * 1000) {
                     array.push(styles.twoRcvdBubbles);
                 }
             }
@@ -115,18 +116,206 @@ const GroupMessageThread = ({
         } else {
             array.push(styles.chatBubbleSent);
             if (i != 0) {
-                if (messages[i-1].senderId == state.id) {
+                if (messages[i-1].senderId == state.id && Date.parse(messages[i-1].messageSent) - Date.parse(message.messageSent)  > -1 * 2 * 60 * 60 * 1000) {
                     array.push(styles.twoSentBubbles);
                 }
             }
         }
 
-        if (i == (messages.length - 1) || messages[i+1].senderId != message.senderId) {
+        if (i == (messages.length - 1) || messages[i+1].senderId != message.senderId || 
+            Date.parse(messages[i+1].messageSent) - Date.parse(message.messageSent)  > 2 * 60 * 60 * 1000) {
             array.push(styles.chatBubbleStop);
         }
 
         return array;
     }
+
+    const styleOfCenterDates = {
+        flavour: 'long',
+        gradation: [
+            {
+                factor: 60 * 60,
+                threshold: 0,
+                format: (value, locale) => {
+                    var d = new Date(value);
+                    var time = d.toLocaleTimeString(locale);
+                    var timeToReturn = time.substring(0, time.length - 6).concat(` ${time.substring(time.length - 2)}`);
+                    return timeToReturn;
+                }
+
+            },
+            {
+                factor: 60 * 60,
+                threshold: (now, future) => {
+                    var midnight = (new Date(now)).setHours(0,0,0,0);
+                    return (now - midnight)/ 3600;
+                },
+                format: (value, locale) => {
+                    var stringToReturn = 'Yesterday ';
+                    var d = new Date(value);
+                    var time = d.toLocaleTimeString(locale);
+                    var timeToReturn = time.substring(0, time.length - 6).concat(` ${time.substring(time.length - 2)}`);
+                    return stringToReturn + timeToReturn;
+                }
+            },
+            {
+                factor: 60 * 60,
+                threshold: (now, future) => {
+                    var midnight = (new Date(now)).setHours(0,0,0,0);
+                    var dateToday = (new Date(now)).getDate();
+                    var yesterdayMidnight = (new Date(midnight).setDate(dateToday - 2));
+                    return (now - yesterdayMidnight)/ 3600;
+                },
+                format: (value, locale) => {
+                    var d = new Date(value);
+                    var dayOftheWeek = d.getDay();
+                    var stringToReturn;
+                    if (dayOftheWeek == 0)
+                        stringToReturn = 'Sunday ';
+                    else if (dayOftheWeek == 1)
+                        stringToReturn = 'Monday ';
+                    else if (dayOftheWeek == 2)
+                        stringToReturn = 'Tuesday ';
+                    else if (dayOftheWeek == 3)
+                        stringToReturn = 'Wednesday ';
+                    else if (dayOftheWeek == 4)
+                        stringToReturn = 'Thursday ';
+                    else if (dayOftheWeek == 5)
+                        stringToReturn = 'Friday ';
+                    else 
+                        stringToReturn = 'Saturday ';
+                    var time = d.toLocaleTimeString(locale);
+                    var timeToReturn = time.substring(0, time.length - 6).concat(` ${time.substring(time.length - 2)}`);
+                    return stringToReturn + timeToReturn;
+                }
+            },
+            {
+                factor: 60 * 60,
+                threshold: (now, future) => {
+                    var midnight = (new Date(now)).setHours(0,0,0,0);
+                    var dateToday = (new Date(now)).getDate();
+                    var dateMidnight = (new Date(midnight).setDate(dateToday - 7));
+                    return (now - dateMidnight)/ 3600;
+                },
+                format: (value, locale) => {
+                    var d = new Date(value);
+                    var dayOftheWeek = d.getDay();
+                    var dateNumber = d.getDate();
+                    var monthNumber = d.getMonth();
+                    var month = 'Jan';
+                    if (monthNumber == 1)
+                        month = 'Feb';
+                    else if (monthNumber == 2)
+                        month = 'Mar';
+                    else if (monthNumber == 3)
+                        month = 'Apr';
+                    else if (monthNumber == 4)
+                        month = 'May';
+                    else if (monthNumber == 5)
+                        month = 'Jun';
+                    else if (monthNumber == 6)
+                        month = 'Jul';
+                    else if (monthNumber == 7)
+                        month = 'Aug';
+                    else if (monthNumber == 8)
+                        month = 'Sep';
+                    else if (monthNumber == 9)
+                        month = 'Oct';
+                    else if (monthNumber == 10)
+                        month = 'Nov';
+                    else
+                        month = 'Dec';
+                    
+                    var stringToReturn;
+                    if (dayOftheWeek == 0)
+                        stringToReturn = `Sun, ${month} ${dateNumber}, `;
+                    else if (dayOftheWeek == 1)
+                        stringToReturn = `Mon, ${month} ${dateNumber}, `;
+                    else if (dayOftheWeek == 2)
+                        stringToReturn = `Tue, ${month} ${dateNumber}, `;
+                    else if (dayOftheWeek == 3)
+                        stringToReturn = `Wed, ${month} ${dateNumber}, `;
+                    else if (dayOftheWeek == 4)
+                        stringToReturn = `Thu, ${month} ${dateNumber}, `;
+                    else if (dayOftheWeek == 5)
+                        stringToReturn = `Fri, ${month} ${dateNumber}, `;
+                    else 
+                        stringToReturn = `Sat, ${month} ${dateNumber}, `;
+                    var time = d.toLocaleTimeString(locale);
+                    var timeToReturn = time.substring(0, time.length - 6).concat(` ${time.substring(time.length - 2)}`);
+                    return stringToReturn + timeToReturn;
+                }
+            },
+            {
+                factor: 60 * 60,
+                threshold: (now, future) => {
+                    var midnight = (new Date(now)).setHours(0,0,0,0);
+                    var d = new Date(now);
+                    var dateToday = (new Date(now)).getFullYear();
+                    var dateMidnight = (new Date(midnight).setFullYear(dateToday - 1, d.getMonth(), d.getDate()));
+                    return (now - dateMidnight)/ 3600;
+                },
+                format: (value, locale) => {
+                    var d = new Date(value);
+                    var dayOftheWeek = d.getDay();
+                    var dateNumber = d.getDate();
+                    var monthNumber = d.getMonth();
+                    var year = d.getFullYear();
+                    var month = 'Jan';
+                    if (monthNumber == 1)
+                        month = 'Feb';
+                    else if (monthNumber == 2)
+                        month = 'Mar';
+                    else if (monthNumber == 3)
+                        month = 'Apr';
+                    else if (monthNumber == 4)
+                        month = 'May';
+                    else if (monthNumber == 5)
+                        month = 'Jun';
+                    else if (monthNumber == 6)
+                        month = 'Jul';
+                    else if (monthNumber == 7)
+                        month = 'Aug';
+                    else if (monthNumber == 8)
+                        month = 'Sep';
+                    else if (monthNumber == 9)
+                        month = 'Oct';
+                    else if (monthNumber == 10)
+                        month = 'Nov';
+                    else
+                        month = 'Dec';
+                    
+                    var stringToReturn;
+                    if (dayOftheWeek == 0)
+                        stringToReturn = `Sun, ${month} ${dateNumber}, ${year}, `;
+                    else if (dayOftheWeek == 1)
+                        stringToReturn = `Mon, ${month} ${dateNumber}, ${year}, `;
+                    else if (dayOftheWeek == 2)
+                        stringToReturn = `Tue, ${month} ${dateNumber}, ${year}, `;
+                    else if (dayOftheWeek == 3)
+                        stringToReturn = `Wed, ${month} ${dateNumber}, ${year}, `;
+                    else if (dayOftheWeek == 4)
+                        stringToReturn = `Thu, ${month} ${dateNumber}, ${year}, `;
+                    else if (dayOftheWeek == 5)
+                        stringToReturn = `Fri, ${month} ${dateNumber}, ${year}, `;
+                    else 
+                        stringToReturn = `Sat, ${month} ${dateNumber}, ${year}, `;
+                    var time = d.toLocaleTimeString(locale);
+                    var timeToReturn = time.substring(0, time.length - 6).concat(` ${time.substring(time.length - 2)}`);
+                    return stringToReturn + timeToReturn;
+                }
+            },
+        ]
+    };
+
+    const renderTimeText = (message, i) => {
+            var d = new Date(message.messageSent);
+            var time = d.toLocaleTimeString(en);
+            var timeToReturn = time.substring(0, time.length - 6).concat(` ${time.substring(time.length - 2)}`);
+            return <Text style={[styles.timeAgo, message.senderId == state.id ? {alignSelf: 'flex-end'}:
+            {alignSelf: 'flex-start'}]}>{timeToReturn}</Text>
+            
+    };
 
     return (
         <View style={{flex: 1}} onLayout={onLayout}>
@@ -134,6 +323,8 @@ const GroupMessageThread = ({
             <ScrollView ref={scrollView} style={{marginTop: 10}}>
                 {messages.map((message, i) => (
                     <View key={i}>
+                        {i == 0 || Date.parse(messages[i-1].messageSent) - Date.parse(message.messageSent)  < -1 * 2 * 60 * 60 * 1000 ? 
+                            <Text style={{color: 'gray', alignSelf: 'center', marginBottom: 10}}>{timeAgo.format(Date.parse(message.messageSent), styleOfCenterDates)}</Text>: null}
                         {message.senderId != state.id && i > 0 && messages[i - 1].senderId != message.senderId ? <Text style={styles.nameText}>
                             {message.senderUsername}
                         </Text>: null}
@@ -147,6 +338,9 @@ const GroupMessageThread = ({
                                 {message.content}
                             </Text>)}
                         </View>
+                        {i == (messages.length - 1) || messages[i+1].senderId != message.senderId  || 
+                            Date.parse(messages[i+1].messageSent) - Date.parse(message.messageSent)  > 2 * 60 * 60 * 1000 ? renderTimeText(message, i) : null}
+                        
                     </View>
                 ))}
             </ScrollView>
@@ -195,7 +389,8 @@ const styles = EStyleSheet.create({
     timeAgo: {
         fontSize: '.75rem',
         color: 'gray',
-        marginRight: '.75rem'
+        marginHorizontal: '1rem',
+        marginBottom: '2rem'
     },
     secondLineWrapper: {
         flexDirection: 'row',
@@ -250,8 +445,7 @@ const styles = EStyleSheet.create({
     },
     chatBubbleStop: {
         borderBottomLeftRadius: '1.25rem',
-        borderBottomRightRadius: '1.25rem',
-        marginBottom: '2rem'
+        borderBottomRightRadius: '1.25rem'
     },
     text: {
         color: 'white',

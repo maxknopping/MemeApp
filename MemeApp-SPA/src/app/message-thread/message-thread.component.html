@@ -11,17 +11,25 @@
         </li>
         <li #scrollBottom class="list-group-item message-thread">
             <ul class="chat">
-                <li *ngFor="let message of messages; let i = index"
+              <div style="display: flex; flex-flow: column nowrap;" *ngFor="let message of messages; let i = index">
+                <div style="justify-self: center; text-align: center; margin-bottom: 10px;" *ngIf="renderCenteredText(message, i)">
+                  <span>{{message.messageSent | messagesTime}}</span>
+                </div>
+                <li
                 [ngClass]="{'chat__bubble': message.post === null, 
                             'post_bubble': message.post != null,
                             'chat__bubble--sent': message.senderId == id, 
                             'chat__bubble--rcvd': message.senderId != id,
-                            'chat__bubble--stop': i == (messages.length - 1) || messages[i+1].senderId != message.senderId}">
+                            'chat__bubble--stop': i == (messages.length - 1) || messages[i+1].senderId != message.senderId,
+                            'two-received': i > 0 ? messages[i-1].senderId == message.senderId && message.senderId != id && twoSameBubbleStyle(message, i): false,
+                            'two-sent': renderTwoSentStyle(message, i),
+                            'chat__bubble--stop': i == (messages.length - 1) || messages[i+1].senderId != message.senderId || renderChatBubbleStop(message, i)}">
                       <app-post-card-message *ngIf="message.post != null" [post]="message.post"></app-post-card-message>
                       <span *ngIf="message.senderId == id" class="tooltiptext">{{message.messageSent | date:'shortTime'}}</span>
                       {{message.content}}
                       <span *ngIf="message.senderId != id" class="tooltiptext">{{message.messageSent | date:'shortTime'}}</span>
                 </li>
+              </div>
              </ul>
         </li>
         <li class="list-group-item">

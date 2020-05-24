@@ -1,8 +1,9 @@
 import React, {useState, useContext} from 'react';
-import {View, StyleSheet, Image, TextInput, TouchableOpacity, KeyboardAvoidingView, Dimensions} from 'react-native';
+import {View, StyleSheet, Image, TextInput, TouchableOpacity, KeyboardAvoidingView, Dimensions, Linking} from 'react-native';
 import {Text, Button} from 'react-native-elements';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {Context as AuthContext} from './../context/AuthContext';
+import {CheckBox} from 'react-native-elements';
 
 const { height: fullHeight } = Dimensions.get('window');
 
@@ -13,19 +14,29 @@ const SignUp = ({
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirm] = useState('');
+    const [termsChecked, setTermsChecked] = useState(false);
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
     const [isLoading, setLoading] = useState(false);
     const {state, signup} = useContext(AuthContext);
     const [offest, setOffset] = useState(0);
     const theme = EStyleSheet.value('$backgroundColor');
+    const baseUrl = 'http://localhost:4200';
 
     const onLayout = ({
         nativeEvent: { layout: { height } },
       }) => {
         const off = fullHeight - height;
         setOffset(off);
-      }
+      };
+
+    const onGetTermsAndConditions = async () => {
+        return Linking.openURL(baseUrl + '/terms');
+    };
+
+    const onGetPrivacyPolicy = async () => {
+        return Linking.openURL(baseUrl + '/privacy');
+    };
 
     return (
         <View style={{flex: 1}} onLayout={onLayout}>
@@ -61,12 +72,34 @@ const SignUp = ({
             <TextInput value={name} placeholderTextColor="gray" onChangeText={(text => setName(text))} 
                 style={styles.username} autoCapitalize="none" 
                 placeholder="Name" autoCorrect={false}/>
+            <View style={{width: '80%'}}>
+            <CheckBox containerStyle={{backgroundColor: 'transparent', borderWidth: 0}} 
+                title={
+                    <View style={{flexDirection: 'row', flexWrap: 'wrap', marginLeft: 10}}>
+                        <Text style={styles.text}>I agree to the </Text>
+                        <TouchableOpacity onPress={onGetTermsAndConditions}>
+                            <Text style={styles.linkText}>Terms and Conditions </Text>
+                        </TouchableOpacity>
+                        <Text style={styles.text}>and the{' '}</Text>
+                        <TouchableOpacity onPress={onGetPrivacyPolicy}>
+                            <Text style={styles.linkText}>Privacy Policy</Text>
+                        </TouchableOpacity>
+                    </View>
+                }
+                checked={termsChecked}
+                textStyle={{color: EStyleSheet.value('$textColor')}}
+                onIconPress={() => setTermsChecked(!termsChecked)}
+                checkedIcon="dot-circle-o"
+                uncheckedIcon="circle-thin"
+                uncheckedColor={EStyleSheet.value('$crimson')}
+                checkedColor={EStyleSheet.value('$crimson')}/>
+            </View>
             <Button loading={(state.errorMessage === null && isLoading || state.token === null && isLoading)} 
                 buttonStyle={{borderRadius: 10, backgroundColor: crimson}} 
                 style={styles.login} 
                 title="Sign Up" 
                 disabled={username === '' || password.length < 8 || confirmPassword !== password || username.length > 30 ||
-                    !email.includes('@') || !email.includes('.')}
+                    !email.includes('@') || !email.includes('.') || termsChecked === false}
                 onPress={() => {
                     signup({username, email, password, name});
                     setLoading(true);
@@ -115,8 +148,13 @@ const styles = EStyleSheet.create({
     textContainer: {
         flexDirection: 'row'
     },
+    linkText: {
+        fontSize: '.9rem',
+        color: '$crimson'
+    },
     text: {
-        fontSize: '.9rem'
+        fontSize: '.9rem',
+        color: 'gray'
     },
     validator: {
         fontSize: '.9rem'

@@ -48,7 +48,7 @@
   .chat__bubble--rcvd {
     background: #707070;
     color: white;
-    float: left;
+    align-self: flex-start;
     border-bottom-right-radius: 30px;
   }
   
@@ -57,13 +57,14 @@
     color: white;
     float: right;
     border-bottom-left-radius: 30px;
+    align-self: flex-end;
   }
   
-  .chat__bubble--sent + .chat__bubble--sent {
+  .two-sent {
     border-top-right-radius: 5px;
   }
   
-  .chat__bubble--rcvd + .chat__bubble--rcvd {
+  .two-received {
     border-top-left-radius: 5px;
   }
   

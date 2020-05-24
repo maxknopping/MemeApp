@@ -36,7 +36,6 @@
     clear: both;
     border-radius: 30px 30px 5px 5px ;
     max-width: 300px;
-    padding-left: 20px;
     padding-right: 20px;
   }
 
@@ -51,18 +50,18 @@
   .chat__bubble--rcvd {
     background: #707070;
     color: white;
-    float: left;
+    align-self: flex-start;
     border-bottom-right-radius: 30px;
   }
   
   .chat__bubble--sent {
     background: #0084ff;
     color: white;
-    float: right;
+    align-self: flex-end;
     border-bottom-left-radius: 30px;
   }
   
-  .chat__bubble--sent + .chat__bubble--sent {
+  .two-sent {
     border-top-right-radius: 5px;
   }
   
@@ -73,6 +72,7 @@
   .chat__bubble--stop {
     border-bottom-right-radius: 30px;
     border-bottom-left-radius: 30px;
+    margin-bottom: 2rem;
   }
 
   .chat__bubble--stop.chat__bubble--rcvd {

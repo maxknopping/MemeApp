@@ -46,5 +46,7 @@ namespace MemeApp.API.Models
 
         public string PushToken { get; set; }
 
+        public bool IsAdmin { get; set; }
+
     }
 }

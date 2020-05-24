@@ -21,5 +21,7 @@ namespace MemeApp.API.Dtos
         public string PhotoUrl { get; set; }
 
         public string Name { get; set; }
+
+        public bool IsAdmin { get; set; }
     }
 }

@@ -1,4 +1,6 @@
 using System;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
@@ -51,13 +53,56 @@ namespace MemeApp.API.Controllers
             return Ok(photoToReturn);
         }
 
+        [HttpGet("{id}/watermark")]
+        public async Task<IActionResult> AddWatermarkToPost(int id) {
+            var photo = await repo.GetPost(id);
+            byte[] imageData = null;
+            using (var wc = new System.Net.WebClient()) {
+                imageData = wc.DownloadData(photo.Url);
+            }
+
+            var stream = new MemoryStream(imageData);
+
+            if (imageData == null) {
+                return BadRequest("Could not find post");
+            }
+
+            
+            MemoryStream logoStream = new MemoryStream();
+            using (FileStream file = new FileStream("Controllers/MemeClub.png", FileMode.Open, FileAccess.Read)) {
+                byte[] bytes = new byte[file.Length];
+                file.Read(bytes, 0, Convert.ToInt32(file.Length));
+                file.CopyTo(logoStream);
+            }
+
+            var mainImage = new Bitmap(stream);
+            var logo = new Bitmap(logoStream);
+            //Image mainImage = Image.FromStream(stream, false, true);
+            //Image logo = Image.FromStream(logoStream, false, true);
+
+            var markedImage = new MemoryStream();
+            using (Graphics g = Graphics.FromImage(mainImage)) {
+                g.DrawImage(logo, new System.Drawing.Point(mainImage.Size.Width - logo.Size.Width - 10, mainImage.Size.Height - logo.Size.Height - 10));
+                mainImage.Save(markedImage, ImageFormat.Png);
+            }
+
+            var markedBytes = markedImage.ToArray();
+
+            var base64 = Convert.ToBase64String(markedBytes);
+
+
+            return Ok(base64);
+
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePost(int id, int userId) {
-            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
+            var user = await repo.GetUser(userId);
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) && !user.IsAdmin) {
                 return Unauthorized();
             }
             var userFromRepo = await repo.GetUser(userId);
-            if (!userFromRepo.Posts.Any()) {
+            if (!userFromRepo.Posts.Any() && !userFromRepo.IsAdmin) {
                 return Unauthorized();
             }
             var post = await repo.GetPost(id);

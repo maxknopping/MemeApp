@@ -12,9 +12,10 @@ const authReducer = (state, action) => {
         case 'add_error':
             return {...state, errorMessage: action.payload};
         case 'signin':
-            return {token: action.payload.token, id: action.payload.id, username: action.payload.username, expoPushToken: action.payload.expoPushToken, errorMessage: ''};
+            return {token: action.payload.token, id: action.payload.id, username: action.payload.username, expoPushToken: action.payload.expoPushToken, errorMessage: '', 
+                    isAdmin: action.payload.isAdmin};
         case 'signout':
-            return {token: null, id: 0, username: '', errorMessage: null, expoPushToken: null};
+            return {token: null, id: 0, username: '', errorMessage: null, expoPushToken: null, isAdmin: false};
         case 'changeUsername':
             return {...state, username: action.payload};
         case 'changePassword':
@@ -39,7 +40,7 @@ const tryLocalSignIn = (dispatch) => async () => {
             }
         dispatch({type:'signin', payload: {token: response.data.token, 
             id: response.data.user.id, username: response.data.user.username, expoPushToken: 
-            response.data.pushToken == null ? pushToken : response.data.pushToken}});
+            response.data.pushToken == null ? pushToken : response.data.pushToken, isAdmin: response.data.user.isAdmin}});
         await AsyncStorage.setItem('token', response.data.token);
         if (Platform.OS === 'ios') {
             Notifications.setBadgeNumberAsync(0);
@@ -64,8 +65,8 @@ const signup = (dispatch) => {
                 await AsyncStorage.setItem('password', password);
                 const pushToken = await registerForNotifications(registerResponse.data.id);
                 //await AsyncStorage.setItem('pushToken', pushToken);
-                dispatch({type:'signin', payload: {token: response.data.token, 
-                    id: response.data.user.id, username: response.data.user.username, expoPushToken: pushToken}});
+                dispatch({type:'signin', payload: {token: response.data.token,
+                    id: response.data.user.id, username: response.data.user.username, expoPushToken: pushToken, isAdmin: response.data.user.isAdmin}});
                 navigate('Feed');
             });
         } catch (err) {
@@ -89,7 +90,7 @@ const signin = (dispatch) => async ({username, password}) => {
             }
             dispatch({type:'signin', payload: {token: response.data.token, 
                 id: response.data.user.id, username: response.data.user.username, expoPushToken: 
-                response.data.pushToken == null ? pushToken : response.data.pushToken}});
+                response.data.pushToken == null ? pushToken : response.data.pushToken, isAdmin: response.data.user.isAdmin}});
             if (Platform.OS === 'ios') {
                 Notifications.setBadgeNumberAsync(0);
             }
@@ -159,4 +160,4 @@ const registerForNotifications = async (id) => {
 };
 
 export const {Context, Provider} = createDataContext(authReducer, {signin, changeUsername, changePassword, signout, signup, tryLocalSignIn},
-     {token: null, id: 0, username: '', errorMessage: null, expoPushToken: null});
+     {token: null, id: 0, username: '', errorMessage: null, expoPushToken: null, isAdmin: false});

@@ -2,16 +2,16 @@
   "expo": {
     "name": "Meme Club",
     "slug": "MemeApp-App",
+    "schema": "memeclub",
     "privacy": "public",
     "sdkVersion": "36.0.0",
     "platforms": [
       "ios",
-      "android",
       "web"
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/mc.png",
+    "icon": "/Users/maxknopping/Desktop/MemeApp/MemeApp-App/assets/meme_club_logo2.png",
     "splash": {
       "image": "./src/screens/img/logo@3x.png",
       "resizeMode": "contain",
@@ -24,7 +24,7 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true,
+      "supportsTablet": false,
       "infoPlist": {
         "NSAppTransportSecurity" : {
           "NSAllowsLocalNetworking": true,

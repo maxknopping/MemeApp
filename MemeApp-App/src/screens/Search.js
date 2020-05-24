@@ -5,6 +5,7 @@ import userService from './../apis/user';
 import { Context } from '../context/AuthContext';
 import {ListItem, Button} from 'react-native-elements';
 import {Feather} from 'react-native-vector-icons';
+import WelcomeModal from './WelcomeModal';
 
 const Search = ({
     navigation
@@ -64,6 +65,9 @@ const Search = ({
         ).catch(error => console.log(error));
     };
 
+    const description = "Here you can search for users by typing their username in the search box.";
+
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.searchView}>
@@ -106,6 +110,9 @@ const Search = ({
                     />
                 ))}
             </ScrollView>
+            <View>
+                <WelcomeModal pagekey={"Search"} title={"Search"} description={description}/>
+            </View>
         </SafeAreaView>
     );
 };

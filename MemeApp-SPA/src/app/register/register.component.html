@@ -52,6 +52,21 @@
         registerForm.get('confirmPassword').touched" 
         class="invalid-feedback">Passwords must match</div>
     </div>
+
+    <div class="form-group">
+      <div class="inline-field">
+        <label style="display: inline-block;" for="terms">
+          <input [ngClass]="{'is-invalid': registerForm.get('agreeToTerms').errors && 
+          registerForm.get('agreeToTerms').touched}"
+          type="checkbox" style="display: inline;" id="terms" name="terms" formControlName="agreeToTerms" />
+            I agree to the <a [routerLink]="[ '/terms' ]">Terms and Conditions</a> and the 
+            <a [routerLink]="[ '/privacy' ]">Privacy Policy</a>
+          </label>
+      </div>
+      <div *ngIf="registerForm.get('agreeToTerms').hasError('requiredTrue') && 
+      registerForm.get('agreeToTerms').touched" 
+      class="invalid-feedback">Please agree to continue</div>
+  </div>
   
     <div class="form-group text-center">
       <button [disabled]="!registerForm.valid" class="btn btn-success" type="submit">Register</button>

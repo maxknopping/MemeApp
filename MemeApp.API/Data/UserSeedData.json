@@ -259,5 +259,43 @@
         "joustRating": 1000
       }
     ]
+  },
+  {
+    "Username": "admin",
+    "Gender": "male",
+    "DateOfBirth": "1984-02-19",
+    "Password": "password",
+    "Name": "Admin",
+    "Created": "2017-06-27",
+    "LastActive": "2017-06-27",
+    "Introduction": "Aliqua nisi labore tempor adipisicing. Lorem in ut enim quis dolor magna commodo nisi ad voluptate et excepteur aliqua. Ea nostrud velit laborum sit nisi cillum proident nisi.\r\n",
+    "LookingFor": "Irure sunt fugiat labore ullamco. Quis mollit ut sint eu. Amet id sunt est ullamco aliquip exercitation commodo qui commodo. Pariatur ullamco dolore et mollit minim officia ex minim dolore magna cupidatat exercitation laboris eu.\r\n",
+    "Bio": "Sit ea id excepteur adipisicing ea excepteur sint ex et amet commodo do voluptate esse.",
+    "City": "Cavalero",
+    "Country": "Viet Nam",
+    "Email": "mknopping@gmail.com",
+    "Following": [
+      {
+        "FolloweeId": 2,
+        "FollowerId": 1
+      },
+      {
+        "FolloweeId": 3,
+        "FollowerId": 1
+      },
+      {
+        "FolloweeId": 4,
+        "FollowerId": 1
+      },
+      {
+        "FolloweeId": 5,
+        "FollowerId": 1
+      },
+      {
+        "FolloweeId": 6,
+        "FollowerId": 1
+      }
+    ],
+    "IsAdmin": true
   }
 ]

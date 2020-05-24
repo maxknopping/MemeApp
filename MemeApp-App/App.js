@@ -44,7 +44,7 @@ const switchNavigator = createSwitchNavigator({
     SignUp: SignUp,
     ForgotUsername: ForgotUsername,
     ForgotPassword: ForgotPassword,
-    TemporaryPassword: TemporaryPassword
+    TemporaryPassword: TemporaryPassword,
   }, {
     initialRouteName: 'SignIn',
     defaultNavigationOptions: ({navigation}) => ({
@@ -61,7 +61,10 @@ const switchNavigator = createSwitchNavigator({
         Comments: Comments,
         Messages: MessageList,
         MessageThread: MessageThread,
-        SinglePost: SinglePost,
+        SinglePost: {
+          screen: SinglePost,
+          path: 'post'
+        },
         Notifications: Notifications,
         GroupMessageThread: GroupMessageThread,
         GroupManager: GroupManager

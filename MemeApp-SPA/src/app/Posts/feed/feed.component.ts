@@ -3,6 +3,7 @@ import { Post } from '../../_models/Post';
 import { UserService } from '../../_services/User.service';
 import { AlertifyService } from '../../_services/alertify.service';
 import { ActivatedRouteSnapshot, ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from 'src/app/_services/auth.service';
 
 @Component({
   selector: 'app-feed',
@@ -14,7 +15,7 @@ export class FeedComponent implements OnInit {
   index: number;
   reachedEnd: boolean;
 
-  constructor(private user: UserService, private route: ActivatedRoute, private alertify: AlertifyService) { }
+  constructor(private user: UserService, private route: ActivatedRoute, private alertify: AlertifyService, private authService: AuthService) { }
 
   ngOnInit() {
     this.route.data.subscribe(data => {
@@ -57,5 +58,16 @@ export class FeedComponent implements OnInit {
     if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
       this.loadPosts();
     }
+  }
+
+  deletePost(id) {
+    this.alertify.confirm('Are you sure you want to delete this post?', () => {
+      this.user.deletePost(this.authService.decodedToken.nameid, id).subscribe(() => {
+        this.posts.splice(this.posts.findIndex(p => p.id === id), 1);
+        this.alertify.success('Post has been deleted');
+      }, error => {
+        this.alertify.error('Failed to delete the post');
+      });
+    });
   }
 }

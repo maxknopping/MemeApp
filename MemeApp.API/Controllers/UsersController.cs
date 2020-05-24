@@ -59,6 +59,21 @@ namespace MemeApp.API.Controllers
             return Ok(userToReturn);
         }
 
+        [HttpGet("username/{username}/{index}")]
+        public async Task<IActionResult> GetPostForProfile(string username, int index) {
+            var user = await repo.GetUser(username);
+            var userToReturn = mapper.Map<UserForDetailedDto>(user);
+
+            if (user.Posts.Count == 0) {
+                return BadRequest();
+            }
+            try {
+            return Ok(userToReturn.Posts[index]);
+            } catch {
+                return BadRequest();
+            }
+        }
+
         [HttpGet("post/{postId}")]
         public async Task<IActionResult> GetPost(int postId)
         {

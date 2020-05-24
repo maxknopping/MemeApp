@@ -9,6 +9,7 @@ import {MaterialCommunityIcons, Feather} from 'react-native-vector-icons';
 import Constants from 'expo-constants';
 import PostCard from './PostCard';
 import InfiniteScrollView from 'react-native-infinite-scroll-view';
+import WelcomeModal from './WelcomeModal';
 
 const Featured = ({
     navigation,
@@ -73,7 +74,14 @@ const Featured = ({
         });
     };
 
+    const description = "This is the featured page. Here you will see popular posts from the community." +
+        " Next, click on the sword icon in the top right corner. This will take you to the home page for Joust mode.";
+
     return (
+        <>
+            <View>
+                <WelcomeModal pagekey={"Featured5"} title={"Featured"} description={description}/>
+            </View>
             <FlatList
             contentContainerStyle={{
                 flexDirection: 'column'
@@ -89,7 +97,8 @@ const Featured = ({
                 refreshing={refreshing} colors={EStyleSheet.value('$textColor')} tintColor={EStyleSheet.value('$textColor')}/>
             }
             ListFooterComponent={() => loadingMore ? <ActivityIndicator animating size="small" /> : null}
-        />);
+        />
+        </>);
 };
 
 const styles = EStyleSheet.create({

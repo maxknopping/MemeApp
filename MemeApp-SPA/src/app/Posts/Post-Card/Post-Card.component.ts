@@ -30,7 +30,7 @@ export class PostCardComponent implements OnInit {
 
   ngOnInit() {
     const user = JSON.parse(localStorage.getItem('user'));
-    if (user.username === this.post.username) {
+    if (user.username === this.post.username || this.authService.currentUser.isAdmin) {
       this.myPost = true;
     }
     console.log(this.post);
@@ -67,6 +67,16 @@ export class PostCardComponent implements OnInit {
       this.router.navigate(['/comments', this.post.id, this.myPost]);
     });
   }
+
+  downloadUrl() {
+    let a: any = document.createElement('a');
+    a.href = this.post.url;
+    a.download = `${this.post.username}_on_Memeclub`;
+    document.body.appendChild(a);
+    a.style = 'display: none';
+    a.click();
+    a.remove();
+  };
 
   messagePost() {
     this.bsModalRef = this.modalService.show(SendPostModalComponent, {

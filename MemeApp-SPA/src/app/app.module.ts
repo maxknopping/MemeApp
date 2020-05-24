@@ -53,6 +53,9 @@ import { NotificationsComponent } from './notifications/notifications.component'
 import { NotificationsResolver } from './_resolvers/notifications.resolver';
 import { SearchComponent } from './search/search.component';
 import {NgxSpinnerModule} from 'ngx-spinner';
+import { MessagesTimePipe } from './_pipes/messages-time.pipe';
+import { TermsAndConditionsComponent } from './Terms and privacy/terms-and-conditions/terms-and-conditions.component';
+import { PrivacyPolicyComponent } from './Terms and privacy/privacy-policy/privacy-policy.component';
 
 export function tokenGetter() {
    return localStorage.getItem('token');
@@ -84,7 +87,10 @@ export function tokenGetter() {
       GroupMessageThreadComponent,
       GroupManagerComponent,
       NotificationsComponent,
-      SearchComponent
+      SearchComponent,
+      MessagesTimePipe,
+      TermsAndConditionsComponent,
+      PrivacyPolicyComponent
    ],
    imports: [
       HttpClientModule,

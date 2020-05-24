@@ -1,5 +1,6 @@
 import React, {useState, useEffect, useContext} from 'react';
-import { Text, View, Image, TouchableOpacity, Dimensions, TextInput, ScrollView, ActivityIndicator, Alert, TouchableWithoutFeedback } from 'react-native';
+import { Text, View, Image, TouchableOpacity, Dimensions, TextInput, ScrollView, 
+    ActivityIndicator, Alert, TouchableWithoutFeedback, Share, Platform } from 'react-native';
 import {Overlay, ListItem, CheckBox, Button} from 'react-native-elements';
 import {Context} from './../context/AuthContext';
 import userService from './../apis/user';
@@ -39,10 +40,35 @@ const PostCard = ({
                 }
             }
         }
-        if (state.username === post.username) {
+        if (state.username === post.username || state.isAdmin) {
             setMyPost(true);
         }
     }, []);
+
+    const getWatermarkedImage = async () => {
+            console.log('started');
+            const Jimp = require('jimp');
+            const image = await Jimp.read(post.url);
+            const logo = await Jimp.read('https://res.cloudinary.com/memehub/image/upload/v1589479228/logo_3x_yjchiz.png');
+
+            logo.resize(image.bitmap.width / 5, Jimp.AUTO);
+            const LOGO_MARGIN_PERCENTAGE = .5;
+            const xMargin = (image.bitmap.width * LOGO_MARGIN_PERCENTAGE) / 100;
+            const yMargin = (image.bitmap.width * LOGO_MARGIN_PERCENTAGE) / 100;
+            const X = image.bitmap.width - logo.bitmap.width - xMargin;
+            const Y = image.bitmap.height - logo.bitmap.height - yMargin;
+
+
+            var markedImage = image.composite(logo, X, Y, [{
+                mode: Jimp.BLEND_SCREEN,
+                opacitySource: 0.1,
+                opacityDest: 1
+            }]);
+            
+            var base64 = await markedImage.getBase64Async(Jimp.AUTO);
+
+            return base64;
+    };
 
     const likePost = () => {
         setTimeout(()=> null, 0);
@@ -87,6 +113,7 @@ const PostCard = ({
                     } else {
                         element.checked = false;
                     }
+                    element.groupId = 0;
                 });
                 setList([...response.data]);
                 console.log(response.data);
@@ -158,6 +185,19 @@ const PostCard = ({
           lastTap = now;
         }
       }
+
+    const onShare = async () => {
+        if (Platform.OS === 'ios') {
+            const baseUrl = 'http://localhost:4200/post'
+            Share.share({
+                message: `${baseUrl}/${postState.id}`
+            }, {
+                excludedActivityTypes: [
+                    'com.apple.UIKit.activity.AirDrop'
+                ]
+            });
+        }
+    };
     
     return (
         <View style={{flex: 1}}>
@@ -220,6 +260,9 @@ const PostCard = ({
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => setSearchVisible(true)}>
                         <SimpleLineIcons style={styles.planeIcon} name="paper-plane"/>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => onShare()}>
+                        <EvilIcons style={styles.shareIcon} name="share-apple"/>
                     </TouchableOpacity>
                     <Overlay isVisible={searchVisible} onShow={() => {
                         getInitialUsers();
@@ -431,6 +474,11 @@ const styles = EStyleSheet.create({
     },
     planeIcon: {
         fontSize: '1.5rem',
+        color: '$textColor',
+        marginRight: '1.4rem'
+    },
+    shareIcon: {
+        fontSize: '2.1rem',
         color: '$textColor'
     },
     likeCount: {
