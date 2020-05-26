@@ -95,6 +95,7 @@ namespace MemeApp.API
                 });
             }
 
+            //app.UseDeveloperExceptionPage();
             app.UseHttpsRedirection();
             // WithOrigins("http://localhost:4200", "http://localhost:19002")
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
