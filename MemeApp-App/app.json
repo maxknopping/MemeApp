@@ -2,7 +2,7 @@
   "expo": {
     "name": "Meme Club",
     "slug": "MemeApp-App",
-    "schema": "memeclub",
+    "scheme": "memeclub",
     "privacy": "public",
     "sdkVersion": "36.0.0",
     "platforms": [

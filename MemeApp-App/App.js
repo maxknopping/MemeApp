@@ -34,17 +34,20 @@ import {AppearanceProvider, Appearance} from 'react-native-appearance';
 import JoustHome from './src/screens/JoustHome';
 import Joust from './src/screens/Joust';
 import Swipe from './src/screens/Swipe';
+import { Linking } from 'expo';
+import AuthSinglePost from './src/screens/AuthSinglePost';
 
 const theme = Appearance.getColorScheme();
 
 const switchNavigator = createSwitchNavigator({
   Loading: LoadingScreen,
-  authFlow: createStackNavigator({
+  authFlow: {screen: createStackNavigator({
     SignIn: SignIn,
     SignUp: SignUp,
     ForgotUsername: ForgotUsername,
     ForgotPassword: ForgotPassword,
     TemporaryPassword: TemporaryPassword,
+    AuthSinglePost: AuthSinglePost,
   }, {
     initialRouteName: 'SignIn',
     defaultNavigationOptions: ({navigation}) => ({
@@ -53,8 +56,9 @@ const switchNavigator = createSwitchNavigator({
     },
     headerBackTitleVisible: false
   })}),
-  mainFlow: createBottomTabNavigator({
-    feedFlow: createStackNavigator({
+  path: ''},
+  mainFlow: {screen: createBottomTabNavigator({
+    feedFlow: {screen: createStackNavigator({
         Feed: Feed,
         List: List,
         Profile: Profile,
@@ -63,8 +67,7 @@ const switchNavigator = createSwitchNavigator({
         MessageThread: MessageThread,
         SinglePost: {
           screen: SinglePost,
-          path: 'post'
-        },
+          path: 'post/:postId'},
         Notifications: Notifications,
         GroupMessageThread: GroupMessageThread,
         GroupManager: GroupManager
@@ -77,6 +80,7 @@ const switchNavigator = createSwitchNavigator({
         headerBackTitleVisible: false
       })
     }),
+    path: ''},
     featuredFlow: createStackNavigator({
         Featured: Featured,
         List: List,
@@ -173,7 +177,7 @@ const switchNavigator = createSwitchNavigator({
       showLabel: false
 
     }
-  })
+  }), path: ''}
 });
 
 const crimson = '#DC143C';
@@ -206,11 +210,13 @@ if (theme === "light") {
 
 const App = createAppContainer(switchNavigator);
 
+const prefix = Linking.makeUrl('/');
+
 export default () => {
   return (
     <AppearanceProvider>
       <AuthProvider>
-        <App theme={theme} ref={(navigator) => {setNavigator(navigator)}}/>
+        <App theme={theme} uriPrefix={prefix} ref={(navigator) => {setNavigator(navigator)}}/>
       </AuthProvider>
     </AppearanceProvider>
   );
