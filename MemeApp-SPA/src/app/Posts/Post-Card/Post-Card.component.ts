@@ -68,6 +68,12 @@ export class PostCardComponent implements OnInit {
     });
   }
 
+  reportPost() {
+    this.user.reportPost(this.post.id, this.authService.decodedToken.nameid).subscribe(() => {
+      this.alertify.success('Successfully reported this post');
+    })
+  }
+
   downloadUrl() {
     let a: any = document.createElement('a');
     a.href = this.post.url;

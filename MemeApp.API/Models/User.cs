@@ -48,5 +48,11 @@ namespace MemeApp.API.Models
 
         public bool IsAdmin { get; set; }
 
+        public bool IsReported { get; set; }
+
+        public int ReportedCount { get; set; }
+
+        public int ReportedPostCount { get; set; }
+
     }
 }

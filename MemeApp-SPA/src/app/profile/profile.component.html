@@ -18,16 +18,24 @@
         <h3>{{user.name}}</h3>
         <h5 class="bio-text text-center">{{user?.bio}}</h5>
           <h6>{{followers}}
-            <a *ngIf="followers > 0" [routerLink]="[ '/list/', user.username, 'followers' ]">
+            <a style="color: black;" *ngIf="followers > 0" [routerLink]="[ '/list/', user.username, 'followers' ]">
                 Followers
             </a>
             <span *ngIf="followers === 0">Followers</span>
             | {{user.following.length}}
-            <a *ngIf="user.following.length > 0" [routerLink]="[ '/list/', user.username, 'following' ]">
+            <a style="color: black;" *ngIf="user.following.length > 0" [routerLink]="[ '/list/', user.username, 'following' ]">
                 Following
             </a>
             <span *ngIf="user.following.length === 0">Following</span>
           </h6>
+          <div class="btn-group" dropdown placement="top right">
+            <button style="background-color: transparent; border: 0px; cursor: pointer;" type="button" dropdownToggle>
+              <i class="fa fa-ellipsis-h ellipse-icon"></i>
+            </button>
+            <ul style="cursor: pointer;" class="dropdown-menu mb-3" [ngClass]="{'dropdown-menu-right': true}" role="menu"  *dropdownMenu>
+              <li role="menuitem"><a class="dropdown-item" (click)="report()">Report</a></li>
+            </ul>
+          </div>
       </div>
       </div>
     </div>

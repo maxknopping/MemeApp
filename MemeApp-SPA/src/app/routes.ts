@@ -31,6 +31,7 @@ import { NotificationsResolver } from './_resolvers/notifications.resolver';
 import { SearchComponent } from './search/search.component';
 import { TermsAndConditionsComponent } from './Terms and privacy/terms-and-conditions/terms-and-conditions.component';
 import { PrivacyPolicyComponent } from './Terms and privacy/privacy-policy/privacy-policy.component';
+import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
 
 export const appRoutes: Routes = [
     {path: '', component: HomeComponent},
@@ -42,7 +43,7 @@ export const appRoutes: Routes = [
         runGuardsAndResolvers: 'always',
         canActivate: [AuthGuard],
         children: [
-            {path: 'feed', component: FeedComponent, canActivate: [AuthGuard], resolve: {FeedResolver}},
+            {path: 'feed', component: FeedComponent, resolve: {FeedResolver}},
             {path: 'featured', component: FeaturedComponent},
             {path: 'profile/:username', component: ProfileComponent, resolve: {user: ProfileResolver}},
             {path: 'edit/profile', component: ProfileEditComponent, resolve: {user: ProfileEditResolver},
@@ -58,7 +59,8 @@ export const appRoutes: Routes = [
                 resolve: {messages: GroupMessageThreadResolver}},
             {path: 'group/:groupId/:groupName', component: GroupManagerComponent, resolve: {users: GroupManagerResolver}},
             {path: 'notifications', component: NotificationsComponent, resolve: {notifications: NotificationsResolver}},
-            {path: 'search', component: SearchComponent}
+            {path: 'search', component: SearchComponent},
+            {path: 'admin', component: AdminPanelComponent, data: {roles: 'Admin'}}
         ]
     },
     {path: '**', redirectTo: '', pathMatch: 'full'}

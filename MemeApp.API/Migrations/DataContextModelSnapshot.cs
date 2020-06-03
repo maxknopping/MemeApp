@@ -193,6 +193,8 @@ namespace MemeApp.API.Migrations
 
                     b.Property<bool>("inJoust");
 
+                    b.Property<bool>("isReported");
+
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
@@ -213,6 +215,8 @@ namespace MemeApp.API.Migrations
 
                     b.Property<bool>("IsAdmin");
 
+                    b.Property<bool>("IsReported");
+
                     b.Property<DateTime>("LastActive");
 
                     b.Property<string>("Name");
@@ -226,6 +230,10 @@ namespace MemeApp.API.Migrations
                     b.Property<string>("PublicIdForPhoto");
 
                     b.Property<string>("PushToken");
+
+                    b.Property<int>("ReportedCount");
+
+                    b.Property<int>("ReportedPostCount");
 
                     b.Property<string>("Username");
 

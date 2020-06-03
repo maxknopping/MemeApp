@@ -54,6 +54,9 @@ namespace MemeApp.API.Models
                     this.Message = "followed you.";
                     this.Followed = true;
                     break;
+                case "updateUser":
+                    this.Message = "Your account was flagged as being inappropriate and we changed your profile. You are at risk for your account being deleted or banned.";
+                    break;
                 default: 
                     this.Message = "";
                     break;

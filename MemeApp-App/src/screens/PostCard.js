@@ -100,6 +100,21 @@ const PostCard = ({
             ).catch(error => console.log(error));
     };
 
+    const reportPost = () => {
+        userService.post(`/${state.id}/report/${post.id}`, {}, {
+            headers: {
+                'Authorization': `Bearer ${state.token}`
+            }
+        })
+        .then(
+            function (response) {
+                Alert.alert(
+                    'Successfully Reported Post', '', [{text: 'Ok', style: 'default', onPress: () => setOptionsVisible(false)}]
+                );
+            }
+        ).catch(error => console.log(error));
+};
+
     const search = (text) => {
         userService.get(`/search/${state.id}/${text}/false`, {
             headers: {
@@ -215,6 +230,9 @@ const PostCard = ({
                         </TouchableOpacity>
                         <Overlay isVisible={postOptionsVisible} children={
                             <>
+                            <Text style={styles.text} onPress={reportPost}>
+                                Report
+                            </Text>
                             <Text style={styles.text}>
                                 Save Image
                             </Text>

@@ -35,6 +35,8 @@ namespace MemeApp.API.Models
 
         public int JoustRating { get; set; }
 
+        public bool isReported { get; set; }
+
 
         
     }

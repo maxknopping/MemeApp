@@ -9,5 +9,7 @@ namespace MemeApp.API.Dtos
         public string Email { get; set; }
 
         public string Name { get; set; }
+
+        public bool RemoveProfilePicture { get; set; }
     }
 }

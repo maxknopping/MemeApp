@@ -74,19 +74,19 @@ a:link {
   }
   
   a:visited {
-    color: black;
+    color: crimson;
     background-color: transparent;
     text-decoration: none;
   }
   
   a:hover {
-    color: black;
+    color: crimson;
     background-color: transparent;
     text-decoration: none;
   }
   
   a:active {
-    color: black;
+    color:  crimson;
     background-color: transparent;
     text-decoration: none;
   }

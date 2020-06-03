@@ -20,6 +20,7 @@
             <li *ngIf="myPost" role="menuitem"><a class="dropdown-item" (click)="deletePost(post.id)">Delete Post</a></li>
             <li role="menuitem"><a href="{{post.url}}" download="{{post.username}}_on_Memeclub.png" 
               target="_blank" class="dropdown-item">Save Image</a></li>
+            <li role="menuitem"><a class="dropdown-item" (click)="reportPost()">Report</a></li>
           </ul>
         </div>
         <p style="margin-bottom: 0px; margin-left: 7px;">

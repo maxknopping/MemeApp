@@ -79,4 +79,10 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  report() {
+    this.userService.reportUser(this.user.id).subscribe(() => {
+        this.alertify.success('Successfully reported this user');
+    });
+  }
+
 }

@@ -72,6 +72,14 @@ export class UserService {
     return this.http.post(`${this.baseUrl}/${id}/unlike/${recipientId}`, {});
   }
 
+  reportPost(postId: number, userId: number) {
+    return this.http.post(`${this.baseUrl}/${userId}/posts/report/${postId}`, {});
+  }
+
+  reportUser(userId: number) {
+    return this.http.post(`${this.baseUrl}/${userId}/report`, {});
+  }
+
   getLikers(postId, userId) {
     return this.http.get(`${this.baseUrl}/${userId}/likers/${postId}`);
   }
@@ -171,5 +179,7 @@ export class UserService {
   markNotificationsAsRead(userId: number) {
     return this.http.post(`${this.baseUrl}/notifications/${userId}/read`, {});
   }
+
+  
 
 }

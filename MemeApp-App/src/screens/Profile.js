@@ -1,12 +1,12 @@
 import React, {useContext, useEffect, useState, useRef} from 'react';
 import { Text, View, ScrollView, Image, ActivityIndicator, 
-        FlatList, Dimensions, RefreshControl, SafeAreaView, TouchableOpacity, Modal } from 'react-native';
+        FlatList, Dimensions, RefreshControl, SafeAreaView, TouchableOpacity, Modal, Alert } from 'react-native';
 import {Button, Overlay} from 'react-native-elements';
 import {Button as NativeButton} from 'native-base';
 import {Context} from './../context/AuthContext';
 import userService from './../apis/user';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {MaterialIcons, Ionicons, Feather} from 'react-native-vector-icons';
+import {MaterialIcons, Ionicons, Feather, Entypo} from 'react-native-vector-icons';
 import Constants from 'expo-constants';
 import PostCard from './PostCard';
 import WelcomeModal from './WelcomeModal';
@@ -70,6 +70,21 @@ const Profile = ({
                'Authorization': `Bearer ${state.token}`
            }
        }).catch(error => console.log(error));
+   }
+
+   const reportUser = () => {
+    userService.post(`/${user.id}/report`, {}, {
+        headers: {
+            'Authorization': `Bearer ${state.token}`
+        }
+    })
+    .then(
+        function (response) {
+            Alert.alert(
+                'Successfully Reported User', '', [{text: 'Ok', style: 'default', onPress: () => setModalVisible(false)}]
+            );
+        }
+    ).catch(error => console.log(error));
    }
     
     useEffect(() => {
@@ -204,6 +219,17 @@ const Profile = ({
         ListHeaderComponentStyle={{flex: 1}}
         ListHeaderComponent={(
             <View>
+                <Overlay isVisible={modalVisible} children={
+                            <>
+                            <Text style={styles.text} onPress={reportUser}>
+                                Report
+                            </Text>
+                            <Text onPress={() => setModalVisible(false)} style={[styles.text, {color: '#DC143C'}]}>
+                                Cancel
+                            </Text>
+                            </>
+                            } onBackdropPress={() => setModalVisible(false)} height={'auto'} width={'auto'} animationType={'fade'}>
+                        </Overlay>
             <View style={styles.headerView}>
                     {user ? (
                         <Image rounded style={styles.profilePicture} source={user.photoUrl ? {uri: user.photoUrl} : 
@@ -258,16 +284,23 @@ const Profile = ({
                 <View style={styles.bioView}>
                     {user ? <Text style={styles.bioText}>{user.bio}</Text> : null}
                 </View>
-                {followButton === 'Follow' ? <Button buttonStyle={{backgroundColor: EStyleSheet.value('$crimson'), 
+                <View style={{flexDirection: 'row', flex: 1}}>
+                {followButton === 'Follow' ? <Button containerStyle={{width: '90%'}} buttonStyle={{backgroundColor: EStyleSheet.value('$crimson'), 
                     borderRadius: EStyleSheet.value('.8rem')}} style={styles.followButton} title={followButton} onPress={follow}/> :
                     followButton === 'Edit Profile' ? <Button buttonStyle={{backgroundColor: 'gray', 
-                    borderRadius: EStyleSheet.value('.8rem')}} style={styles.followButton} title={followButton} onPress={() => {
+                    borderRadius: EStyleSheet.value('.8rem')}} containerStyle={{width: '100%'}} style={styles.followButton} title={followButton} onPress={() => {
                         navigation.navigate('EditProfile', {username: state.username});
                     }}/> :
-                    <Button buttonStyle={{backgroundColor: 'gray', borderColor: 'black', borderWidth: EStyleSheet.value('.05rem'), 
+                    <Button containerStyle={{width: '90%'}} buttonStyle={{backgroundColor: 'gray', borderColor: 'black', borderWidth: EStyleSheet.value('.05rem'), 
                     borderRadius: EStyleSheet.value('.8rem')}}
                     style={styles.followButton} title={followButton} onPress={() => unfollow()}/>
                 }
+                { followButton !== 'Edit Profile' ?
+                <TouchableOpacity onPress={() => setModalVisible(true)}>
+                    <Entypo style={styles.ellipsis} name="dots-three-horizontal"/> 
+                </TouchableOpacity> : null
+                }
+                </View>
                 <View style={styles.tabView}>
                     <NativeButton onPress={() => segmentClicked(0)} active={activeIndex === 0} transparent>
                         <MaterialIcons style={[styles.icons, activeIndex === 0 ?
@@ -368,7 +401,7 @@ const styles = EStyleSheet.create({
     },
     followButton: {
         marginHorizontal: '5%',
-        marginVertical: '5%',
+        marginVertical: '5%'
     },
     tabView: {
         flexDirection: 'row',
@@ -394,6 +427,20 @@ const styles = EStyleSheet.create({
     },
     label: {
         color: '$textColor'
+    },
+    ellipsis: {
+        fontSize: '1rem',
+        marginRight: '1rem',
+        marginTop: '2rem',
+        fontWeight: 'bold',
+        color: '$textColor',
+        alignSelf: 'center'
+    },
+    text: {
+        fontSize: '1rem',
+        fontWeight: 'bold',
+        alignSelf: 'center',
+        margin: '1rem'
     }
 
 });

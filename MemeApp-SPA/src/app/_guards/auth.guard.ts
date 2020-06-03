@@ -20,7 +20,19 @@ export class AuthGuard implements CanActivate {
     private router: Router
   ) {}
 
-  canActivate(): boolean {
+  canActivate(next: ActivatedRouteSnapshot): boolean {
+    let roles = null;
+    if (next.firstChild.data['roles']) {
+      roles = next.firstChild.data['roles'] as string;
+    }
+    if (roles) {
+       if (this.authService.roleMatch()) {
+         return true;
+       } else {
+         this.router.navigate(['/feed']);
+         this.alertify.error('You are not authorized to access this page.');
+       }
+    }
     if (this.authService.loggedIn()) {
       return true;
     }

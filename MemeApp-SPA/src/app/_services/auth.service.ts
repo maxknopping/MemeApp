@@ -77,4 +77,12 @@ export class AuthService {
   getPost(id: number): Observable<Post> {
     return this.http.get<Post>(`${this.baseUrl}post/${id}`);
   }
+
+  roleMatch() {
+    if (this.currentUser.isAdmin) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

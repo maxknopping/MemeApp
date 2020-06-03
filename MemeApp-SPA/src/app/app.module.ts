@@ -59,6 +59,11 @@ import { SearchComponent } from './search/search.component';
 import { MessagesTimePipe } from './_pipes/messages-time.pipe';
 import { TermsAndConditionsComponent } from './Terms and privacy/terms-and-conditions/terms-and-conditions.component';
 import { PrivacyPolicyComponent } from './Terms and privacy/privacy-policy/privacy-policy.component';
+import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
+import { UserManagementComponent } from './admin/user-management/user-management.component';
+import { PostManagementComponent } from './admin/post-management/post-management.component';
+import { AdminManagementComponent } from './admin/admin-management/admin-management.component';
+import { AdminService } from './_services/admin.service';
 
 export function tokenGetter() {
    return localStorage.getItem('token');
@@ -93,7 +98,11 @@ export function tokenGetter() {
       SearchComponent,
       MessagesTimePipe,
       TermsAndConditionsComponent,
-      PrivacyPolicyComponent
+      PrivacyPolicyComponent,
+      AdminPanelComponent,
+      UserManagementComponent,
+      PostManagementComponent,
+      AdminManagementComponent
    ],
    imports: [
       HttpClientModule,
@@ -110,11 +119,11 @@ export function tokenGetter() {
       NgxCroppieModule,
       ModalModule.forRoot(),
       JwtModule.forRoot({
-        config: {
-           tokenGetter: tokenGetter,
-          whitelistedDomains: ['localhost:5000'],
-           blacklistedRoutes: ['localhost:5000/api/auth/register']
-        }}),
+           config: {
+              tokenGetter: tokenGetter,
+             whitelistedDomains: ['localhost:5000'],
+              blacklistedRoutes: ['localhost:5000/api/auth/register']
+           }}),
       IconsModule,
    ],
    //JwtModule.forRoot({
@@ -139,7 +148,8 @@ export function tokenGetter() {
       SinglePostResolver,
       GroupMessageThreadResolver,
       GroupManagerResolver,
-      NotificationsResolver
+      NotificationsResolver,
+      AdminService
    ],
    bootstrap: [
       AppComponent

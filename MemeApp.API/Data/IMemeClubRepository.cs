@@ -62,5 +62,11 @@ namespace MemeApp.API.Data
         Task<Post> GetSwipePost();
 
         void SwipeResult(int postId, bool liked);
+
+        Task<IList<User>> getAdminUsers();
+
+        Task<IList<User>> getReportedUsers();
+
+        Task<IList<Post>> getReportedPosts();
     }
 }

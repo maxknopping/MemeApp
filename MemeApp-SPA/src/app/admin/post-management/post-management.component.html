@@ -1,0 +1,17 @@
+<div *ngIf="posts.length === 0" style="text-align: center;">
+  <h5 style="display: inline-block;">No more reported posts left.</h5>
+</div>
+
+<div class="container" style="margin-top: 10px;">
+  <div *ngFor="let post of posts" class="row">
+    <div class = "col-md-3 col-sm-1"></div>
+    <div class="col-sm-10 col-md-6">
+      <div style="display: flex; flex-direction: row;">
+        <button (click)="allowPost(post.id)" class="btn-success">OK</button>
+        <button (click)="deletePost(post.id)" class="btn-danger">DELETE</button>
+      </div>
+        <app-Post-Card [post]="post" (delete)="deletePost($event)"></app-Post-Card>
+    </div>
+    <div class = "col-md-3 col-sm-1"></div>
+  </div> 
+</div>

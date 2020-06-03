@@ -411,6 +411,16 @@ namespace MemeApp.API.Controllers
             
         }
 
+        [HttpPost("{userId}/report")]
+        public async Task<IActionResult> ReportUser(int userId)
+        {
+            var user = await repo.GetUser(userId);
+            user.IsReported = true;
+            user.ReportedCount++;
+            await repo.SaveAll();
+            return Ok();
+        }
+
         [HttpGet("{userId}/likers/{postId}")]
         public async Task<IActionResult> GetLikers(int postId, int userId)
         {

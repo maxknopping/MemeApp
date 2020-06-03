@@ -13,9 +13,9 @@
     "orientation": "portrait",
     "icon": "/Users/maxknopping/Desktop/MemeApp/MemeApp-App/assets/meme_club_logo2.png",
     "splash": {
-      "image": "./src/screens/img/logo@3x.png",
+      "image": "./src/screens/img/MemeClub.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#000000"
     },
     "updates": {
       "fallbackToCacheTimeout": 0

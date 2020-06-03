@@ -476,5 +476,23 @@ namespace MemeApp.API.Data
             }
             await SaveAll();
         }
+
+        public async Task<IList<User>> getAdminUsers()
+        {
+            var allAdmins = await context.Users.Where(p => p.IsAdmin == true).ToListAsync();
+            return allAdmins;
+        }
+
+        public async Task<IList<Post>> getReportedPosts()
+        {
+            var allReportedPosts = await context.Posts.Include(p => p.User).Where(p => p.isReported == true).ToListAsync();
+            return allReportedPosts;
+        }
+
+        public async Task<IList<User>> getReportedUsers()
+        {
+            var allReported = await context.Users.Where(p => p.IsReported == true).ToListAsync();
+            return allReported;
+        }
     }
 }

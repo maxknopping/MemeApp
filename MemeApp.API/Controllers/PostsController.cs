@@ -102,7 +102,7 @@ namespace MemeApp.API.Controllers
                 return Unauthorized();
             }
             var userFromRepo = await repo.GetUser(userId);
-            if (!userFromRepo.Posts.Any() && !userFromRepo.IsAdmin) {
+            if (!userFromRepo.Posts.Any() || !userFromRepo.IsAdmin) {
                 return Unauthorized();
             }
             var post = await repo.GetPost(id);
@@ -177,6 +177,21 @@ namespace MemeApp.API.Controllers
             return BadRequest();
 
         }
+
+        [HttpPost("report/{postId}")]
+        public async Task<IActionResult> ReportUser(int userId, int postId)
+        {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
+                return Unauthorized();
+            }
+
+            var post = await repo.GetPost(postId);
+            post.isReported = true;
+            post.User.ReportedPostCount++;
+            await repo.SaveAll();
+            return Ok();
+        }
+
 
         [HttpPost("profilePicture")]
         public async Task<IActionResult> AddProfilePictureForUser(int userId, [FromForm]PostForCreationDto postForCreation) {

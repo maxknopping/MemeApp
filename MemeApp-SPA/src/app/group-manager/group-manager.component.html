@@ -21,7 +21,7 @@
           <li class="list-group-item title listItem">
               <img class="profile-picture mr-2" src="{{user.photoUrl || '../../../assets/user.png'}}" alt="">
               
-              <button class="like-button">
+              <button class="like-button" [routerLink]="[ '/profile/', user.username]">
               <div style="align-items: flex-start;">
                   <h4 style="margin-bottom: 0rem !important;">
                       {{user.username}}
