@@ -47,4 +47,11 @@ export class UserManagementComponent implements OnInit {
     });
   }
 
+  banUser(user: User) {
+    this.admin.banUser(this.auth.decodedToken.nameid, {days: 3.0}, user.id).subscribe(() => {
+      this.users = this.users.filter(u => u.id != user.id);
+      this.alertify.success('User has been banned');
+    });
+  }
+
 }

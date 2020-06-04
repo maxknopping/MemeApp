@@ -33,6 +33,13 @@ export class AuthGuard implements CanActivate {
          this.alertify.error('You are not authorized to access this page.');
        }
     }
+
+    if (this.authService.currentUser.isBanned) {
+      this.router.navigate(['/banned']);
+      this.alertify.error('You are banned');
+      return false;
+    }
+
     if (this.authService.loggedIn()) {
       return true;
     }

@@ -17,4 +17,6 @@ export interface User {
     isAdmin?: boolean;
     reportedCount?: number;
     reportedPostCount?: number;
+    isBanned?: boolean;
+    banEnds?: any;
 }

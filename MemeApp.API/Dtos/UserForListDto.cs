@@ -23,5 +23,9 @@ namespace MemeApp.API.Dtos
         public string Name { get; set; }
 
         public bool IsAdmin { get; set; }
+
+        public bool IsBanned { get; set; }
+
+        public DateTime BanEnds { get; set; }
     }
 }

@@ -164,6 +164,36 @@ namespace MemeApp.API.Controllers
 
         }
 
+        [HttpPost("ban/{userId}/userToBan/{id}")]
+        public async Task<IActionResult> BanUser(int id, int userId, BanDto ban)
+        {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
+                return Unauthorized();
+            }
+            var user = await repo.GetUser(userId);
+
+            if (!user.IsAdmin)
+            {
+                return Unauthorized();
+            }
+
+            var userToBan = await repo.GetUser(id);
+
+            var now = DateTime.Now;
+
+            var banDate = now.AddDays(ban.Days);
+
+            userToBan.IsBanned = true;
+            userToBan.BanEnds = banDate;
+            userToBan.IsReported = false;
+
+            if (await repo.SaveAll()) {
+                return Ok();
+            } else {
+                return BadRequest();
+            }
+        }
+
         [HttpPut("{userId}/update/{id}")]
         public async Task<IActionResult> UpdateUser(int id, int userId, UserForAdminEditDto userForEdit)
         {

@@ -32,12 +32,14 @@ import { SearchComponent } from './search/search.component';
 import { TermsAndConditionsComponent } from './Terms and privacy/terms-and-conditions/terms-and-conditions.component';
 import { PrivacyPolicyComponent } from './Terms and privacy/privacy-policy/privacy-policy.component';
 import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
+import { BannedComponentComponent } from './banned-component/banned-component.component';
 
 export const appRoutes: Routes = [
     {path: '', component: HomeComponent},
     {path: 'post/:postId', component: SinglePostComponent, resolve: {post: SinglePostResolver}},
     {path: 'terms', component: TermsAndConditionsComponent},
     {path: 'privacy', component: PrivacyPolicyComponent},
+    {path: 'banned', component: BannedComponentComponent},
     {
         path: '',
         runGuardsAndResolvers: 'always',

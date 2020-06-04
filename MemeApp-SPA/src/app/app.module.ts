@@ -64,6 +64,7 @@ import { UserManagementComponent } from './admin/user-management/user-management
 import { PostManagementComponent } from './admin/post-management/post-management.component';
 import { AdminManagementComponent } from './admin/admin-management/admin-management.component';
 import { AdminService } from './_services/admin.service';
+import { BannedComponentComponent } from './banned-component/banned-component.component';
 
 export function tokenGetter() {
    return localStorage.getItem('token');
@@ -102,7 +103,8 @@ export function tokenGetter() {
       AdminPanelComponent,
       UserManagementComponent,
       PostManagementComponent,
-      AdminManagementComponent
+      AdminManagementComponent,
+      BannedComponentComponent
    ],
    imports: [
       HttpClientModule,
@@ -119,11 +121,11 @@ export function tokenGetter() {
       NgxCroppieModule,
       ModalModule.forRoot(),
       JwtModule.forRoot({
-           config: {
-              tokenGetter: tokenGetter,
-             whitelistedDomains: ['localhost:5000'],
-              blacklistedRoutes: ['localhost:5000/api/auth/register']
-           }}),
+         config: {
+            tokenGetter: tokenGetter,
+            whitelistedDomains: ['localhost:5000'],
+            blacklistedRoutes: ['localhost:5000/api/auth/register']
+         }}),
       IconsModule,
    ],
    //JwtModule.forRoot({

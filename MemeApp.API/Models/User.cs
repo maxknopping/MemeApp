@@ -54,5 +54,9 @@ namespace MemeApp.API.Models
 
         public int ReportedPostCount { get; set; }
 
+        public bool IsBanned { get; set; }
+
+        public DateTime BanEnds { get; set; }
+
     }
 }

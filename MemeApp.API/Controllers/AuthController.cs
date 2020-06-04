@@ -115,6 +115,13 @@ namespace MemeApp.API.Controllers
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
+            if (userFromRepo.IsBanned) {
+                if (userFromRepo.BanEnds.CompareTo(DateTime.Now) <= 0) {
+                    userFromRepo.IsBanned = false;
+                    await userRepo.SaveAll();
+                }
+            }
+
             var user = mapper.Map<UserForListDto>(userFromRepo);
 
             return Ok(new

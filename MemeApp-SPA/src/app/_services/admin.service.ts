@@ -35,6 +35,10 @@ constructor(private http: HttpClient) { }
     return this.http.put(`${this.baseUrl}/${userId}/update/${id}`, userToEdit);
   }
 
+  banUser(userId: number, ban: any, id: number,) {
+    return this.http.post(`${this.baseUrl}/ban/${userId}/userToBan/${id}`, ban);
+  }
+
   unReportPost(userId: number, postId: number) {
     return this.http.post(`${this.baseUrl}/${userId}/unReport/post/${postId}`, {});
   }
@@ -42,6 +46,8 @@ constructor(private http: HttpClient) { }
   unReportUser(userId: number, reportedId: number) {
     return this.http.post(`${this.baseUrl}/${userId}/unReport/user/${reportedId}`, {});
   }
+
+
 
 
 
