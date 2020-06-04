@@ -41,6 +41,7 @@ namespace MemeApp.API.Helpers
                 opt.MapFrom(src => src.Causer.PhotoUrl));
             CreateMap<MessageGroupForCreationDto, Message>();
             CreateMap<User, UserForSendPostDto>();
+            CreateMap<User, UserForReportDto>();
 
         }
     }

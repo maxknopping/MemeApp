@@ -114,14 +114,13 @@ namespace MemeApp.API.Controllers
             return Ok();
         }
 
-        [HttpGet("reportedUsers/{username}")]
-        public async Task<IActionResult> GetReportedUsers(string username)
+        [HttpGet("reportedUsers/{userId}")]
+        public async Task<IActionResult> GetReportedUsers(int userId)
         {
-            if (!username.Equals(User.FindFirst(ClaimTypes.Name)))
-            {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
                 return Unauthorized();
             }
-            var user = await repo.GetUser(username);
+            var user = await repo.GetUser(userId);
 
             if (!user.IsAdmin)
             {
@@ -165,22 +164,20 @@ namespace MemeApp.API.Controllers
 
         }
 
-        [HttpPut("{myUsername}/update/{id}")]
-        public async Task<IActionResult> UpdateUser(int id, string myUsername, UserForEditDto userForEdit)
+        [HttpPut("{userId}/update/{id}")]
+        public async Task<IActionResult> UpdateUser(int id, int userId, UserForAdminEditDto userForEdit)
         {
-            if (!myUsername.Equals(User.FindFirst(ClaimTypes.Name)))
-            {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
+                return Unauthorized();
+            }
+            var admin = await repo.GetUser(userId);
+
+            if (!admin.IsAdmin) {
                 return Unauthorized();
             }
 
-            var existingUser = await repo.GetUser(userForEdit.Username);
-            var userFromRepo = await repo.GetUser(id);
 
-            if (existingUser != null && userForEdit.Username != userFromRepo.Username)
-            {
-                return BadRequest("Useranme is taken.");
-            }
-            userForEdit.Username = userForEdit.Username.ToLower();
+            var userFromRepo = await repo.GetUser(id);
 
             if (userForEdit.RemoveProfilePicture)
             {
@@ -197,13 +194,20 @@ namespace MemeApp.API.Controllers
                 }
             }
 
-            mapper.Map(userForEdit, userFromRepo);
+            if (userForEdit.RemoveBio) {
+                userFromRepo.Bio = null;
+            }
+
+            if (userForEdit.RemoveName) {
+                userFromRepo.Name = null;
+            }
 
             if (await repo.SaveAll())
             {
                 var notification = new Notification("updateUser")
                 {
-                    RecipientId = id
+                    RecipientId = id,
+                    CauserId = userId
                 };
 
                 repo.Add<Notification>(notification);

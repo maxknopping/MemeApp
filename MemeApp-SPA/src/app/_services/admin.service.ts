@@ -31,8 +31,8 @@ constructor(private http: HttpClient) { }
     return this.http.post(`${this.baseUrl}/editRoles/${userId}/userToEdit/${id}`, roles);
   }
 
-  updateUser(myUsername: string, userToEdit: any, id: number,) {
-    return this.http.post(`${this.baseUrl}/${myUsername}/update/${id}`, userToEdit);
+  updateUser(userId: number, userToEdit: any, id: number,) {
+    return this.http.put(`${this.baseUrl}/${userId}/update/${id}`, userToEdit);
   }
 
   unReportPost(userId: number, postId: number) {

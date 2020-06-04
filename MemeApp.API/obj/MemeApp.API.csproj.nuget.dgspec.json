@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "/Users/maxknopping/Desktop/MemeApp/MemeApp.API/MemeApp.API.csproj": {}
+    "C:\\Users\\Max and Ryan\\Desktop\\MemeApp\\memeapp.api\\MemeApp.API.csproj": {}
   },
   "projects": {
-    "/Users/maxknopping/Desktop/MemeApp/MemeApp.API/MemeApp.API.csproj": {
+    "C:\\Users\\Max and Ryan\\Desktop\\MemeApp\\memeapp.api\\MemeApp.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/maxknopping/Desktop/MemeApp/MemeApp.API/MemeApp.API.csproj",
+        "projectUniqueName": "C:\\Users\\Max and Ryan\\Desktop\\MemeApp\\memeapp.api\\MemeApp.API.csproj",
         "projectName": "MemeApp.API",
-        "projectPath": "/Users/maxknopping/Desktop/MemeApp/MemeApp.API/MemeApp.API.csproj",
-        "packagesPath": "/Users/maxknopping/.nuget/packages/",
-        "outputPath": "/Users/maxknopping/Desktop/MemeApp/MemeApp.API/obj/",
+        "projectPath": "C:\\Users\\Max and Ryan\\Desktop\\MemeApp\\memeapp.api\\MemeApp.API.csproj",
+        "packagesPath": "C:\\Users\\Max and Ryan\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Max and Ryan\\Desktop\\MemeApp\\memeapp.api\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "/Users/maxknopping/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\Max and Ryan\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp2.1"

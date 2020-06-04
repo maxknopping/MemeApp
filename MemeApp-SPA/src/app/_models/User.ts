@@ -8,11 +8,13 @@ export interface User {
     name: string;
     created: Date;
     lastActive: Date;
-    photoUrl: string;
+    photoUrl?: string;
     bio?: string;
     posts: Post[];
     followers: Follow[];
     following: Follow[];
     followButton?: string;
     isAdmin?: boolean;
+    reportedCount?: number;
+    reportedPostCount?: number;
 }
