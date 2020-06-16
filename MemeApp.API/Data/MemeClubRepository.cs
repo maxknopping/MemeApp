@@ -430,10 +430,10 @@ namespace MemeApp.API.Data
             return postsToReturn;
         }
 
-        public async void JoustResult(int winningPostId, int losingPostId)
+        public async Task<bool> JoustResult(int winningPostId, int losingPostId)
         {
-            var winningPost = await GetPost(winningPostId);
-            var losingPost = await GetPost(losingPostId);
+            var winningPost = GetPost(winningPostId).GetAwaiter().GetResult();
+            var losingPost = GetPost(losingPostId).GetAwaiter().GetResult();
 
             var winnerExpected = (1.0 / (1.0 + Math.Pow(10, ((losingPost.JoustRating - winningPost.JoustRating)/ 400.0))));
             var loserExpected = (1.0 / (1.0 + Math.Pow(10, ((winningPost.JoustRating - losingPost.JoustRating)/ 400.0))));
@@ -443,7 +443,7 @@ namespace MemeApp.API.Data
             winningPost.JoustRating = newWinnerRating;
             losingPost.JoustRating = newLoserRating;
 
-            await SaveAll();
+            return await SaveAll();
         }
 
         public async Task<Post> GetTopJoustPosts(int index)
@@ -466,7 +466,7 @@ namespace MemeApp.API.Data
             return postOne;
         }
 
-        public async void SwipeResult(int postId, bool liked)
+        public async Task<bool> SwipeResult(int postId, bool liked)
         {
             var post = await GetPost(postId);
             if (liked) {
@@ -474,7 +474,7 @@ namespace MemeApp.API.Data
             } else {
                 post.JoustRating -= 2;
             }
-            await SaveAll();
+            return await SaveAll();
         }
 
         public async Task<IList<User>> getAdminUsers()

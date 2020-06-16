@@ -20,6 +20,8 @@ const authReducer = (state, action) => {
             return {...state, username: action.payload};
         case 'changePassword':
             return {...state};
+        case 'banned':
+            return {...state, banEnds: action.payload}
         default: 
             return state;
     }
@@ -45,7 +47,12 @@ const tryLocalSignIn = (dispatch) => async () => {
         if (Platform.OS === 'ios') {
             Notifications.setBadgeNumberAsync(0);
         }
-        navigate('Feed');
+        if (response.data.user.isBanned) {
+            dispatch({type: 'banned', payload: response.data.user.banEnds});
+            navigate('Banned');
+        } else {
+            navigate('Feed');
+        }
     } else {
         navigate('SignIn');
     }
@@ -94,7 +101,13 @@ const signin = (dispatch) => async ({username, password}) => {
             if (Platform.OS === 'ios') {
                 Notifications.setBadgeNumberAsync(0);
             }
-            navigate('Feed');
+            console.log(response.data.user);
+            if (response.data.user.isBanned) {
+                dispatch({type: 'banned', payload: response.data.user.banEnds});
+                navigate('Banned');
+            } else {
+                navigate('Feed');
+            }
         } catch (err) {
             dispatch({type:'add_error', payload:'Incorrect Username or Password'});
             console.log(err);

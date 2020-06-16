@@ -12,17 +12,17 @@
 /Users/maxknopping/Desktop/MemeApp/MemeApp.API/bin/Debug/netcoreapp2.1/MemeApp.API.dll
 /Users/maxknopping/Desktop/MemeApp/MemeApp.API/bin/Debug/netcoreapp2.1/MemeApp.API.pdb
 /Users/maxknopping/Desktop/MemeApp/MemeApp.API/obj/Debug/netcoreapp2.1/MemeApp.API.RazorTargetAssemblyInfo.cache
-C:\Users\Max and Ryan\Desktop\MemeApp\memeapp.api\bin\Debug\netcoreapp2.1\MemeApp.API.deps.json
-C:\Users\Max and Ryan\Desktop\MemeApp\memeapp.api\bin\Debug\netcoreapp2.1\MemeApp.API.runtimeconfig.json
-C:\Users\Max and Ryan\Desktop\MemeApp\memeapp.api\bin\Debug\netcoreapp2.1\MemeApp.API.runtimeconfig.dev.json
-C:\Users\Max and Ryan\Desktop\MemeApp\memeapp.api\bin\Debug\netcoreapp2.1\MemeApp.API.dll
-C:\Users\Max and Ryan\Desktop\MemeApp\memeapp.api\bin\Debug\netcoreapp2.1\MemeApp.API.pdb
-C:\Users\Max and Ryan\Desktop\MemeApp\memeapp.api\obj\Debug\netcoreapp2.1\MemeApp.API.csprojAssemblyReference.cache
-C:\Users\Max and Ryan\Desktop\MemeApp\memeapp.api\obj\Debug\netcoreapp2.1\MemeApp.API.csproj.CoreCompileInputs.cache
-C:\Users\Max and Ryan\Desktop\MemeApp\memeapp.api\obj\Debug\netcoreapp2.1\MemeApp.API.RazorAssemblyInfo.cache
-C:\Users\Max and Ryan\Desktop\MemeApp\memeapp.api\obj\Debug\netcoreapp2.1\MemeApp.API.RazorAssemblyInfo.cs
-C:\Users\Max and Ryan\Desktop\MemeApp\memeapp.api\obj\Debug\netcoreapp2.1\MemeApp.API.AssemblyInfoInputs.cache
-C:\Users\Max and Ryan\Desktop\MemeApp\memeapp.api\obj\Debug\netcoreapp2.1\MemeApp.API.AssemblyInfo.cs
-C:\Users\Max and Ryan\Desktop\MemeApp\memeapp.api\obj\Debug\netcoreapp2.1\MemeApp.API.RazorTargetAssemblyInfo.cache
-C:\Users\Max and Ryan\Desktop\MemeApp\memeapp.api\obj\Debug\netcoreapp2.1\MemeApp.API.dll
-C:\Users\Max and Ryan\Desktop\MemeApp\memeapp.api\obj\Debug\netcoreapp2.1\MemeApp.API.pdb
+C:/Users/Max and Ryan/Desktop/MemeApp/memeapp.api/bin/Debug/netcoreapp2.1/MemeApp.API.deps.json
+C:/Users/Max and Ryan/Desktop/MemeApp/memeapp.api/bin/Debug/netcoreapp2.1/MemeApp.API.runtimeconfig.json
+C:/Users/Max and Ryan/Desktop/MemeApp/memeapp.api/bin/Debug/netcoreapp2.1/MemeApp.API.runtimeconfig.dev.json
+C:/Users/Max and Ryan/Desktop/MemeApp/memeapp.api/bin/Debug/netcoreapp2.1/MemeApp.API.dll
+C:/Users/Max and Ryan/Desktop/MemeApp/memeapp.api/bin/Debug/netcoreapp2.1/MemeApp.API.pdb
+C:/Users/Max and Ryan/Desktop/MemeApp/memeapp.api/obj/Debug/netcoreapp2.1/MemeApp.API.csprojAssemblyReference.cache
+C:/Users/Max and Ryan/Desktop/MemeApp/memeapp.api/obj/Debug/netcoreapp2.1/MemeApp.API.csproj.CoreCompileInputs.cache
+C:/Users/Max and Ryan/Desktop/MemeApp/memeapp.api/obj/Debug/netcoreapp2.1/MemeApp.API.RazorAssemblyInfo.cache
+C:/Users/Max and Ryan/Desktop/MemeApp/memeapp.api/obj/Debug/netcoreapp2.1/MemeApp.API.RazorAssemblyInfo.cs
+C:/Users/Max and Ryan/Desktop/MemeApp/memeapp.api/obj/Debug/netcoreapp2.1/MemeApp.API.AssemblyInfoInputs.cache
+C:/Users/Max and Ryan/Desktop/MemeApp/memeapp.api/obj/Debug/netcoreapp2.1/MemeApp.API.AssemblyInfo.cs
+C:/Users/Max and Ryan/Desktop/MemeApp/memeapp.api/obj/Debug/netcoreapp2.1/MemeApp.API.RazorTargetAssemblyInfo.cache
+C:/Users/Max and Ryan/Desktop/MemeApp/memeapp.api/obj/Debug/netcoreapp2.1/MemeApp.API.dll
+C:/Users/Max and Ryan/Desktop/MemeApp/memeapp.api/obj/Debug/netcoreapp2.1/MemeApp.API.pdb

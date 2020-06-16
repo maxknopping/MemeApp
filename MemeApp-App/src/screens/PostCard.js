@@ -8,6 +8,9 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import {Entypo, FontAwesome, Feather, SimpleLineIcons, EvilIcons} from 'react-native-vector-icons';
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
+import * as MediaLibrary from 'expo-media-library';
+import * as Permissions from 'expo-permissions';
+import getPermissions from './../helpers/getPermissions';
 
 
 const PostCard = ({
@@ -213,6 +216,13 @@ const PostCard = ({
             });
         }
     };
+
+    const onSaveImage = async () => {
+        const status = await getPermissions(Permissions.CAMERA_ROLL);
+        if (status) {
+            MediaLibrary.saveToLibraryAsync(post.url).then(() => setOptionsVisible(false));
+        }
+    }
     
     return (
         <View style={{flex: 1}}>
@@ -233,7 +243,7 @@ const PostCard = ({
                             <Text style={styles.text} onPress={reportPost}>
                                 Report
                             </Text>
-                            <Text style={styles.text}>
+                            <Text onPress={onSaveImage} style={styles.text}>
                                 Save Image
                             </Text>
                             {myPost ? <Text onPress={() => {

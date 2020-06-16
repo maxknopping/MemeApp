@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Text, View, ScrollView, TouchableOpacity } from 'react-native';
+import { Text, View, ScrollView, TouchableOpacity,Linking } from 'react-native';
 import {Card} from 'react-native-elements';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Context } from '../context/AuthContext';
@@ -8,11 +8,31 @@ const Settings = ({
     navigation,
 }) => {
     const {signout} = useContext(Context);
+    const baseUrl = 'http://localhost:4200';
+
+    const onGetTermsAndConditions = async () => {
+        return Linking.openURL(baseUrl + '/terms');
+    };
+
+    const onGetPrivacyPolicy = async () => {
+        return Linking.openURL(baseUrl + '/privacy');
+    };
+
     return (
         <ScrollView>
             <Card containerStyle={{margin: 0, backgroundColor: EStyleSheet.value('$backgroundColor')}}>
                 <TouchableOpacity onPress={() => navigation.navigate('ChangePassword')}>
                     <Text style={styles.changePassword}>Change Password</Text>
+                </TouchableOpacity>
+            </Card>
+            <Card containerStyle={{margin: 0, backgroundColor: EStyleSheet.value('$backgroundColor')}}>
+                <TouchableOpacity onPress={onGetPrivacyPolicy}>
+                    <Text style={styles.changePassword}>Privacy Policy</Text>
+                </TouchableOpacity>
+            </Card>
+            <Card containerStyle={{margin: 0, backgroundColor: EStyleSheet.value('$backgroundColor')}}>
+                <TouchableOpacity onPress={onGetTermsAndConditions}>
+                    <Text style={styles.changePassword}>Terms and Conditions</Text>
                 </TouchableOpacity>
             </Card>
             <Card containerStyle={{margin: 0, backgroundColor: EStyleSheet.value('$backgroundColor')}}>

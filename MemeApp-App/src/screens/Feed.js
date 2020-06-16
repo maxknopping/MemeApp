@@ -18,6 +18,7 @@ const Feed = ({
     const [refreshing, setRefreshing] = useState(false);
     const [loadingMore, setLoadingMore] = useState(false);
     const [posts, setPosts] = useState([]);
+    const [doneLoading, setLoading] = useState(true);
 
     useEffect(() => {
         userService.get(`/feed/${state.username}/0`, {
@@ -27,6 +28,7 @@ const Feed = ({
         }).then(
             function (response) {
                 setPosts([response.data]);
+                setLoading(false);
                 userService.get(`/hasNewMessages/${state.id}`, {
                     headers: {
                         'Authorization': `Bearer ${state.token}`
@@ -104,7 +106,7 @@ const Feed = ({
             <View>
                 <WelcomeModal pagekey={"Feed"} title={"Welcome to MemeClub"} description={description}/>
             </View>
-            {posts.length === 0 ? <View style={{flex: 1, alignItems: 'center', marginTop: 10}}>
+            {posts.length === 0 && !doneLoading && !refreshing ? <View style={{flex: 1, alignItems: 'center', marginTop: 10}}>
                     <Text style={styles.text}>When you follow other users, their posts will appear here.</Text>
                 </View>: 
             <FlatList

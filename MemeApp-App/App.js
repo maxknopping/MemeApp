@@ -36,6 +36,7 @@ import Joust from './src/screens/Joust';
 import Swipe from './src/screens/Swipe';
 import { Linking } from 'expo';
 import AuthSinglePost from './src/screens/AuthSinglePost';
+import Banned from './src/screens/Banned';
 
 const theme = Appearance.getColorScheme();
 
@@ -48,6 +49,7 @@ const switchNavigator = createSwitchNavigator({
     ForgotPassword: ForgotPassword,
     TemporaryPassword: TemporaryPassword,
     AuthSinglePost: AuthSinglePost,
+    Banned: Banned
   }, {
     initialRouteName: 'SignIn',
     defaultNavigationOptions: ({navigation}) => ({

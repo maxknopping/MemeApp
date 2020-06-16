@@ -55,13 +55,13 @@ namespace MemeApp.API.Data
 
         Task<IList<Post>> GetJoustPosts();
 
-        void JoustResult(int winningPostId, int losingPostId);
+        Task<bool> JoustResult(int winningPostId, int losingPostId);
 
         Task<Post> GetTopJoustPosts(int index);
 
         Task<Post> GetSwipePost();
 
-        void SwipeResult(int postId, bool liked);
+        Task<bool> SwipeResult(int postId, bool liked);
 
         Task<IList<User>> getAdminUsers();
 

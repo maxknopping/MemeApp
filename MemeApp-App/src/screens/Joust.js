@@ -106,7 +106,7 @@ const styles = EStyleSheet.create({
     },
     headerUsername: {
         marginLeft: '.5rem',
-        color: 'white',
+        color: '$textColor',
         fontWeight: 'bold',
         fontSize: '1rem'
     },
@@ -120,12 +120,12 @@ const styles = EStyleSheet.create({
         flexWrap: 'wrap'
     },
     bottomUsername: {
-        color: 'white',
+        color: '$textColor',
         fontWeight: 'bold',
         fontSize: '1rem'
     },
     caption: {
-        color: 'white',
+        color: '$textColor',
         fontSize: '1rem'
     },
     containerView: {

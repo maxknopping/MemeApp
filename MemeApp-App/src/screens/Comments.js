@@ -176,9 +176,6 @@ const Comments = ({
                                 navigation.navigate('List', {type: 'commentLikers', identifier: comment.id})}>
                                     <Text style={styles.timeAgo}>{comment.likes} Likes</Text>
                                 </TouchableOpacity> : null}
-                            <TouchableOpacity>
-                                <Text style={styles.timeAgo}>Reply</Text>
-                            </TouchableOpacity>
                             {comment.deleteable ?
                             <TouchableOpacity onPress={() => {
                                 Alert.alert(

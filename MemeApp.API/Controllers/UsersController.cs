@@ -797,15 +797,15 @@ namespace MemeApp.API.Controllers
         }
 
         [HttpPost("joust/result/{winner}/{loser}")]
-        public IActionResult JoustResult(int winner, int loser) {
-            repo.JoustResult(winner, loser);
+        public async Task<IActionResult> JoustResult(int winner, int loser) {
+            await repo.JoustResult(winner, loser);
 
             return Ok();
         }
 
         [HttpPost("swipe/result/{postId}/{liked}")]
-        public IActionResult SwipeResult(int postId, bool liked) {
-            repo.SwipeResult(postId, liked);
+        public async Task<IActionResult> SwipeResult(int postId, bool liked) {
+            await repo.SwipeResult(postId, liked);
 
             return Ok();
         }

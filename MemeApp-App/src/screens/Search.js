@@ -134,7 +134,8 @@ const styles = EStyleSheet.create({
     searchInput: {
         flex: 1,
         marginLeft: '1rem',
-        fontSize: '1rem'
+        fontSize: '1rem',
+        color: 'black'
     },
     username: {
         fontSize: '1rem',

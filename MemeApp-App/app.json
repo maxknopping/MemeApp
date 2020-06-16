@@ -1,30 +1,34 @@
 {
   "expo": {
     "name": "Meme Club",
-    "slug": "MemeApp-App",
+    "slug": "MemeClub",
     "scheme": "memeclub",
     "privacy": "public",
     "sdkVersion": "36.0.0",
+    "userInterfaceStyle": "automatic",
     "platforms": [
       "ios",
       "web"
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "/Users/maxknopping/Desktop/MemeApp/MemeApp-App/assets/meme_club_logo2.png",
+    "icon": "/Users/maxknopping/Desktop/MemeApp/MemeApp-App/assets/meme_club_logo.png",
     "splash": {
       "image": "./src/screens/img/MemeClub.png",
       "resizeMode": "contain",
       "backgroundColor": "#000000"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "enabled": false
     },
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
       "supportsTablet": false,
+      "bundleIdentifier": "co.memeclub",
+      "buildNumber": "1.0.0",
       "infoPlist": {
         "NSAppTransportSecurity" : {
           "NSAllowsLocalNetworking": true,
@@ -32,7 +36,11 @@
             "http://192.168.0.4:5000": {
               "NSTemporaryExceptionAllowsInsecureHTTPLoads": true
             }
-          }
+          },
+          "NSCameraUsageDescription": "MemeClub uses the camera to allow users to take a photo to post on the app.",
+          "NSPhotoLibraryAddUsageDescription": "MemeClub users need to be able to save memes to their camera roll.",
+          "NSPhotoLibraryUsageDescription": "MemeClub uses the camera roll to allow users to post memes currently saved on their camera roll.m"
+
         }
       }
     }
