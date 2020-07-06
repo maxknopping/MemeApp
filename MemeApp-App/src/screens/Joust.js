@@ -57,7 +57,7 @@ const Joust = ({
         <ScrollView style={{flex: 1}} refreshControl={
             <RefreshControl refreshing={refreshing} colors={EStyleSheet.value('$textColor')} tintColor={EStyleSheet.value('$textColor')} onRefresh={onRefresh} />
         }>
-            {posts.length > 0 ?<View>
+            {posts.length > 0 ?<View style={{marginTop: '35%'}}>
                 <View style={styles.containerView}>
                     {posts.map((post, index) => {
                         return (
@@ -102,7 +102,7 @@ const styles = EStyleSheet.create({
     headerWrapper: {
         margin: '.5rem',
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     headerUsername: {
         marginLeft: '.5rem',
