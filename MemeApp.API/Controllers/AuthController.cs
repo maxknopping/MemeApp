@@ -80,6 +80,22 @@ namespace MemeApp.API.Controllers
             {
                 Console.WriteLine(ex.Message);
             }
+            var message = new Message{
+                RecipientId = createdUser.Id,
+                SenderId = 11,
+                Content = "Hi! Welcome to MemeClub. Message me if you find any bugs or have any feedback about the app.",
+                MessageSent = DateTime.Now
+            };
+
+            var notification = new Notification("message")
+            {
+                RecipientId = message.RecipientId,
+                CauserId = 11
+            };
+
+            userRepo.Add(notification);
+            userRepo.Add(message);
+            await userRepo.SaveAll();
 
             return CreatedAtRoute("GetUser", new { controller = "Users", id = createdUser.Id }, userToReturn);
         }

@@ -8,7 +8,7 @@ const Settings = ({
     navigation,
 }) => {
     const {signout} = useContext(Context);
-    const baseUrl = 'http://localhost:4200';
+    const baseUrl = 'https://memeclub.co';
 
     const onGetTermsAndConditions = async () => {
         return Linking.openURL(baseUrl + '/terms');

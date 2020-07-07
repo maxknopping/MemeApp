@@ -206,7 +206,7 @@ const PostCard = ({
 
     const onShare = async () => {
         if (Platform.OS === 'ios') {
-            const baseUrl = 'http://localhost:4200/post'
+            const baseUrl = 'https://memeclub.co/post'
             Share.share({
                 message: `${baseUrl}/${postState.id}`
             }, {

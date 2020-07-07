@@ -21,7 +21,7 @@ const SignUp = ({
     const {state, signup} = useContext(AuthContext);
     const [offest, setOffset] = useState(0);
     const theme = EStyleSheet.value('$backgroundColor');
-    const baseUrl = 'http://localhost:4200';
+    const baseUrl = 'https://memeclub.co';
 
     const onLayout = ({
         nativeEvent: { layout: { height } },
