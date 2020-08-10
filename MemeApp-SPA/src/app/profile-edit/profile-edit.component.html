@@ -2,7 +2,9 @@
     <div class="row">
       <div class="col-sm-3" style="text-align: center;">
           <img class="card-img-top profile-picture" [src]="imgURL || '../../../assets/user.png'">
-          <button class="btn-info change-picture" (click)="cropImageModal()">Change Profile Picture</button>
+          <button style="border: none; background-color: crimson; color: white; 
+                         padding-left: 0; padding-right: 0; padding-top: 1em; padding-bottom: 1em; line-height: 1.25em;
+                         border-radius: 10px;" class="btn change-picture" (click)="cropImageModal()">Change Profile Picture</button>
       </div>
       <div class="col-sm-6">
         <form #editForm="ngForm" id="editForm" (ngSubmit)="sendChanges()">
@@ -28,9 +30,12 @@
               <textarea name="bio" rows="4" class="form-control" [(ngModel)]="user.bio"></textarea>
           </div>
           <div class="password-container">
-            <button type="button" (click)="changePasswordModal()" class="btn-info password-change">Change Password</button>
+            <button style="border: none; padding-left: 0px; padding-right: 0px; padding-top: .5em; padding-bottom: .5em; 
+                           border-radius: 10px; background-color: crimson;"
+            type="button" (click)="changePasswordModal()" class="btn-info password-change">Change Password</button>
           </div>
-          <button form="editForm" [disabled]="(!editForm.dirty && uploader.queue.length == 0) || 
+          <button style="border: none; padding-left: .5em; padding-right: .5em; padding-top: .5em; padding-bottom: .5em; 
+                         border-radius: 10px;" form="editForm" [disabled]="(!editForm.dirty && uploader.queue.length == 0) || 
             user.username.indexOf(' ') !== -1 || user.username.length > 30 || !user.email.includes('@') || 
             !user.email.includes('.') || user.email.length === 0 || user.username.length === 0" class="save-button btn-success">SAVE CHANGES</button>
         </form>

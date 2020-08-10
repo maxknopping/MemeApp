@@ -3,6 +3,7 @@ import { AdminService } from 'src/app/_services/admin.service';
 import { AuthService } from 'src/app/_services/auth.service';
 import { User } from 'src/app/_models/User';
 import { AlertifyService } from 'src/app/_services/alertify.service';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-user-management',
@@ -13,6 +14,7 @@ export class UserManagementComponent implements OnInit {
   users: User[];
   constructor(private admin: AdminService, private auth: AuthService, private alertify: AlertifyService) { }
 
+  selectControl: FormControl = new FormControl();
   ngOnInit() {
     this.admin.getReportedUsers(this.auth.decodedToken.nameid).subscribe((res: User[]) => {
       this.users = res;
@@ -48,7 +50,7 @@ export class UserManagementComponent implements OnInit {
   }
 
   banUser(user: User) {
-    this.admin.banUser(this.auth.decodedToken.nameid, {days: 3.0}, user.id).subscribe(() => {
+    this.admin.banUser(this.auth.decodedToken.nameid, {days: this.selectControl.value}, user.id).subscribe(() => {
       this.users = this.users.filter(u => u.id != user.id);
       this.alertify.success('User has been banned');
     });

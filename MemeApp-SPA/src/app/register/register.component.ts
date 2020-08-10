@@ -34,7 +34,8 @@ export class RegisterComponent implements OnInit {
       name: [''],
       password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(50)]],
       confirmPassword: ['', Validators.required],
-      agreeToTerms: [false, Validators.requiredTrue]
+      agreeToTerms: [false, Validators.requiredTrue],
+      captcha: [null, Validators.required]
     }, {validator: this.passwordMatchValidator});
   }
 

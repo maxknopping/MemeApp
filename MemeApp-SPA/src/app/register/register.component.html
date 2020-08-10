@@ -59,17 +59,27 @@
           <input [ngClass]="{'is-invalid': registerForm.get('agreeToTerms').errors && 
           registerForm.get('agreeToTerms').touched}"
           type="checkbox" style="display: inline;" id="terms" name="terms" formControlName="agreeToTerms" />
-            I agree to the <a [routerLink]="[ '/terms' ]">Terms and Conditions</a> and the 
-            <a [routerLink]="[ '/privacy' ]">Privacy Policy</a>
+            I agree to the <a style="color: crimson;" target="_blank" [routerLink]="[ '/terms' ]">Terms and Conditions</a> and the 
+            <a style="color: crimson;" target="_blank" [routerLink]="[ '/privacy' ]">Privacy Policy</a>
           </label>
       </div>
       <div *ngIf="registerForm.get('agreeToTerms').hasError('requiredTrue') && 
       registerForm.get('agreeToTerms').touched" 
       class="invalid-feedback">Please agree to continue</div>
-  </div>
+    </div>
+
+    <div class="form-group">
+      <re-captcha
+      formControlName="captcha"
+      name="captcha"
+      required
+      siteKey="6LdWYLsZAAAAADjK4fyDGr43dqq8ZJD5F-v-4zbR"
+      type="images"
+    ></re-captcha>
+    </div>
   
     <div class="form-group text-center">
-      <button [disabled]="!registerForm.valid" class="btn btn-success" type="submit">Register</button>
+      <button [disabled]="!registerForm.valid" class="btn" style="background-color: crimson; color: white;" type="submit">Register</button>
       <button class="btn btn-default" type="button" (click)="cancel()">Cancel</button>
     </div>
     

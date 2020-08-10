@@ -12,7 +12,6 @@
 }
 
 .row-wrapper {
-    padding-top: 30px;
 }
 
 .input-label {
@@ -31,10 +30,6 @@
     font-size: 20px;
 }
 
-.row-wrapper {
-    padding-left: 30px;
-}
-
 .label-wrapper {
     width: 100%;
 }
@@ -43,13 +38,12 @@
     -webkit-appearance: none;
     width: 40%;
     height: 50px;
-    background-color: #4BB73f;
+    background-color: crimson;
     color: white;
     font-size: 20px;
-    border-radius: 10px;
     font-family: Nunito Sans;
     letter-spacing: 2px;
-    padding-top: 15px;
+    border-width: 0px;
 }
 
 .post-wrapper {
@@ -61,6 +55,6 @@
 }
 
 .preview {
-    width: 400px;
-    height: 400px;
+    width: 100px;
+    height: 100px;
 }

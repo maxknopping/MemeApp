@@ -34,17 +34,16 @@
 }
 
 .right-align {
-    padding-top: 15px;
     float: right;
     vertical-align: middle;
 }
 
 .bottom-line {
-    padding-right: 30px;
+    padding-left: 10px;
 }
 
 .first-bottom-line {
-    padding-left: 65px;
+    padding-left: 6px;
     padding-right: 30px;
 }
 

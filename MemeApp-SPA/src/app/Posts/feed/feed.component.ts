@@ -21,14 +21,9 @@ export class FeedComponent implements OnInit {
     this.route.data.subscribe(data => {
       this.index = 0;
       this.loadInitialPosts();
-      window.addEventListener('scroll', this.scroll, true); //third parameter
     });
   }
 
-  // tslint:disable-next-line: use-lifecycle-interface
-  ngOnDestroy() {
-    window.removeEventListener('scroll', this.scroll, true);
-  }
 
   loadPosts() {
     const username = localStorage.getItem('username');

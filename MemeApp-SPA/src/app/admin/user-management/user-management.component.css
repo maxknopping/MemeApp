@@ -10,15 +10,14 @@
     border: 0px;
     color: black;
     background-color: transparent;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: .75em;
 }
 
 .like-button:hover {
     background: transparent
-}
-
-.listItem {
-    flex-direction: row !important;
-    display: flex;
 }
 
 .submit {
@@ -35,5 +34,13 @@
     color: white;
     padding: 5px;
     font-size: .75rem;
-    border-radius: .75rem;
+    border-radius: .6rem;
+    border: none;
+}
+
+@media only screen and (max-width: 992px) {
+    .listItem {
+        flex-flow: row wrap !important;
+        display: flex;
+    }
 }

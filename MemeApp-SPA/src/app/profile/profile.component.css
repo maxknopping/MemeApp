@@ -1,21 +1,139 @@
-.profile-picture {
-    border-radius: 50%;
-    height:250px;
-    width:250px;
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+    .profile-picture {
+        border-radius: 50%;
+        height:60px;
+        width:60px;
+    }
+    .username{
+        font-size: 1.5rem;
+    }
+    .follow-button {
+        font-size: 1rem;
+    }
+
+    .following-button {
+        font-size: 1rem;
+    }
+
+    .edit-button {
+        font-size: 1rem;
+    }
 }
 
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+    .profile-picture {
+        border-radius: 50%;
+        height:100px;
+        width:100px;
+    }
+
+    .username{
+        font-size: 1.5rem;
+    }
+
+    .follow-button {
+        font-size: 1rem;
+    }
+
+    .following-button {
+        font-size: 1rem;
+    }
+
+    .edit-button {
+        font-size: 1rem;
+    }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+    .profile-picture {
+        border-radius: 50%;
+        height:175px;
+        width:175px;
+    }
+    .username{
+        font-size: 2rem;
+    }
+
+    .follow-button {
+        font-size: 1.5rem;
+    }
+
+    .following-button {
+        font-size: 1.5rem;
+    }
+
+    .edit-button {
+        font-size: 1.5rem;
+    }
+
+    .following-labels {
+        font-size: 1rem;
+    }
+
+    .name {
+        font-size: 1.5rem;
+    }
+
+    .bio-text {
+        font-size: 1rem;
+    }
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+    .profile-picture {
+        border-radius: 50%;
+        height:250px;
+        width:250px;
+    }
+
+    .username{
+        font-size: 2.5rem;
+    }
+
+    .follow-button {
+        font-size: 2rem;
+    }
+
+    .name {
+        font-size: 2rem;
+    }
+
+    .bio-text {
+        font-size: 1.5rem;
+    }
+
+    .following-button {
+        font-size: 2rem;
+    }
+
+    .edit-button {
+        font-size: 2rem;
+    }
+
+    .following-labels {
+        font-size: 1.5rem;
+    }
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+
+}
+
+
 .username-wrapper {
-    padding-top: 25px;
     padding-bottom: 10px;
 }
  
 .follow-button {
     -webkit-appearance: none;
-    width: 50%;
-    height: 70px;
+    width: 70%;
     background-color: #4BB73f;
     color: white;
-    font-size: 30px;
     border-radius: 10px;
     font-family: Nunito Sans;
     letter-spacing: 4px;
@@ -23,11 +141,9 @@
 
 .following-button {
     -webkit-appearance: none;
-    width: 50%;
-    height: 70px;
+    width: 70%;
     background-color: white;
     color: black;
-    font-size: 30px;
     border-radius: 10px;
     font-family: Nunito Sans;
     letter-spacing: 4px;
@@ -36,10 +152,8 @@
 
 .edit-button {
     -webkit-appearance: none;
-    width: 50%;
-    height: 70px;
+    width: 70%;
     color: white;
-    font-size: 30px;
     border-radius: 10px;
     font-family: Nunito Sans;
     letter-spacing: 4px;
@@ -47,6 +161,7 @@
 
 .button-wrapper {
     padding-bottom: 20px;
+    width: 100%;
 }
 
 .row-wrapper {

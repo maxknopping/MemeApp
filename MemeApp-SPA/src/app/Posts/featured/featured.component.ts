@@ -20,11 +20,6 @@ export class FeaturedComponent implements OnInit {
   ngOnInit() {
     this.index = 0;
     this.loadInitialPosts();
-    window.addEventListener('scroll', this.scroll, true); //third parameter
-  }
-
-  ngOnDestroy() {
-    window.removeEventListener('scroll', this.scroll, true);
   }
 
   loadPosts() {

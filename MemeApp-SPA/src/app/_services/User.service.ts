@@ -180,6 +180,13 @@ export class UserService {
     return this.http.post(`${this.baseUrl}/notifications/${userId}/read`, {});
   }
 
-  
+  hasNewNotifications(userId: number) {
+    return this.http.get(`${this.baseUrl}/hasNewNotifications/${userId}`);
+  }
+
+  hasNewMessages(userId: number) {
+    return this.http.get(`${this.baseUrl}/hasNewMessages/${userId}`);
+  }
+
 
 }

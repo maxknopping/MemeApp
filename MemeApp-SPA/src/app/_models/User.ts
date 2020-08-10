@@ -19,4 +19,5 @@ export interface User {
     reportedPostCount?: number;
     isBanned?: boolean;
     banEnds?: any;
+    banCount?: number;
 }

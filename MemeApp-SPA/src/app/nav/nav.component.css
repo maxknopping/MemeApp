@@ -21,3 +21,64 @@
     margin-right: 10px;
     width: 100% !important;
 }
+
+.btn {
+    font-size: .875rem;
+}
+
+@media only screen and (max-width: 400px) {
+    .lessMargin {
+        margin-right: 1rem;
+    }
+}
+
+@media only screen and (max-width: 574) {
+    .form-inline {
+        flex-direction: column;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .mat-badge-content {
+        background: transparent;
+    }
+
+    .nav-container {
+        margin-top: 10px;
+        margin-right: auto;
+
+    }
+
+    .profile-dropdown {
+        margin-top: 10px;
+        padding: 0;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 810px) {
+    .collapse {
+        display: none !important;
+    }
+
+    .navbar-toggler {
+        display: inline-block;
+    }
+ }
+
+@media only screen and (min-width: 768px) {
+    .mat-badge-content {
+        background: crimson;
+    }
+
+    .nav-container {
+        margin-right: auto;
+        margin-left: auto;
+    }
+}
+
+@media only screen and (max-width: 830px) {
+    .dropdown-menu {
+        left: auto !important;
+        right: 0px !important;
+    }
+}

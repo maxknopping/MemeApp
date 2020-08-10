@@ -13,6 +13,7 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { NgxCroppieComponent } from 'ngx-croppie';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { CroppingModalComponent } from '../CroppingModal/CroppingModal.component';
+import { ResizeEvent } from 'angular-resizable-element';
 
 @Component({
   selector: 'app-uploadPost',
@@ -36,12 +37,17 @@ export class UploadPostComponent implements OnInit  {
   };
   uploader: FileUploader;
   baseURL = environment.apiUrl;
+  captionMode = false;
 
   constructor(private authService: AuthService, private http: HttpClient, private sanitizer: DomSanitizer,
               private modalService: BsModalService) { }
 
   ngOnInit() {
     this.initializeUploader();
+  }
+
+  onResizeEnd(event: ResizeEvent): void {
+    console.log('Element was resized', event);
   }
 
   initializeUploader() {
@@ -102,6 +108,14 @@ export class UploadPostComponent implements OnInit  {
     });
   }
 
+  toggleCaptionMode() {
+    if (this.captionMode == true) {
+      this.uploader.clearQueue();
+      this.imgURL = '';
+    }
+    this.captionMode = !this.captionMode;
+  }
+
 public blobToFile = (theBlob: Blob, fileName: string): File => {
 
   const b: File = new File([theBlob], fileName);
@@ -119,6 +133,7 @@ cropImageModal() {
     const array: File[] = [file];
     this.uploader.addToQueue(array);
     this.bsModalRef.hide();
+    this.toggleCaptionMode();
     this.preview(blobImage);
   });
 }

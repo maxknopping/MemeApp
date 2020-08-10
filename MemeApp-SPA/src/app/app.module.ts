@@ -65,6 +65,11 @@ import { PostManagementComponent } from './admin/post-management/post-management
 import { AdminManagementComponent } from './admin/admin-management/admin-management.component';
 import { AdminService } from './_services/admin.service';
 import { BannedComponentComponent } from './banned-component/banned-component.component';
+import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
+import {MatBadgeModule} from '@angular/material/badge';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import {DragDropModule} from '@angular/cdk/drag-drop';
+import { ResizableModule } from 'angular-resizable-element';
 
 export function tokenGetter() {
    return localStorage.getItem('token');
@@ -127,6 +132,13 @@ export function tokenGetter() {
             blacklistedRoutes: ['localhost:5000/api/auth/register']
          }}),
       IconsModule,
+      RecaptchaFormsModule,
+      RecaptchaModule,
+      MatBadgeModule,
+      InfiniteScrollModule,
+      DragDropModule,
+      ResizableModule
+
    ],
    //JwtModule.forRoot({
    //   config: {

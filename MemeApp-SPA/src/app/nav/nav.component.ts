@@ -4,6 +4,10 @@ import { AlertifyService } from '../_services/alertify.service';
 import { Router } from '@angular/router';
 import { UserService } from '../_services/User.service';
 
+interface NotificationCount {
+  count: number;
+}
+
 @Component({
   selector: 'app-nav',
   templateUrl: './nav.component.html',
@@ -17,6 +21,8 @@ export class NavComponent implements OnInit {
   searchPreviewUsers;
   @ViewChild('dropdown', {static: true}) private dropdown: ElementRef;
   collapsed = true;
+  messageCount = 0;
+  notificationCount = 0;
 
   constructor(
     public authService: AuthService,
@@ -27,6 +33,12 @@ export class NavComponent implements OnInit {
 
   ngOnInit() {
     this.authService.currentPhotoUrl.subscribe(photoUrl => this.photoUrl = photoUrl);
+    this.user.hasNewMessages(this.authService.decodedToken.nameid).subscribe((res: NotificationCount) => {
+      this.messageCount = res.count;
+    });
+    this.user.hasNewNotifications(this.authService.decodedToken.nameid).subscribe((res: NotificationCount) => {
+      this.notificationCount = res.count;
+    });
   }
 
   login() {
@@ -41,7 +53,6 @@ export class NavComponent implements OnInit {
       }
     );
     this.username = localStorage.getItem('username');
-
   }
 
   loggedIn() {
@@ -70,6 +81,10 @@ export class NavComponent implements OnInit {
     this.user.searchForUser(this.authService.decodedToken.nameid, phrase, false).subscribe(users => {
       this.searchPreviewUsers = users;
     });
+  }
+
+  markNotificationsAsRead() {
+    this.notificationCount = 0;
   }
 
   toggleCollapsed() {

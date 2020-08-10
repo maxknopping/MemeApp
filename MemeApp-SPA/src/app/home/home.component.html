@@ -1,10 +1,10 @@
 <div class="container mt-5">
     <div *ngIf="!registerMode && !forgotUsernameMode && !forgotPasswordMode && !tempPasswordMode" style="text-align: center">
       <h1>MemeClub</h1>
-      <p class="lead">The meme social media.</p>
-      <div class="text-center">
-        <button class="btn btn-warning btn-md mr-2 mb-2" (click)="registerToggle()">Register</button>
-        <button class="btn btn-info btn-md mr-2 mb-2" (click)="forgotUsernameToggle()">Forgot Username?</button>
+      <p style="margin-bottom: 24px;" class="lead">The meme social media.</p>
+      <div class="text-center" style="display: flex; flex-direction: column; align-items: center;">
+        <button style="background-color: crimson; color: white; width: min-content;" class="btn btn-md mb-2 registerButton" (click)="registerToggle()">Register</button>
+        <button class="btn btn-info btn-md mb-2" (click)="forgotUsernameToggle()">Forgot Username?</button>
         <button class="btn btn-success btn-md mb-2" (click)="forgotPasswordToggle()">Forgot Password?</button>
       </div>
     </div>

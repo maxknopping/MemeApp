@@ -58,5 +58,7 @@ namespace MemeApp.API.Models
 
         public DateTime BanEnds { get; set; }
 
+        public int BanCount { get; set; }
+
     }
 }

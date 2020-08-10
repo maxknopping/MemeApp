@@ -1,34 +1,13 @@
 <div class="container mt-4">
   <div class="row">
-    <div class="col-sm-3">
-      <img class="card-img-top profile-picture" src="{{user.photoUrl || '../../../../assets/user.png'}}">
-      <div class="card-body">
+    <div style="display: flex; justify-content: stretch; flex-direction: row; width: 100%;">
+      <div style="margin-left: 5%; margin-right: 10%;">
+          <img style="justify-self: start;" class="card-img-top profile-picture" src="{{user.photoUrl || '../../../../assets/user.png'}}">
       </div>
-    </div>
-    <div class="col-sm-6 text-center">
-      <div class="username-wrapper">
-          <h1>{{user?.username}}</h1>
-      </div>
-      <div class="button-wrapper">
-        <button *ngIf="!isMyProfile && !following" (click)="follow(user.id)" class="follow-button">FOLLOW</button>
-        <button *ngIf="!isMyProfile && following" (click)="unfollow(user.id)" class="following-button">FOLLOWING</button>
-        <button *ngIf="isMyProfile" class="edit-button bg-dark" [routerLink]="[ '/edit/profile' ]">EDIT PROFILE</button>
-      </div>
-      <div>
-        <h3>{{user.name}}</h3>
-        <h5 class="bio-text text-center">{{user?.bio}}</h5>
-          <h6>{{followers}}
-            <a style="color: black;" *ngIf="followers > 0" [routerLink]="[ '/list/', user.username, 'followers' ]">
-                Followers
-            </a>
-            <span *ngIf="followers === 0">Followers</span>
-            | {{user.following.length}}
-            <a style="color: black;" *ngIf="user.following.length > 0" [routerLink]="[ '/list/', user.username, 'following' ]">
-                Following
-            </a>
-            <span *ngIf="user.following.length === 0">Following</span>
-          </h6>
-          <div class="btn-group" dropdown placement="top right">
+      <div class="header-wrapper" style="flex-direction: column; margin-left: 30px; flex: 1;">
+        <div class="username-wrapper" style="display: flex;">
+          <span class="username">{{user?.username}}</span>
+          <div class="btn-group" style="margin-left: 15px; align-self: center;" dropdown placement="top right">
             <button style="background-color: transparent; border: 0px; cursor: pointer;" type="button" dropdownToggle>
               <i class="fa fa-ellipsis-h ellipse-icon"></i>
             </button>
@@ -36,17 +15,43 @@
               <li role="menuitem"><a class="dropdown-item" (click)="report()">Report</a></li>
             </ul>
           </div>
+        </div>
+        <div class="button-wrapper">
+          <button *ngIf="!isMyProfile && !following" (click)="follow(user.id)" class="follow-button">FOLLOW</button>
+          <button *ngIf="!isMyProfile && following" (click)="unfollow(user.id)" class="following-button">FOLLOWING</button>
+          <button *ngIf="isMyProfile" class="edit-button bg-dark" [routerLink]="[ '/edit/profile' ]">EDIT PROFILE</button>
+        </div>
+        <div class="followers-wrapper">
+          <span class="following-labels" style="margin-right: 25%;">{{followers}}
+            <a style="color: black;" *ngIf="followers > 0" [routerLink]="[ '/list/', user.username, 'followers' ]">
+                Followers
+            </a>
+            <span *ngIf="followers === 0">Followers</span></span>
+            <span class="following-labels">{{user.following.length}}
+            <a style="color: black;" *ngIf="user.following.length > 0" [routerLink]="[ '/list/', user.username, 'following' ]">
+                Following
+            </a>
+            <span *ngIf="user.following.length === 0">Following</span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+      <div style="margin-left: 5%; margin-top: 20px;">
+        <span style="font-weight: bold;" class="name">{{user.name}}</span><br/>
+        <span class="bio-text">{{user?.bio}}</span>
       </div>
       </div>
     </div>
-  </div>
+
+
   <div class="tab-panel">
       <tabset justified="true" class="member-tabset"> 
           <tab heading="" id="tab1"><ng-template tabHeading><i style="color: bg-dark" class="fa fa-th fa-2x"></i></ng-template>
             <div class="post-container">
                 <div class="row row-wrapper">
-                  <div *ngFor="let post of posts" class="col-sm-4">
-                    <img class="card-img grid-image" src="{{post.url}}" [routerLink]="['/post/', post.id]">
+                  <div *ngFor="let post of posts" class="col-4">
+                    <img class="grid-image" src="{{post.url}}" [routerLink]="['/post/', post.id]">
                   </div>
                 </div>
               </div>

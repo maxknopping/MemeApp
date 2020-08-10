@@ -25,5 +25,8 @@ namespace MemeApp.API.Dtos
         public int ReportedCount { get; set; }
 
         public int ReportedPostCount { get; set; }
+        
+        public bool IsBanned { get; set; }
+        public int BanCount { get; set; }
     }
 }
