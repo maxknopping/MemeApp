@@ -58,3 +58,107 @@
     width: 100px;
     height: 100px;
 }
+
+@media only screen and (min-width: 992px) {
+    .meme-to-edit {
+        max-height: 30rem;
+        max-width: 30rem;
+        border-width: 10px solid;
+        border-color: black;
+    }
+    .meme-text-container {
+        flex-direction: row;
+    }
+
+
+    .cdk-boundary {
+        max-width: 30rem;
+        max-height: 30rem;
+    }
+
+    .text-container {
+        width: 50%; 
+        margin-left: 20px;
+    }
+
+    .next-button-top {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 992px) {
+    .meme-to-edit {
+        max-height: 20rem;
+        max-width: 20rem;
+        border-width: 10px solid;
+        border-color: black;
+    }
+    .meme-text-container {
+        flex-direction: column;
+        align-self: center;
+    }
+
+    .cdk-boundary {
+        max-width: 20rem;
+        max-height: 20rem;
+        align-self: center;
+        margin-bottom: 10px;
+    }
+
+    .text-container {
+        align-self: center;
+        margin-left: 0px;
+        width: 100%;
+    }
+
+    .next-button-bottom {
+        display: none;
+    }
+}
+
+.cdk-boundary:hover > .draggable {
+    border: 2px dashed;
+    border-color: black;
+}
+
+.draggable {
+    box-sizing: border-box;
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+.resize-handle-top,
+      .resize-handle-bottom {
+        position: absolute;
+        height: 5px;
+        cursor: row-resize;
+        width: 100%;
+      }
+      .resize-handle-top {
+        top: -12px;
+      }
+      .resize-handle-bottom {
+        bottom: 5px;
+      }
+      .resize-handle-left,
+      .resize-handle-right {
+        position: absolute;
+        height: 100%;
+        cursor: col-resize;
+        width: 5px;
+      }
+      .resize-handle-left {
+        left: -12px;
+        top: 40%
+      }
+      .resize-handle-right {
+        right: 5px;
+        top: 40%
+      }
+
+      .cdk-boundary:hover {
+          cursor: move;
+      }

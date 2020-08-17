@@ -19,6 +19,8 @@ namespace MemeApp.API.Models
 
         public string Message { get; set; }
 
+        public string GroupName { get; set; }
+
         public Post Post { get; set; }
 
         public int? PostId { get; set; }
@@ -36,7 +38,10 @@ namespace MemeApp.API.Models
             Created = DateTime.Now;
             switch (this.Type) {
                 case "message": 
-                    this.Message = "sent you a message.";
+                    this.Message = "sent you a message: ";
+                    break;
+                case "groupmessage":
+                    this.Message = "sent a message in: ";
                     break;
                 case "comment":
                     this.Message = $"commented on your post: ";

@@ -16,6 +16,8 @@ namespace MemeApp.API.Dtos
 
         public DateTime Created { get; set; }
 
+        public string GroupName { get; set; }
+
         public bool IsRead { get; set; }
 
         public string Message { get; set; }

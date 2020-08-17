@@ -37,6 +37,7 @@ import Swipe from './src/screens/Swipe';
 import { Linking } from 'expo';
 import AuthSinglePost from './src/screens/AuthSinglePost';
 import Banned from './src/screens/Banned';
+import MemeMaker from './src/screens/MemeMaker';
 
 const theme = Appearance.getColorScheme();
 
@@ -104,6 +105,7 @@ const switchNavigator = createSwitchNavigator({
     }),
     uploadFlow: createStackNavigator({
       UploadPost: UploadPost,
+      MemeMaker: MemeMaker,
       NewPost: NewPost
   },
   {

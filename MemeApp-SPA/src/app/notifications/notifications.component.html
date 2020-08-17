@@ -19,6 +19,9 @@
                   <span *ngIf="notification.commentText"> 
                     "{{notification.commentText}}"
                   </span>
+                  <span *ngIf="notification.groupName"> 
+                    "{{notification.groupName}}"
+                  </span>
                 </span>
                 <img class="post" style="margin-left: auto; align-self: center;" *ngIf="notification.postUrl" src={{notification.postUrl}} alt="">
     </li>

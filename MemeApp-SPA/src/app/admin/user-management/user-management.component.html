@@ -7,7 +7,7 @@
   <div class="col-10">
       <div *ngFor="let user of users">
           <li class="list-group-item title listItem" style="display: flex; flex-direction: row;">
-            <div style="margin-right: 30px; width: 60px;">
+            <div style="margin-right: 30px; width: 60px; margin-bottom: 10px;">
               <img class="profile-picture mr-2" style="margin-bottom: 10px;" src="{{user.photoUrl || '../../../assets/user.png'}}" alt="">
               <button (click)="removeProfilePicture(user)"
                 class="following">
@@ -30,33 +30,33 @@
                   </div>
               </div>
 
-              <div style="width: 100px; flex-direction: column; display: flex; margin-right: 30px;">
-                <p>{{user.bio}}</p>
-                <button (click)="removeBio(user)"
+              <div class="widerElements" style="flex-direction: column; display: flex; margin-right: 30px; margin-bottom: 10px;">
+                <p style="margin-bottom: 5px !important;">{{user.bio}}</p>
+                <button style="margin-right: auto;" (click)="removeBio(user)"
                         class="following">
                           <span>Remove</span>
                 </button>
               </div>
 
-              <div style="width: 100px; flex-direction: row; display: flex; margin-right: 0%;">
-                <p>Reported Count: {{user.reportedCount}}{{"\n"}}Num. Reports on Posts: {{user.reportedPostCount}}
+              <div class="widerElements" style="flex-direction: row; display: flex; margin-right: 20px;">
+                <p>Reported Count: {{user.reportedCount}}<br>Num. Reports on Posts: {{user.reportedPostCount}}
                   <br>Ban Count: {{user.banCount}}<br>Is Banned: {{user.isBanned ? "Yes": "No"}}
                 </p>
               </div>
 
-              <div style="justify-self: end; align-items: flex-end; display: flex;">
+              <div style="justify-self: end; display: flex; justify-content: center; flex-direction: column;">
                 <button (click)="unReportUser(user)"
-                  class="btn-success" style="margin-left: auto; align-self: center; border: none;">
+                  class="btn-success" style="align-self: center; border: none; margin-bottom: 10px;">
                     <span>Done</span>
                 </button>
-                  <select style="align-self: center; margin-left: .5em; margin-right: .5em;"  [formControl]="selectControl">
+                  <select style="align-self: center; margin-left: .5em; margin-right: .5em; margin-bottom: 10px;"  [formControl]="selectControl">
                     <option value="3">3 days</option>
                     <option value="7">7 days</option>
                     <option value="14">14 days</option>
                     <option value="28">28 days</option>
                   </select>
                   <button (click)="banUser(user)"
-                    class="btn-danger" style="margin-left: auto; align-self: center; border: none;">
+                    class="btn-danger" style="align-self: center; border: none;">
                       <span>
                         Ban
                       </span>

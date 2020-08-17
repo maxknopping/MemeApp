@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, useRef } from 'react';
 import { Text, View, TouchableOpacity, Image, TextInput, SafeAreaView } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
@@ -7,6 +7,8 @@ import userService from './../apis/user';
 import { Context } from '../context/AuthContext';
 import axios from 'axios';
 import {Buffer} from 'buffer';
+import ViewShot from "react-native-view-shot";
+import {ImageManipulator} from 'expo-image-crop';
 
 
 
@@ -14,10 +16,11 @@ const NewPost = ({
     navigation,
 }) => {
     const {state} = useContext(Context);
-    const image = navigation.getParam('image');
-    const base64 = navigation.getParam('base64')
+    const [image, setImage] = useState(navigation.getParam('image'));
+    const base64 = useRef('');
     const [caption, setCaption] = useState('');
     const [inJoust, setInJoust] = useState(false);
+    const [cropperVisible, setCropperVisible] = useState(false);
 
     const post = (photo) => {
         userService.post(`${state.id}/posts/ios` , {
@@ -34,6 +37,13 @@ const NewPost = ({
         }
         ).catch(error => console.log(error));
     };
+
+    useEffect(() => {
+        let str = 'file://'
+        str = str + image;
+        setImage(str);
+        setCropperVisible(true);
+    }, [])
 
     return (
         <SafeAreaView style={styles.safeArea}>
@@ -52,10 +62,21 @@ const NewPost = ({
                 uncheckedIcon="circle-thin"
                 uncheckedColor={EStyleSheet.value('$crimson')}
                 checkedColor={EStyleSheet.value('$crimson')}/>
-            <Button onPress={() => post(base64)} title="Post" buttonStyle={styles.postButton} style={styles.postButton}>
+            <Button onPress={() => post(base64.current)} title="Post" buttonStyle={styles.postButton} style={styles.postButton}>
                     <Text>{'Post'}</Text>
             </Button>
         </View>
+
+        <ImageManipulator
+                  photo={{ uri: image }}
+                  isVisible={cropperVisible}
+                  onPictureChoosed={({ uri, base64: base64Temp }) => {
+                      setImage(uri);
+                      base64.current = base64Temp;
+                  }}
+                  onToggleModal={() => setCropperVisible(false)}
+                  saveOptions={{base64: true}}
+              />
         </SafeAreaView>
         );
 };

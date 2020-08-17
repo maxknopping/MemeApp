@@ -1,10 +1,10 @@
 <div class="row row-wrapper">
-  <div class = "col-md-3 col-sm-1"></div>
-    <div class="col-sm-10 col-md-6" style="padding-right: 0px;">
+  <div class = "col-md-1 col-1"></div>
+    <div class="col-10" style="padding-right: 0px;">
 
-      <div *ngIf="captionMode" class="text-left" style="margin-bottom: 10px;">
+      <div *ngIf="captionMode && !memeMode" class="text-left" style="margin-bottom: 10px;">
         <div style="display: flex; flex-direction: row;">
-          <img class="preview" style="margin-right: 5px;" [src]="imgURL" *ngIf="imgURL">
+          <img class="preview" style="margin-right: 5px; object-fit: contain;" [src]="imgURL" *ngIf="imgURL">
           <textarea name="bio" placeholder="Type your caption here..." style="height: 100px;" rows="4" class="form-control" [(ngModel)]="post.caption"></textarea>
         </div>
         <div class="input-group" style="margin-top: 1rem;">
@@ -16,22 +16,78 @@
         </div>
       </div>
 
-      <div *ngIf="!captionMode" class="text-center">
-        <div>
-          <button style="color: white; background-color: crimson; border-width: 0px;" class="btn-lg" type="button"
-            (click)="cropImageModal()">
-            Upload Photo
-          </button>
-        </div>
-        <div *ngFor="let item of uploader.queue">
-            <button type="button" class="btn btn-danger btn-xs"
-                    (click)="removePhoto(item)">
-                <span class="glyphicon glyphicon-trash"></span> Remove
+      <div *ngIf="memeMode && !captionMode" class="text-center" style="">
+        <button (click)="captureMeme()" style="float: right;" class="btn btn-success next-button-top">Next</button>
+        <div style="clear: both;"></div>
+        <div class="meme-text-container" style="display: flex; margin-bottom: 10px;">
+            <div id="memeContainer" (mouseout)="hideBoxes()" (mouseover)="unhideBoxes()" class="cdk-boundary" style="">
+            <img class="meme-to-edit" origin="anonymous" [src]="imgURL" *ngIf="imgURL">
+            <div *ngFor="let box of boxes" [style.display]="!box.shown ? 'none': 'block'"
+            class="draggable" mwlResizable  [resizeEdges]="{ bottom: true, right: true, top: true, left: true }"
+            cdkDrag [ngStyle]="box.style" [cdkDragDisabled]="dragDisabled"
+            cdkDragBoundary=".cdk-boundary" (resizeEnd)="onResizeEnd($event, box)" (resizeStart)="onResizeStart($event)" [enableGhostResize]="true">
+            <div [ngStyle]="boxStyle"
+            class="resize-handle-top resizehandle"
+            mwlResizeHandle
+            [resizeEdges]="{ top: true }"
+              ><i-feather name="square"></i-feather></div>
+              <div [ngStyle]="boxStyle"
+                class="resize-handle-left resizehandle"
+                mwlResizeHandle
+                [resizeEdges]="{ left: true }"
+              ><i-feather name="square"></i-feather></div>
+              <div [ngStyle]="boxStyle"
+                class="resize-handle-right resizehandle"
+                mwlResizeHandle
+                [resizeEdges]="{ right: true }"
+              ><i-feather name="square"></i-feather></div>
+              <div [ngStyle]="boxStyle"
+                class="resize-handle-bottom resizehandle"
+                mwlResizeHandle
+                [resizeEdges]="{ bottom: true }"
+              ><i-feather name="square"></i-feather></div>
+              <div style="width: 100%; height: 100%;" [innerHTML]="getHtml(box) | safeHtml"></div>
+            </div>
+          </div>
+          <div id="text-box-container" class="text-container">
+            <div *ngFor="let box of boxes" 
+            style="flex-direction: row; display: flex; width: 100%; margin-bottom: 10px; border-color: lightgray;"
+            [style.border]="!box.shown ? 'none' : '1px solid'">
+              <ejs-richtexteditor [inlineMode]="{ enable: true, onSelection: false }" 
+                [enabled]="true" #defaultRTE
+                [height]="50" 
+                id="box{{box.id}}" 
+                [style.display]="!box.shown ? 'none': 'block'"
+                 [toolbarSettings]='tools'>
+                <span></span></ejs-richtexteditor>
+              <button (click)="onRemoveTextBox(box)" style="border: 1px solid; background-color: transparent; border-color: lightgray;" 
+                  [style.display]="!box.shown ? 'none': 'inline-block'"><i-feather name="x"></i-feather></button>
+            </div>
+            <button (click)="onAddTextBox()" class="btn" style="background-color: crimson; color: white;">
+              Add TextBox
             </button>
+          </div>
         </div>
+        <button (click)="captureMeme()" style="float: right;" class="btn btn-success next-button-bottom">Next</button>
+        <div style="clear: both;"></div>
+      </div>
+
+      <div *ngIf="!captionMode && !memeMode" class="text-center">
+        <div>
+          <label class="btn-lg" style="color: white; cursor: pointer; background-color: crimson; border-width: 0px; margin-bottom: 30px;">
+          <input type="file" style="display: none;"
+            (change)="handleFileInput($event.target.files)">
+            Upload Photo
+          </label>
+          <h5>Popular memes to choose from</h5>
+          <span>To select a meme just click on it</span>
+          <div style="width: 100%; display: flex; flex-direction: row; flex-wrap: wrap; ">
+              <img (click)="onMemeClick(meme)" *ngFor="let meme of memes" style="max-width: 25%; object-fit: cover; width: auto; height: 100px; cursor: pointer;" class="grid-image" [src]="meme.url">
+          </div>
+        </div>
+        
       </div>
 
     </div>
-    <div class = "col-md-3 col-sm-1"></div>
+    <div class = "col-md-1 col-sm-1"></div>
 </div>
-

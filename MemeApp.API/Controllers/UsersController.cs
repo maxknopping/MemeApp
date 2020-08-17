@@ -358,7 +358,7 @@ namespace MemeApp.API.Controllers
                 var pushNotification = new PushMessage(userRecipient.PushToken, 
                     data: new {type = "like"},
                     title: "MemeClub", 
-                    body: $"@{userRecipient.Username} {notification.Message}", 
+                    body: $"@{user.Username} {notification.Message}", 
                     sound: PushSounds.Default, 
                     badge: notificationCount,
                     displayInForeground: true
@@ -477,13 +477,14 @@ namespace MemeApp.API.Controllers
                     repo.Add(notification);
                     var notificationCount = await repo.HasNewNotifications(recipient.UserId);
                     var userRecipient = await repo.GetUser(recipient.UserId);
+                    var commenter = await repo.GetUser(comment.CommenterId);
 
                     if (userRecipient.PushToken != null) {
                         var client = new PushClient();
                         var pushNotification = new PushMessage(userRecipient.PushToken, 
                             data: new {type = "like"},
                             title: "MemeClub", 
-                            body: $"@{userRecipient.Username} {notification.Message}\"{notification.Comment.Text}\"", 
+                            body: $"@{commenter.Username} {notification.Message}\"{notification.Comment.Text}\"", 
                             sound: PushSounds.Default, 
                             badge: notificationCount,
                             displayInForeground: true
@@ -576,6 +577,8 @@ namespace MemeApp.API.Controllers
 
             repo.Add<CommentLike>(like);
 
+            var liker = await repo.GetUser(id);
+
             if (await repo.SaveAll()) {
                 if (id != recipient.CommenterId) {
                     var notificationCount = await repo.HasNewNotifications(recipient.CommenterId);
@@ -586,7 +589,7 @@ namespace MemeApp.API.Controllers
                         var pushNotification = new PushMessage(userRecipient.PushToken, 
                             data: new {type = "like"},
                             title: "MemeClub", 
-                            body: $"@{userRecipient.Username} {notification.Message}\"{notification.Comment.Text}\"", 
+                            body: $"@{liker.Username} {notification.Message}\"{notification.Comment.Text}\"", 
                             sound: PushSounds.Default, 
                             badge: notificationCount,
                             displayInForeground: true

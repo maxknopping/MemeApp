@@ -1,18 +1,35 @@
 import { Constants} from 'expo';
 import * as Permissions from 'expo-permissions';
 import * as ImagePicker from 'expo-image-picker';
-import React, { Component } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import ImageEditor from '@react-native-community/image-editor';
-import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Image, FlatList, Dimensions } from 'react-native';
 import getPermissions from './../helpers/getPermissions';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import * as FileSystem from 'expo-file-system';
 import WelcomeModal from './WelcomeModal';
+import Axios from 'axios';
+import { ImageManipulator } from 'expo-image-crop';
 
 
 const UploadPost = ({
     navigation,
 }) => {
+  const [memeTemplates, setMemeTemaplates] = useState([]);
+  const {width, height} = Dimensions.get('window');
+    const imgflip = Axios.create({
+      baseURL: 'https://api.imgflip.com/get_memes'
+    });
+
+    useEffect(() => {
+      imgflip.get('').then(
+        function (response) {
+          setMemeTemaplates(response.data.data.memes);
+          console.log(response.data.data.memes);
+        }
+      )
+    }, [])
+
     const theme = EStyleSheet.value('$backgroundColor');
     const options = {
         allowsEditing: true,
@@ -24,7 +41,7 @@ const UploadPost = ({
       if (status) {
         const result = await ImagePicker.launchCameraAsync(options);
         if (!result.cancelled) {
-          navigation.navigate('NewPost', { image: result.uri, base64: result.base64 });
+          navigation.navigate('MemeMaker', {url: result.uri});
         }
       }
     };
@@ -34,7 +51,7 @@ const UploadPost = ({
         if (status) {
           const result = await ImagePicker.launchImageLibraryAsync(options);
           if (!result.cancelled) {
-            navigation.navigate('NewPost', { image: result.uri, base64: result.base64 });
+            navigation.navigate('MemeMaker', {url: result.uri});
             /*
             ImageEditor.cropImage(result.uri, {
               offset: {x: 0, y: 0},
@@ -63,8 +80,29 @@ const UploadPost = ({
     return (
         <SafeAreaView style={styles.container}>
           <View>
-            <Image style={styles.image} source={theme === 'white' ? require('./img/logo.png') : require('./img/MemeClub.png')}/>
-            <Text style={styles.comingSoon}>Meme creation coming soon!</Text>
+            <Text style={styles.text}>
+              Popular Meme Templates
+            </Text>
+            <Text style={styles.comingSoon}>
+              Click one to continue
+            </Text>
+          </View>
+          <View style={styles.memeList}>
+            <FlatList style={styles.memeList}
+            data={memeTemplates}
+            
+            keyExtractor={(item) => item.id}
+            horizontal={false}
+            numColumns={3}
+            renderItem={({item, index}) => {
+              return (
+              <TouchableOpacity key={index} onPress={() => navigation.navigate('MemeMaker', {url: item.url})}>
+                <View style={[ {width: width/3} , {height: width/3}, {marginBottom: EStyleSheet.value('.1rem')}, index % 3 !== 0 ? 
+                    {paddingLeft: EStyleSheet.value('.1rem')} : {paddingLeft: 0}]} >
+                        <Image style={{flex: 1, width: undefined, height: undefined}} source={{uri: item.url}}/>
+                </View>
+                </TouchableOpacity>);
+            }}/>
           </View>
           <View>
                 <WelcomeModal pagekey={"UploadPost"} title={"Upload"} description={description}/>
@@ -129,6 +167,14 @@ const styles = EStyleSheet.create({
       backgroundColor: '$crimson',
       marginVertical: '.5rem',
       borderRadius: '.6rem'
+    },
+    imageCard: {
+      width: '2rem',
+      height: '2rem',
+      resizeMode: 'cover'
+    },
+    memeList: {
+      height: '75%'
     }
   });
 

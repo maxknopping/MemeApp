@@ -13,4 +13,5 @@ export interface Notification {
     commentId?: number;
     followed: boolean;
     type: string;
+    groupName?: string;
 }

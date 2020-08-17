@@ -188,5 +188,9 @@ export class UserService {
     return this.http.get(`${this.baseUrl}/hasNewMessages/${userId}`);
   }
 
+  getMemes() {
+    return this.http.get(`https://api.imgflip.com/get_memes`);
+  }
+
 
 }

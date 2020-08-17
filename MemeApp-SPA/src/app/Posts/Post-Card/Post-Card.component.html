@@ -29,7 +29,7 @@
             Likes
           </a>
           <span class="ml-1" *ngIf="likes === 0">Likes</span>
-          <span class="ml-3">
+          <span  *ngIf="post.inJoust" class="ml-3">
             <i class="fa fa-trophy"></i>
             {{post.joustRating}}
           </span>
@@ -48,7 +48,7 @@
     <li class="list-group-item">
       <form #commentForm="ngForm" id="commentForm" (ngSubmit)="sendComment()">
         <div class="input-group">
-          <input type="text" class="form-control" placeholder="Leave a comment..." [(ngModel)]="comment" name="comment">
+          <input type="text" required class="form-control" style="color: black;" placeholder="Leave a comment..." [(ngModel)]="comment" name="comment">
           <div class="input-group-append">
             <input class="btn post-button" type="submit" value="Post">
           </div>

@@ -315,7 +315,7 @@ namespace MemeApp.API.Controllers
                 using (var stream = file.OpenReadStream()) {
                     var uploadParams = new ImageUploadParams() {
                         File = new FileDescription(file.Name, stream),
-                        Transformation = new Transformation().Width(1080).Height(1080).Crop("fill").Gravity("face")
+                        Transformation = new Transformation().Width(1080).Height(1080).Crop("pad")
                     };
                     uploadResult = cloudinary.Upload(uploadParams);
                 }

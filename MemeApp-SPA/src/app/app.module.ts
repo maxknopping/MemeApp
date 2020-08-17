@@ -70,6 +70,8 @@ import {MatBadgeModule} from '@angular/material/badge';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import { ResizableModule } from 'angular-resizable-element';
+import { RichTextEditorAllModule, RichTextEditorModule } from '@syncfusion/ej2-angular-richtexteditor';
+import { SafeHtmlPipe } from './_pipes/safeHtml.pipe';
 
 export function tokenGetter() {
    return localStorage.getItem('token');
@@ -109,7 +111,8 @@ export function tokenGetter() {
       UserManagementComponent,
       PostManagementComponent,
       AdminManagementComponent,
-      BannedComponentComponent
+      BannedComponentComponent,
+      SafeHtmlPipe
    ],
    imports: [
       HttpClientModule,
@@ -137,7 +140,9 @@ export function tokenGetter() {
       MatBadgeModule,
       InfiniteScrollModule,
       DragDropModule,
-      ResizableModule
+      ResizableModule,
+      RichTextEditorAllModule,
+      RichTextEditorModule,
 
    ],
    //JwtModule.forRoot({

@@ -29,11 +29,11 @@ export class CustomImageFormControlComponent
   implements OnInit, OnChanges, ControlValueAccessor {
   /* Pass the height of the image to this component */
   @Input()
-  public imgCropToHeight = '400';
+  public imgCropToHeight = '300';
 
   /* Pass the width of the image to this component */
   @Input()
-  public imgCropToWidth = '400';
+  public imgCropToWidth = '300';
 
   /* Return type of our image */
   @Input()

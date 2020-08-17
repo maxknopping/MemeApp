@@ -73,6 +73,7 @@ const Notifications = ({
                         </TouchableOpacity>
                         <Text style={styles.message}>{' '}{item.message}</Text>
                 {item.commentText ? <Text style={styles.message}>{"\""}{item.commentText}{"\""}</Text>: null}
+                {item.groupName ? <Text style={styles.message}>{"\""}{item.groupName}{"\""}</Text>: null}
                     </View>
                 }
                 leftAvatar={{source: item.causerPhotoUrl ? {uri: item.causerPhotoUrl} : 

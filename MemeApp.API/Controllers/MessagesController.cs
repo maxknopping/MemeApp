@@ -5,6 +5,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
+using Floxdc.ExponentServerSdk;
+using Floxdc.ExponentServerSdk.Enums;
 using MemeApp.API.Data;
 using MemeApp.API.Dtos;
 using MemeApp.API.Helpers;
@@ -119,8 +121,32 @@ namespace MemeApp.API.Controllers
             repo.Add(fullMessage);
 
 
+            var sender = await repo.GetUser(userId);
+
             if (await repo.SaveAll()) {
                 var messageToReturn = mapper.Map<MessageForListDto>(fullMessage);
+                var notificationCount = await repo.HasNewNotifications(recipient.Id);
+
+                if (recipient.PushToken != null) {
+                        var client = new PushClient();
+                        var pushNotification = new PushMessage(recipient.PushToken, 
+                            data: new {type = "message"},
+                            title: "MemeClub", 
+                            body: $"@{sender.Username} {notification.Message}\"{message.Content}\"", 
+                            sound: PushSounds.Default, 
+                            badge: notificationCount,
+                            displayInForeground: true
+                        );
+
+                        try
+                        {
+                            await client.Publish(pushNotification);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
+                    }
                 return CreatedAtRoute("GetMessage", new {id = fullMessage.Id}, messageToReturn);
             }
 
@@ -239,6 +265,7 @@ namespace MemeApp.API.Controllers
             var fullMessage = mapper.Map<Message>(message);
             fullMessage.MessageSent = DateTime.Now;
             var messages = new List<Message>();
+            var sender = await repo.GetUser(userId);
             foreach(var userGroup in group.UserGroups) {
                 if (userGroup.UserId == userId) {
                     continue;
@@ -253,17 +280,40 @@ namespace MemeApp.API.Controllers
                     individualMessage.Post = post;
                 }
                 individualMessage.RecipientId = userGroup.UserId;
-                var notification = new Notification("message")
+                var notification = new Notification("groupMessage")
                 {
                     RecipientId = userGroup.UserId,
-                    CauserId = userId
+                    CauserId = userId,
+                    GroupName = group.GroupName
                 };
                 repo.Add(notification);
                 repo.Add(individualMessage);
 
                 await repo.SaveAll();
 
+                var notificationCount = await repo.HasNewNotifications(userGroup.UserId);
+                var userRecipient = await repo.GetUser(userGroup.UserId);
 
+                if (userRecipient.PushToken != null) {
+                        var client = new PushClient();
+                        var pushNotification = new PushMessage(userRecipient.PushToken, 
+                            data: new {type = "groupMessage"},
+                            title: "MemeClub", 
+                            body: $"@{sender.Username} {notification.Message}\"{group.GroupName}\"", 
+                            sound: PushSounds.Default, 
+                            badge: notificationCount,
+                            displayInForeground: true
+                        );
+
+                        try
+                        {
+                            await client.Publish(pushNotification);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
+                    }
             }
 
 
