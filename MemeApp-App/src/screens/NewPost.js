@@ -9,6 +9,7 @@ import axios from 'axios';
 import {Buffer} from 'buffer';
 import ViewShot from "react-native-view-shot";
 import {ImageManipulator} from 'expo-image-crop';
+import * as FileSystem from 'expo-file-system';
 
 
 
@@ -17,13 +18,15 @@ const NewPost = ({
 }) => {
     const {state} = useContext(Context);
     const [image, setImage] = useState(navigation.getParam('image'));
-    const base64 = useRef('');
+    const base64Perm = useRef('');
     const [caption, setCaption] = useState('');
     const [inJoust, setInJoust] = useState(false);
     const [cropperVisible, setCropperVisible] = useState(false);
+    const [postButtonLoading, setPostButtonLoading] = useState(false);
 
-    const post = (photo) => {
-        userService.post(`${state.id}/posts/ios` , {
+    const post = async (photo) => {
+        setPostButtonLoading(true);
+        const response = await userService.post(`${state.id}/posts/ios` , {
             file: photo,
             caption: caption,
             inJoust: inJoust
@@ -31,11 +34,9 @@ const NewPost = ({
             headers: {
                 'Authorization': `Bearer ${state.token}`
             }
-        }).then(() => {
-                navigation.navigate('UploadPost');
-                console.log(navigation);
-        }
-        ).catch(error => console.log(error));
+        }).catch(error => console.log(error));
+        setPostButtonLoading(false);
+        navigation.navigate('Feed');
     };
 
     useEffect(() => {
@@ -62,7 +63,7 @@ const NewPost = ({
                 uncheckedIcon="circle-thin"
                 uncheckedColor={EStyleSheet.value('$crimson')}
                 checkedColor={EStyleSheet.value('$crimson')}/>
-            <Button onPress={() => post(base64.current)} title="Post" buttonStyle={styles.postButton} style={styles.postButton}>
+            <Button loading={postButtonLoading} onPress={() => post(base64Perm.current)} title="Post" buttonStyle={styles.postButton} style={styles.postButton}>
                     <Text>{'Post'}</Text>
             </Button>
         </View>
@@ -70,9 +71,10 @@ const NewPost = ({
         <ImageManipulator
                   photo={{ uri: image }}
                   isVisible={cropperVisible}
-                  onPictureChoosed={({ uri, base64: base64Temp }) => {
-                      setImage(uri);
-                      base64.current = base64Temp;
+                  onPictureChoosed={ async (item) => {
+                      setImage(item.uri);
+                      let base64_str = await FileSystem.readAsStringAsync( item.uri, { encoding: FileSystem.EncodingType.Base64 });
+                      base64Perm.current = base64_str;
                   }}
                   onToggleModal={() => setCropperVisible(false)}
                   saveOptions={{base64: true}}

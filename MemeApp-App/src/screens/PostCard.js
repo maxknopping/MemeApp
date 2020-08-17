@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useContext} from 'react';
-import { Text, View, Image, TouchableOpacity, Dimensions, TextInput, ScrollView, 
-    ActivityIndicator, Alert, TouchableWithoutFeedback, Share, Platform } from 'react-native';
+import { Text, View, TouchableOpacity, Dimensions, TextInput, ScrollView, 
+    ActivityIndicator, Alert, TouchableWithoutFeedback, Share, Platform, Image as RNImage } from 'react-native';
 import {Overlay, ListItem, CheckBox, Button} from 'react-native-elements';
 import {Context} from './../context/AuthContext';
 import userService from './../apis/user';
@@ -11,6 +11,8 @@ import en from 'javascript-time-ago/locale/en';
 import * as MediaLibrary from 'expo-media-library';
 import * as Permissions from 'expo-permissions';
 import getPermissions from './../helpers/getPermissions';
+import Image from 'react-native-image-progress';
+import * as Progress from 'react-native-progress';
 
 
 const PostCard = ({
@@ -181,12 +183,31 @@ const PostCard = ({
         });
     };
 
-    const deletePhoto = () => {
-        userService.delete(`/${state.id}/posts/${post.id}`, {
+    const deletePhoto = async () => {
+        const response = await userService.delete(`/${state.id}/posts/${post.id}`, {
             headers: {
                 'Authorization': `Bearer ${state.token}`
             }
-        }).then(() => setOptionsVisible(false)).catch(error => console.log(error));
+        }).then(() => {onDelete();
+            
+        }).catch(error => console.log(error));
+        
+    };
+
+    const onDelete = () => {
+        console.log('method called');
+        Alert.alert(
+            'Post has been deleted',
+            '',
+            [
+              {
+                text: 'Ok',
+                style: 'default',
+                onPress: () => setOptionsVisible(false)
+              }
+            ],
+            {cancelable: true},
+          );
     };
 
     const handleDoubleTap = () => {
@@ -229,7 +250,7 @@ const PostCard = ({
             {postState ?
                 <View style={{flex: 1}}>
                 <View style={styles.headerContainerView}>
-                    <Image style={styles.profilePicture} source={postState.profilePictureUrl ? {uri: postState.profilePictureUrl} : 
+                    <RNImage style={styles.profilePicture} source={postState.profilePictureUrl ? {uri: postState.profilePictureUrl} : 
                         require('./../../assets/user.png')} />
                     <View style={styles.usernameWrapper}>
                         <TouchableOpacity onPress={() => navigation.navigate('Profile', {username: postState.username})}>
@@ -255,7 +276,7 @@ const PostCard = ({
                                         text: 'Cancel',
                                         style: 'cancel',
                                       },
-                                      {text: 'Yes', onPress: () => {deletePhoto(); setOptionsVisible(false);}},
+                                      {text: 'Yes', onPress: () => {deletePhoto();}},
                                     ],
                                     {cancelable: false},
                                   );
@@ -271,7 +292,7 @@ const PostCard = ({
                     </View>
                 </View>
                 <TouchableWithoutFeedback onPress={() => handleDoubleTap()}>
-                    <Image style={{width: width, height: width}} source={{uri: postState.url}}/>
+                    <Image indicator={Progress.Bar} indicatorProps={{color: EStyleSheet.value('$crimson')}} style={{width: width, height: width}} source={{uri: postState.url}}/>
                 </TouchableWithoutFeedback>
                 <View style={styles.iconsContainer}>
                     {!liked ? 

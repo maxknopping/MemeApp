@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import { Text, View, ScrollView, Image, ActivityIndicator,
+import { Text, View, ScrollView, ActivityIndicator,
         FlatList, Dimensions, RefreshControl, SafeAreaView, TouchableOpacity, Modal, Animated } from 'react-native';
 import {Button, Overlay} from 'react-native-elements';
 import {Button as NativeButton} from 'native-base';
@@ -10,6 +10,7 @@ import {MaterialIcons, Ionicons, Feather} from 'react-native-vector-icons';
 import Constants from 'expo-constants';
 import PostCard from './PostCard';
 import WelcomeModal from './WelcomeModal';
+import Image from 'react-native-image-progress';
 
 
 const JoustHome = ({

@@ -10,6 +10,7 @@ import {MaterialIcons, Ionicons, Feather, Entypo} from 'react-native-vector-icon
 import Constants from 'expo-constants';
 import PostCard from './PostCard';
 import WelcomeModal from './WelcomeModal';
+import ProgressImage from 'react-native-image-progress';
 
 const Profile = ({
     navigation
@@ -141,7 +142,7 @@ const Profile = ({
                 <TouchableOpacity key={index} onPress={() => navigation.navigate('SinglePost', {postId: post.id})}>
                 <View style={[ {width: width / 3} , {height: width/3}, {marginBottom: EStyleSheet.value('.1rem')}, index % 3 !== 0 ? 
                     {paddingLeft: EStyleSheet.value('.1rem')} : {paddingLeft: 0}]} >
-                        <Image style={{flex: 1, width: undefined, height: undefined}} source={{uri: post.url}}/>
+                        <ProgressImage style={{flex: 1, width: undefined, height: undefined}} source={{uri: post.url}}/>
                 </View>
                 </TouchableOpacity>
             );
@@ -321,7 +322,7 @@ const Profile = ({
                     <TouchableOpacity onPress={() => navigation.navigate('SinglePost', {postId: item.id})}>
                         <View style={[ {width: width / 3} , {height: width/3}, {marginBottom: EStyleSheet.value('.1rem')}, index % 3 !== 0 ? 
                             {paddingLeft: EStyleSheet.value('.1rem')} : {paddingLeft: 0}]} >
-                                <Image style={{flex: 1, width: undefined, height: undefined}} source={{uri: item.url}}/>
+                                <ProgressImage style={{flex: 1, width: undefined, height: undefined}} source={{uri: item.url}}/>
                         </View>
                     </TouchableOpacity>
                 )

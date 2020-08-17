@@ -3,13 +3,15 @@ import * as Permissions from 'expo-permissions';
 import * as ImagePicker from 'expo-image-picker';
 import React, { Component, useEffect, useState } from 'react';
 import ImageEditor from '@react-native-community/image-editor';
-import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Image, FlatList, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, FlatList, Dimensions } from 'react-native';
 import getPermissions from './../helpers/getPermissions';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import * as FileSystem from 'expo-file-system';
 import WelcomeModal from './WelcomeModal';
 import Axios from 'axios';
 import { ImageManipulator } from 'expo-image-crop';
+import Image from 'react-native-image-progress';
+import ProgressBar from 'react-native-progress/Bar';
 
 
 const UploadPost = ({
@@ -32,7 +34,7 @@ const UploadPost = ({
 
     const theme = EStyleSheet.value('$backgroundColor');
     const options = {
-        allowsEditing: true,
+        allowsEditing: false,
         base64: true
       };
       

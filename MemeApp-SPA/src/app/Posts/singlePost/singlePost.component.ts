@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Post } from 'src/app/_models/Post';
 import { SEOService } from 'src/app/_services/SEO.service';
+import { AlertifyService } from 'src/app/_services/alertify.service';
+import { UserService } from 'src/app/_services/User.service';
+import { AuthService } from 'src/app/_services/auth.service';
 
 @Component({
   selector: 'app-singlePost',
@@ -11,7 +14,8 @@ import { SEOService } from 'src/app/_services/SEO.service';
 export class SinglePostComponent implements OnInit {
   post: Post;
 
-  constructor(private route: ActivatedRoute, private seo: SEOService) { }
+  constructor(private route: ActivatedRoute, private seo: SEOService, private alertify: AlertifyService, 
+              private user: UserService, private authService: AuthService, private router: Router) { }
 
   ngOnInit() {
     this.route.data.subscribe(data => {
@@ -28,4 +32,14 @@ export class SinglePostComponent implements OnInit {
     this.seo.removeTags();
   }
 
+  deletePost(id) {
+    this.alertify.confirm('Are you sure you want to delete this post?', () => {
+      this.user.deletePost(this.authService.decodedToken.nameid, id).subscribe(() => {
+        this.alertify.success('Post has been deleted');
+        this.router.navigate(['/feed']);
+      }, error => {
+        this.alertify.error('Failed to delete the post');
+      });
+    });
+  }
 }

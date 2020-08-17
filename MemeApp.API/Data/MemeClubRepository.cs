@@ -75,6 +75,10 @@ namespace MemeApp.API.Data
 
             posts = posts.Where(p => p.UserId == user.Id);
 
+            if (user == null) {
+                return null;
+            }
+
             user.Posts = posts.AsEnumerable().ToList();
 
             var messages = context.Messages
@@ -135,6 +139,7 @@ namespace MemeApp.API.Data
         public async Task<PostForDetailedDto> GetFeatured(int index)
         {
             var posts = await GetAllPosts();
+            posts = posts.OrderByDescending(p => p.Created).ToList();
             var allPosts = new List<PostForDetailedDto>();
             foreach (var post in posts)
             {
@@ -142,6 +147,7 @@ namespace MemeApp.API.Data
                 allPosts.Add(postDto);
 
             }
+            allPosts = allPosts.OrderByDescending(p => p.Created.Date).ThenByDescending(p => p.LikeList.Count).ToList();
             var feed = allPosts[index];
 
             return feed;
