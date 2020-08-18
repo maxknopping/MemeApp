@@ -38,6 +38,8 @@ import { Linking } from 'expo';
 import AuthSinglePost from './src/screens/AuthSinglePost';
 import Banned from './src/screens/Banned';
 import MemeMaker from './src/screens/MemeMaker';
+import SwipeNew from './src/screens/SwipeNew';
+
 
 const theme = Appearance.getColorScheme();
 
@@ -92,7 +94,7 @@ const switchNavigator = createSwitchNavigator({
         JoustHome: JoustHome,
         SinglePost: SinglePost,
         Joust: Joust,
-        Swipe: Swipe
+        Swipe: SwipeNew
     },
     {
       initialRouteName: 'Featured',

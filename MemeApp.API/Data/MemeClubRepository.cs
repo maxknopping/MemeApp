@@ -148,6 +148,22 @@ namespace MemeApp.API.Data
 
             }
             allPosts = allPosts.OrderByDescending(p => p.Created.Date).ThenByDescending(p => p.LikeList.Count).ToList();
+            var count = 0;
+            DateTime date = DateTime.Now.Date;
+            foreach(var post in allPosts) {
+                if (post.Created.Date.Equals(date)) {
+                    count++;
+                }
+
+                if (count > 60 && post.Created.Date.Equals(date)) {
+                    allPosts.Remove(post);
+                }
+
+                if (!post.Created.Date.Equals(date)) {
+                    count = 1;
+                    date = post.Created.Date;
+                }
+            }
             var feed = allPosts[index];
 
             return feed;

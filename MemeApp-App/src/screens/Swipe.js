@@ -134,7 +134,9 @@ const Swipe = ({
     
     const renderPosts = () => {
         const post = posts[currentIndex];
+        const nextPost = posts[currentIndex + 1];
         return (
+            <>
             <Animated.View {...panResponder.panHandlers} style={[rotateAndTranslate, 
                 {height: width, width: width, padding: 10, position: 'absolute', bottom: '25%'}]}>
                     <Animated.View style={{position: 'absolute', left: 30, top: 30, zIndex: 1000, transform: [{rotate: '-15deg'}], opacity: likeOpacity}}>
@@ -147,6 +149,10 @@ const Swipe = ({
                     </Animated.View>
                     <Image source={{uri: post.url}} style={{flex: 1, borderRadius: 20}}/>
             </Animated.View>
+            <View style={{height: width, width: width, padding: 10, position: 'absolute', bottom: '25%'}}>
+                <Image source={{uri: nextPost.url}} style={{flex: 1, borderRadius: 20, zIndex: 100}}/>
+            </View>
+            </>
         );
     };
 
