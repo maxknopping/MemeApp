@@ -93,15 +93,37 @@ const MessageList = ({
     };
 
     const sendMessageToGroup = () => {
-        userService.post(`/${state.id}/messages/group`, {
-            groupName: 'Group',
-            message: newMessage,
-            userIds: userIds
-        },{
-            headers: {
-                'Authorization': `Bearer ${state.token}`
-            }
-        }).catch(error => console.log(error));
+        console.log(userIds);
+        if (userIds.length > 1) {
+            userService.post(`/${state.id}/messages/group`, {
+                groupName: 'Group',
+                message: newMessage,
+                userIds: userIds
+            },{
+                headers: {
+                    'Authorization': `Bearer ${state.token}`
+                }
+            }).then(() => setUserIds([])).catch(error => {console.log(error);
+            setUserIds([])});
+        } else if (userIds.length == 1) {
+            sendMessage();
+        }
+
+    };
+
+    const sendMessage = () => {
+            let message = {senderId: state.id, content: newMessage, recipientId: userIds[0]};
+            userService.post(`/${state.id}/messages`, message , {
+                headers: {
+                    'Authorization': `Bearer ${state.token}`
+                }
+            }).then(
+                function(response) {
+                    setNewMessage('');
+                    setUserIds([]);
+                    getMessages();
+                }
+            ).catch(error => console.log(error));
     };
 
  
@@ -160,7 +182,7 @@ const MessageList = ({
                                         require('./../../assets/user.png')}}
                                     title={
                                         <View style={styles.titleWrapper}>
-                                                <Text style={styles.username}>{item.username}</Text>
+                                                <Text style={styles.overlayUsername}>{item.username}</Text>
                                         </View>
                                     }
                                     subtitle= {
@@ -203,7 +225,6 @@ const MessageList = ({
                                 titleStyle={{color: 'white'}} 
                                 buttonStyle={styles.sendButton} onPress={() => {
                                     setSearchVisible(false);
-                                    setUserIds([]);
                                     sendMessageToGroup();
                                     list.forEach(element => {
                                         element.checked = false;
@@ -363,6 +384,12 @@ const styles = EStyleSheet.create({
         fontWeight: 'bold',
         marginRight: '.75rem',
         color: '$textColor'
+    },
+    overlayUsername: {
+        fontSize: '1rem',
+        fontWeight: 'bold',
+        marginRight: '.75rem',
+        color: 'black'
     },
     titleWrapper: {
         flexDirection: 'row',

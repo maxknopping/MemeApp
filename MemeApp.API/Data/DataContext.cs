@@ -74,11 +74,14 @@ namespace MemeApp.API.Data
             builder.Entity<Message>()
                 .HasOne(u => u.Sender)
                 .WithMany(m => m.MessagesSent)
+                .HasForeignKey(u => u.SenderId)
                 .OnDelete(DeleteBehavior.Restrict);
+
 
             builder.Entity<Message>()
                 .HasOne(u => u.Recipient)
                 .WithMany(m => m.MessagesReceived)
+                .HasForeignKey(u => u.RecipientId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<Message>()

@@ -104,7 +104,7 @@ namespace MemeApp.API.Controllers
             message.SenderId = userId;
 
             var recipient = await repo.GetUser(message.RecipientId);
-
+            var sender = await repo.GetUser(message.SenderId);
             if (recipient == null) {
                 return BadRequest("Could not find user");
             }
@@ -117,11 +117,8 @@ namespace MemeApp.API.Controllers
                 CauserId = userId
             };
 
-            repo.Add(notification);
             repo.Add(fullMessage);
-
-
-            var sender = await repo.GetUser(userId);
+            repo.Add(notification);
 
             if (await repo.SaveAll()) {
                 var messageToReturn = mapper.Map<MessageForListDto>(fullMessage);

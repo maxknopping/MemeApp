@@ -28,10 +28,11 @@ const SignIn = ({
                 secureTextEntry={true} style={styles.username} autoCapitalize="none" 
                 placeholder="Password" autoCorrect={false}/>
             {state.errorMessage ? <Text style={{color: crimson}}>{state.errorMessage}</Text> : null}
-            <Button loading={(state.errorMessage === null && isLoading || state.token === null && isLoading)} buttonStyle={{borderRadius: 10, backgroundColor: crimson}} style={styles.login} 
-                title="Login" onPress={() => {
-                    signin({username, password});
+            <Button loading={((state.errorMessage === null && isLoading) || (state.token === null && isLoading))} buttonStyle={{borderRadius: 10, backgroundColor: crimson}} style={styles.login} 
+                title="Login" onPress={async () => {
                     setLoading(true);
+                    await signin({username, password});
+                    setLoading(false);
                 }}/>
             <View style={styles.textContainer}>
                 <Text style={styles.text}>Don't have an account? </Text>

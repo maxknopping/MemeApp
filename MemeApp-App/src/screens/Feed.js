@@ -19,7 +19,6 @@ const Feed = ({
     const [loadingMore, setLoadingMore] = useState(false);
     const [posts, setPosts] = useState([]);
     const [doneLoading, setLoading] = useState(true);
-
     useEffect(() => {
         userService.get(`/feed/${state.username}/0`, {
             headers: {
@@ -42,6 +41,7 @@ const Feed = ({
             }
             ).catch(error => {
                 console.log(error);
+                setLoading(false);
                 setRefreshing(false);
             });
     }, []);

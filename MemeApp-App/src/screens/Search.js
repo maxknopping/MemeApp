@@ -76,7 +76,7 @@ const Search = ({
                     setInputValue(text);
                     search(text);
                 }} style={styles.searchInput}
-                    placeholder="Search..." autoCapitalize="none" returnKeyType="search" onSubmitEditing={() => search(inputValue)}/>
+                    placeholder="Search..." placeholderTextColor="gray" autoCapitalize="none" returnKeyType="search" onSubmitEditing={() => search(inputValue)}/>
             </View>
             <ScrollView style={styles.scrollView}>
                 {list.map((item, index) => (
