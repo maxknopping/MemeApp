@@ -68,7 +68,7 @@ const Notifications = ({
                 key={index}
                 title={
                     <View style={styles.titleWrapper}>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={()=> navigation.navigate('Profile', {username: item.causerUsername})}>
                             <Text style={styles.username}>{'@'}{item.causerUsername}</Text>
                         </TouchableOpacity>
                         <Text style={styles.message}>{' '}{item.message}</Text>

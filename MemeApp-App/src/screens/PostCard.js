@@ -505,7 +505,7 @@ const styles = EStyleSheet.create({
     },
     iconsContainer: { 
         flexDirection: 'row',
-        marginTop: '1%',
+        marginTop: '3%',
         marginLeft: '3%'
     },
     likeButton: {

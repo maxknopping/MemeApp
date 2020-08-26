@@ -215,7 +215,7 @@ namespace MemeApp.API.Controllers
                 }
             }
 
-            userFromRepo.PhotoUrl = uploadResult.Uri.ToString();
+            userFromRepo.PhotoUrl = uploadResult.Uri.ToString().Replace("http", "https");
             userFromRepo.PublicIdForPhoto = uploadResult.PublicId;
 
             foreach (var group in userFromRepo.UserGroups) {
@@ -249,7 +249,7 @@ namespace MemeApp.API.Controllers
                 uploadResult = cloudinary.Upload(uploadParams);
             }
 
-            userFromRepo.PhotoUrl = uploadResult.Uri.ToString();
+            userFromRepo.PhotoUrl = uploadResult.Uri.ToString().Replace("http", "https");
             userFromRepo.PublicIdForPhoto = uploadResult.PublicId;
 
             if (await repo.SaveAll()) {
@@ -280,7 +280,7 @@ namespace MemeApp.API.Controllers
 
             var postTemp = new PostForCreationDto();
 
-            postTemp.Url = uploadResult.Uri.ToString();
+            postTemp.Url = uploadResult.Uri.ToString().Replace("http", "https");
             postTemp.PublicId = uploadResult.PublicId;
             postTemp.Caption = postForCreation.Caption;
             postTemp.InJoust = postForCreation.InJoust;
@@ -321,7 +321,7 @@ namespace MemeApp.API.Controllers
                 }
             }
 
-            postForCreation.Url = uploadResult.Uri.ToString();
+            postForCreation.Url = uploadResult.Uri.ToString().Replace("http", "https");
             postForCreation.PublicId = uploadResult.PublicId;
 
             var post = mapper.Map<Post>(postForCreation);
