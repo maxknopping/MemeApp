@@ -253,7 +253,7 @@ const PostCard = ({
                     <RNImage style={styles.profilePicture} source={postState.profilePictureUrl ? {uri: postState.profilePictureUrl} : 
                         require('./../../assets/user.png')} />
                     <View style={styles.usernameWrapper}>
-                        <TouchableOpacity onPress={() => navigation.navigate('Profile', {username: postState.username})}>
+                        <TouchableOpacity onPress={() => navigation.push('Profile', {username: postState.username})}>
                             <Text style={styles.headerUsername}>{postState.username}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => setOptionsVisible(true)}>
@@ -298,20 +298,20 @@ const PostCard = ({
                     {!liked ? 
                         (
                             <TouchableOpacity onPress={likePost}>
-                                <FontAwesome style={styles.likeButtonO} name="heart-o"></FontAwesome>
+                                <Feather style={styles.likeButtonO} name="heart"></Feather>
                             </TouchableOpacity>) :
                         (
                             <TouchableOpacity onPress={unlikePost}>
                                 <FontAwesome style={styles.likeButton} name="heart"></FontAwesome>
                             </TouchableOpacity>)}
-                    <TouchableOpacity onPress={() => navigation.navigate('Comments', {postId: post.id, myPost: myPost})}>
-                        <FontAwesome style={styles.commentIcon} name="comment-o"/>
+                    <TouchableOpacity onPress={() => navigation.push('Comments', {postId: post.id, myPost: myPost})}>
+                        <Feather style={styles.commentIcon} name="message-square"/>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => setSearchVisible(true)}>
-                        <SimpleLineIcons style={styles.planeIcon} name="paper-plane"/>
+                        <Feather style={styles.planeIcon} name="send"/>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => onShare()}>
-                        <EvilIcons style={styles.shareIcon} name="share-apple"/>
+                        <Feather style={styles.shareIcon} name="external-link"/>
                     </TouchableOpacity>
                     <Overlay isVisible={searchVisible} onShow={() => {
                         getInitialUsers();
@@ -438,7 +438,7 @@ const PostCard = ({
 
                 </View>
                 <View style={{flexDirection: 'row', marginLeft: '3%'}}>
-                    <TouchableOpacity onPress={() => navigation.navigate('List', {type: 'likers', identifier: post.id})}>
+                    <TouchableOpacity onPress={() => navigation.push('List', {type: 'likers', identifier: post.id})}>
                         <Text style={styles.likeCount}>{likes} Likes</Text>
                     </TouchableOpacity>
                     {postState.inJoust ? (<><EvilIcons name="trophy" style={styles.trophyIcon}/>
@@ -447,7 +447,7 @@ const PostCard = ({
                 <View style={styles.captionWrapper}>
                         
                         <Text style={styles.caption}>
-                            <Text onPress={() => navigation.navigate('Profile', {username: postState.username})} style={styles.captionUsername}>
+                            <Text onPress={() => navigation.push('Profile', {username: postState.username})} style={styles.captionUsername}>
                                 {postState.username}
                             </Text>
                         {' '}{postState.caption}
@@ -506,7 +506,8 @@ const styles = EStyleSheet.create({
     iconsContainer: { 
         flexDirection: 'row',
         marginTop: '3%',
-        marginLeft: '3%'
+        marginLeft: '3%',
+        height: '2rem'
     },
     likeButton: {
         color: '$crimson',
@@ -527,7 +528,7 @@ const styles = EStyleSheet.create({
         marginRight: '1.4rem'
     },
     shareIcon: {
-        fontSize: '2.1rem',
+        fontSize: '1.5rem',
         color: '$textColor'
     },
     likeCount: {

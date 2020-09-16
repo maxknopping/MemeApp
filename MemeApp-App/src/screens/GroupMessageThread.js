@@ -330,7 +330,7 @@ const GroupMessageThread = ({
                         </Text>: null}
                         <View style={renderchatBubbleStyles(message, i)}>
                             {message.post ? (
-                                <TouchableOpacity onPress={() => navigation.navigate('SinglePost', {postId: message.post.id})}>
+                                <TouchableOpacity onPress={() => navigation.push('SinglePost', {postId: message.post.id})}>
                                     <PostCardMessage navigation={navigation} post={message.post}/>
                                 </TouchableOpacity>
                             ): (

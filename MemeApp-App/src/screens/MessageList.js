@@ -255,7 +255,7 @@ const MessageList = ({
                             }
                             title={
                                 <View style={styles.mainLineWrapper}>
-                                    <TouchableOpacity onPress={() => navigation.navigate('Profile', {username: 
+                                    <TouchableOpacity onPress={() => navigation.push('Profile', {username: 
                                         message.senderId == state.id ? message.recipientUsername
                                         : message.senderUsername})}>
                                         <Text style={styles.usernameText}>{message.senderId == state.id ? message.recipientUsername

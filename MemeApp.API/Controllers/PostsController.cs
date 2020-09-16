@@ -102,7 +102,7 @@ namespace MemeApp.API.Controllers
                 return Unauthorized();
             }
             var userFromRepo = await repo.GetUser(userId);
-            if (!userFromRepo.Posts.Any() || !userFromRepo.IsAdmin) {
+            if (!userFromRepo.Posts.Any()) {
                 return Unauthorized();
             }
             var post = await repo.GetPost(id);

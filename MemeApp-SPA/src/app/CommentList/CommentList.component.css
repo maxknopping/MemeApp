@@ -27,6 +27,8 @@
     border: 0px;
     color: crimson;
     background-color: transparent;
+    height: 20px;
+    padding-top: 2px;
 }
 
 .like-button:hover {

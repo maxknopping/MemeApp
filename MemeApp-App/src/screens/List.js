@@ -10,9 +10,13 @@ const List = ({
     const listType = navigation.getParam('type');
     const {state} = useContext(Context);
     const [list, setList] = useState([]);
-    const identifier = navigation.getParam('identifier');
+    let identifier = navigation.getParam('identifier');
 
     useEffect(() => {
+        getList();
+    }, []);
+
+    const getList = () => {
         if (listType === 'followers') {
             userService.get(`/${state.id}/followers/${identifier}`, {
                 headers: {
@@ -31,6 +35,7 @@ const List = ({
             }).then(
                 function (response) {
                     setList(response.data);
+                    console.log(response.data[0]);
                 }
             ).catch(error => console.log(error));
         } else if (listType === 'likers') {
@@ -64,7 +69,7 @@ const List = ({
                 }
             ).catch(error => console.log(error));
         }
-    }, []);
+    }
 
     follow = (user) => {
         userService.post(`/${state.id}/follow/${user.id}`, {}, {
@@ -117,9 +122,9 @@ const List = ({
                             <TouchableOpacity onPress={() => {
                                 if (listType == 'followers' || listType == 'following')
                                 {
-                                    navigation.navigate('OtherProfile', {username: item.username});
+                                    navigation.push('Profile', {username: item.username});
                                 } else {
-                                    navigation.navigate('Profile', {username: item.username});
+                                    navigation.push('Profile', {username: item.username});
                                 }
                                 
                                 }}>

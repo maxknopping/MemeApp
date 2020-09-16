@@ -78,6 +78,7 @@ const NewPost = ({
                   }}
                   onToggleModal={() => setCropperVisible(false)}
                   saveOptions={{base64: true}}
+                  
               />
         </SafeAreaView>
         );

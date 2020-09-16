@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState, useRef} from 'react';
 import { Text, View, ScrollView, Image, ActivityIndicator, FlatList, ListView, TouchableOpacity, RefreshControl } from 'react-native';
 import {Button} from 'react-native-elements';
 import {Button as NativeButton} from 'native-base';
@@ -18,8 +18,10 @@ const Featured = ({
     const [refreshing, setRefreshing] = useState(false);
     const [loadingMore, setLoadingMore] = useState(false);
     const [posts, setPosts] = useState([]);
+    const flatList = useRef(null);
 
     useEffect(() => {
+        navigation.setParams({scrollToTop: scrollToTop});
         userService.get(`/featured/0`, {
             headers: {
                 'Authorization': `Bearer ${state.token}`
@@ -32,6 +34,13 @@ const Featured = ({
                 setRefreshing(false);
             });
     }, []);
+
+    const scrollToTop = () => {
+        // Scroll to top, in this case I am using FlatList
+        if (!!flatList.current) {
+          flatList.current.scrollToOffset({ offset: 0, animated: true });
+        }
+      }
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
@@ -92,6 +101,7 @@ const Featured = ({
             onEndReached={() => loadMore()}
             onEndReachedThreshold={0.5}
             initialNumToRender={3}
+            ref={flatList}
             refreshControl={
                 <RefreshControl onRefresh={onRefresh}
                 refreshing={refreshing} colors={EStyleSheet.value('$textColor')} tintColor={EStyleSheet.value('$textColor')}/>
@@ -112,21 +122,25 @@ const styles = EStyleSheet.create({
     joustIcon: {
         fontSize: '1.7rem',
         color: '$textColor'
+    },
+    text : {
+        fontSize: '1.1rem',
+        color: '$textColor',
+        fontWeight: 'bold',
+        marginBottom: 10
     }
 });
 
+
 Featured.navigationOptions = ({navigation}) => {
     return {
-        headerRight: () => (
-            <TouchableOpacity onPress={() => navigation.navigate('JoustHome')}>
-                <View style={{marginRight: 10}}>
-                    <MaterialCommunityIcons style={styles.joustIcon} name="sword-cross"/>
-                </View>
+        headerTitle: () => (
+            <TouchableOpacity onPress={() => navigation.getParam('scrollToTop')()}>
+                <Text style={styles.text}>Featured</Text>
             </TouchableOpacity>
         )
-    };
+    }
 };
-
 
 export default Featured;
 

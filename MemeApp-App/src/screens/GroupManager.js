@@ -110,9 +110,9 @@ const GroupManager = ({
                                 <TouchableOpacity onPress={() => {
                                     if (listType == 'followers' || listType == 'following')
                                     {
-                                        navigation.navigate('OtherProfile', {username: item.username});
+                                        navigation.push('OtherProfile', {username: item.username});
                                     } else {
-                                        navigation.navigate('Profile', {username: item.username});
+                                        navigation.push('Profile', {username: item.username});
                                     }
                                     
                                     }}>

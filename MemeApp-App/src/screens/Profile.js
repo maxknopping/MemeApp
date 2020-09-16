@@ -23,6 +23,8 @@ const Profile = ({
     const [followers, setFollowers] = useState(0); 
     const [modalVisible, setModalVisible] = useState(false);
     var username = useRef(state.username);
+    const flatList = useRef(null);
+    console.log(user);
     const segmentClicked = (index) => {
         setActiveIndex(index);
     };
@@ -89,6 +91,7 @@ const Profile = ({
    }
     
     useEffect(() => {
+        navigation.setParams({scrollToTop: scrollToTop});
         if (navigation.getParam('username')) {
             username.current = navigation.getParam('username');
             navigation.setParams({otherUsername: state.username});
@@ -135,11 +138,18 @@ const Profile = ({
 
     }, []);
 
+    const scrollToTop = () => {
+        // Scroll to top, in this case I am using FlatList
+        if (!!flatList.current) {
+          flatList.current.scrollToOffset({ offset: 0, animated: true });
+        }
+      }
+
 
     const renderGridSection = () => {
         return user.posts.map((post, index) => {
             return (
-                <TouchableOpacity key={index} onPress={() => navigation.navigate('SinglePost', {postId: post.id})}>
+                <TouchableOpacity key={index} onPress={() => navigation.push('SinglePost', {postId: post.id})}>
                 <View style={[ {width: width / 3} , {height: width/3}, {marginBottom: EStyleSheet.value('.1rem')}, index % 3 !== 0 ? 
                     {paddingLeft: EStyleSheet.value('.1rem')} : {paddingLeft: 0}]} >
                         <ProgressImage style={{flex: 1, width: undefined, height: undefined}} source={{uri: post.url}}/>
@@ -213,7 +223,8 @@ const Profile = ({
             : null}
         {user ? 
         <FlatList
-        style={{flex: 1}} 
+        style={{flex: 1}}
+        ref={flatList} 
         refreshControl={
             <RefreshControl refreshing={refreshing} colors={EStyleSheet.value('$textColor')} tintColor={EStyleSheet.value('$textColor')} onRefresh={onRefresh} />
         }
@@ -239,7 +250,7 @@ const Profile = ({
                     <View style={styles.infoView}>
                         {user.followers.length > 0 ? (
                             <TouchableOpacity onPress={() => 
-                                navigation.navigate('List', {type: 'followers', identifier: user.username})}>
+                                navigation.push('List', {type: 'followers', identifier: user.username})}>
                                 <View style={styles.followView}>
                                     {user ? (
                                     <Text style={styles.follow}>
@@ -259,7 +270,7 @@ const Profile = ({
                         )}
                         {user.following.length > 0 ? (
                             <TouchableOpacity onPress={() => 
-                                navigation.navigate('List', {type: 'following', identifier: user.username})}>
+                                navigation.push('List', {type: 'following', identifier: user.username})}>
                                 <View style={styles.followView}>
                                     {user ? (
                                     <Text style={styles.follow}>
@@ -319,7 +330,7 @@ const Profile = ({
                 return <PostCard post={item} navigation={navigation}/>
             } else {
                 return (
-                    <TouchableOpacity onPress={() => navigation.navigate('SinglePost', {postId: item.id})}>
+                    <TouchableOpacity onPress={() => navigation.push('SinglePost', {postId: item.id})}>
                         <View style={[ {width: width / 3} , {height: width/3}, {marginBottom: EStyleSheet.value('.1rem')}, index % 3 !== 0 ? 
                             {paddingLeft: EStyleSheet.value('.1rem')} : {paddingLeft: 0}]} >
                                 <ProgressImage style={{flex: 1, width: undefined, height: undefined}} source={{uri: item.url}}/>
@@ -448,17 +459,18 @@ const styles = EStyleSheet.create({
 
 Profile.navigationOptions = ({navigation}) => {
     return {
-        title: navigation.getParam('username'),
-        headerTitleStyle: {
-            fontSize: EStyleSheet.value('1.4rem')
-        },
+        headerTitle: () => (
+            <TouchableOpacity onPress={() => navigation.getParam('scrollToTop')()}>
+                <Text style={{fontSize: EStyleSheet.value('1.4rem'), fontWeight: 'bold'}}>{navigation.getParam('username')}</Text>
+            </TouchableOpacity>
+        ),
         headerRight: () => (<>
             {navigation.getParam('username') === navigation.getParam('otherUsername') ? (
             <TouchableOpacity onPress={() => {
                 console.log(navigation);
                 navigation.navigate('Settings');
                 }}>
-                <View style={{marginRight: 10}}>
+                <View style={{marginRight: 15}}>
                     <Feather style={styles.gearIcon} name="settings"/>
                 </View>
             </TouchableOpacity>) :

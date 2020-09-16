@@ -152,7 +152,7 @@ const Comments = ({
                         require('./../../assets/user.png')}}
                     title={
                         <View style={styles.commentWrapper}>
-                            <TouchableOpacity onPress={() => navigation.navigate('Profile', {username: comment.username})}>
+                            <TouchableOpacity onPress={() => navigation.push('Profile', {username: comment.username})}>
                                 <Text style={styles.username}>{comment.username}</Text>
                             </TouchableOpacity>
                             <Text style={styles.commentText}>{comment.text}</Text>
@@ -173,7 +173,7 @@ const Comments = ({
                         <View style={styles.secondLineWrapper}>
                             <Text style={styles.timeAgo}>{timeAgo.format(Date.parse(comment.created), 'twitter')}</Text>
                             {comment.likes > 0 ? <TouchableOpacity onPress={() => 
-                                navigation.navigate('List', {type: 'commentLikers', identifier: comment.id})}>
+                                navigation.push('List', {type: 'commentLikers', identifier: comment.id})}>
                                     <Text style={styles.timeAgo}>{comment.likes} Likes</Text>
                                 </TouchableOpacity> : null}
                             {comment.deleteable ?

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { Text, View, SafeAreaView, ScrollView, TouchableOpacity, TextInput } from 'react-native';
+import { Text, View, SafeAreaView, ScrollView, TouchableOpacity, TextInput, Image } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import userService from './../apis/user';
 import { Context } from '../context/AuthContext';
@@ -13,6 +13,7 @@ const Search = ({
     const {state} = useContext(Context);
     const [inputValue, setInputValue] = useState('');
     const [list, setList] = useState([]);
+    const theme = EStyleSheet.value('$backgroundColor');
 
     follow = (user) => {
         userService.post(`/${state.id}/follow/${user.id}`, {}, {
@@ -53,6 +54,7 @@ const Search = ({
     };
 
     search = (text) => {
+        if (text.length > 0) {
         userService.get(`/search/${state.id}/${text}/true`, {
             headers: {
                 'Authorization': `Bearer ${state.token}`
@@ -63,6 +65,7 @@ const Search = ({
                 console.log(response.data);
             }
         ).catch(error => console.log(error));
+        }
     };
 
     const description = "Here you can search for users by typing their username in the search box.";
@@ -79,6 +82,7 @@ const Search = ({
                     placeholder="Search..." placeholderTextColor="gray" autoCapitalize="none" returnKeyType="search" onSubmitEditing={() => search(inputValue)}/>
             </View>
             <ScrollView style={styles.scrollView}>
+                {list.length == 0 ? <Image style={styles.image} source={theme === 'white' ? require('./img/logo.png') : require('./img/MemeClub.png')}/>: null}
                 {list.map((item, index) => (
                     <ListItem
                     key={index}
@@ -87,7 +91,7 @@ const Search = ({
                         require('./../../assets/user.png')}}
                     title={
                         <View style={styles.titleWrapper}>
-                            <TouchableOpacity onPress={() => navigation.navigate('Profile', {username: item.username})}>
+                            <TouchableOpacity onPress={() => navigation.push('Profile', {username: item.username})}>
                                 <Text style={styles.username}>{item.username}</Text>
                             </TouchableOpacity>
                         </View>
@@ -153,12 +157,17 @@ const styles = EStyleSheet.create({
     searchView: {
         flexDirection: 'row',
         backgroundColor: 'white',
-        borderRadius: '1rem',
-        padding: '1rem',
-        marginHorizontal: '.5rem'
+        borderRadius: '2rem',
+        padding: '.75rem',
+        marginHorizontal: '.5rem',
+        marginTop: '.5rem'
     },
     searchIcon: {
         fontSize: '1.7rem'
+    },
+    image: {
+        alignSelf: 'center',
+        marginTop: '55%'
     }
 });
 

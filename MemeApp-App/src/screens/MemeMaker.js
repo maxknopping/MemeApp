@@ -87,6 +87,8 @@ const MemeMaker = ({
                 format: 'png',
                 result: 'tmpfile'
             }).then(uriResult => {
+                nextButtonClicked.current = false;
+                setResizeHidden(false);
                 navigation.navigate('NewPost', {image: uriResult});
             });
     };
@@ -142,7 +144,7 @@ const MemeMaker = ({
                 </Text>
                 <Feather style={styles.plusIcon} name="plus"/>
             </TouchableOpacity>
-            <TouchableOpacity onPress={onClickNext} style={{backgroundColor: '#4ABF73', alignSelf: 'center', borderRadius: 12, marginTop: 15, paddingHorizontal: 4}}>
+            <TouchableOpacity onPress={onClickNext} style={{backgroundColor: '#4ABF73', alignSelf: 'center', borderRadius: 12, marginTop: 15, marginBottom: 15, paddingHorizontal: 4}}>
                 <Text style={styles.text}>Next</Text>
             </TouchableOpacity>
             </View>

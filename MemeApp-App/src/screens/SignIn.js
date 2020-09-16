@@ -14,10 +14,6 @@ const SignIn = ({
     const [isLoading, setLoading] = useState(false);
     const {state, signin, tryLocalSignIn} = useContext(AuthContext);
     const theme = EStyleSheet.value('$backgroundColor');
-    
-    useEffect(() => {
-        tryLocalSignIn();
-    }, []);
 
     return (
         <View style={styles.container}>

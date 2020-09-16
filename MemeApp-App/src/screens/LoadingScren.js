@@ -20,7 +20,8 @@ const LoadingScreen = () => {
 const styles = StyleSheet.create({
     view: {
         justifyContent: 'center',
-        flex: 1
+        flex: 1,
+        backgroundColor: 'black'
     }
 });
 

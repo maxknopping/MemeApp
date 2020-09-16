@@ -329,7 +329,7 @@ const MessageThread = ({
                         <Text style={{color: 'gray', alignSelf: 'center', marginBottom: 10}}>{timeAgo.format(Date.parse(message.messageSent), styleOfCenterDates)}</Text>: null}
                     <View key={i} style={renderchatBubbleStyles(message, i)}>
                         {message.post ? (
-                            <TouchableOpacity onPress={() => navigation.navigate('SinglePost', {postId: message.post.id})}>
+                            <TouchableOpacity onPress={() => navigation.push('SinglePost', {postId: message.post.id})}>
                                 <PostCardMessage navigation={navigation} post={message.post}/>
                             </TouchableOpacity>
                         ): (

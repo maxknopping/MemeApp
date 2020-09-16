@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState, useRef} from 'react';
 import { Text, View, ScrollView, ActivityIndicator,
         FlatList, Dimensions, RefreshControl, SafeAreaView, TouchableOpacity, Modal, Animated } from 'react-native';
 import {Button, Overlay} from 'react-native-elements';
@@ -22,6 +22,7 @@ const JoustHome = ({
     const [postIndex, setPostIndex] = useState(0);
     const [posts, setPosts] = useState([]);
     const [loadingMore, setLoadingMore] = useState(false);
+    const flatList = useRef(null);
 
     const segmentClicked = (index) => {
         setActiveIndex(index);
@@ -54,7 +55,7 @@ const JoustHome = ({
         
     
     useEffect( () => {
-
+        navigation.setParams({scrollToTop: scrollToTop});
         async function load() {
             let newPosts = [];
             for (var i = 0; i < 12; i++) {
@@ -84,6 +85,13 @@ const JoustHome = ({
         });
     }
 
+    const scrollToTop = () => {
+        // Scroll to top, in this case I am using FlatList
+        if (!!flatList.current) {
+          flatList.current.scrollToOffset({ offset: 0, animated: true });
+        }
+      }
+
     const description = "This is the Joust Home page, a place where you can interact with popular posts. Under Top Ranked Posts, you will see the posts with the highest amount of trophies. Trophies are a metric to measure how popular a post is." +
         " Every post starts at 1000 trophies, which can go up or down.\n\n" +
         " Here you can also enter Joust mode and Swipe mode. In Joust mode, you are shown two posts, and you can decide which one is better." +
@@ -96,6 +104,7 @@ const JoustHome = ({
             </View>
         <FlatList
         style={{flex: 1}} 
+        ref={flatList}
         refreshControl={
             <RefreshControl refreshing={refreshing} colors={EStyleSheet.value('$textColor')} tintColor={EStyleSheet.value('$textColor')} onRefresh={onRefresh} />
         }
@@ -264,12 +273,23 @@ const styles = EStyleSheet.create({
         color: '$textColor',
         fontSize: '1.1rem',
         marginHorizontal: '5%'
+    },
+    text : {
+        fontSize: '1.1rem',
+        color: '$textColor',
+        fontWeight: 'bold',
+        marginBottom: 10
     }
 });
 
 JoustHome.navigationOptions = ({navigation}) => {
     return {
-        title: 'Joust'
+        headerTitle: () => (
+            <TouchableOpacity onPress={() => navigation.getParam('scrollToTop')()}>
+                <Text style={styles.text}>Joust</Text>
+            </TouchableOpacity>
+        )
+
     }
 }
 

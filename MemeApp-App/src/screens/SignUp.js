@@ -22,6 +22,7 @@ const SignUp = ({
     const [offest, setOffset] = useState(0);
     const theme = EStyleSheet.value('$backgroundColor');
     const baseUrl = 'https://memeclub.co';
+    const [keyboardAvoidance, setKeyBoardAvoidance] = useState(false);
 
     const onLayout = ({
         nativeEvent: { layout: { height } },
@@ -120,8 +121,7 @@ const styles = EStyleSheet.create({
     container: {
         alignItems: 'center',
         flex: 1,
-        justifyContent: 'center',
-        marginBottom: '20%'
+        justifyContent: 'center'
     },
     image: {
         width: '70%',

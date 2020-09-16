@@ -6,23 +6,14 @@
                 <img class="profile-picture mr-2" src="{{comment.photoUrl || '../../../assets/user.png'}}" alt="">
                 <div style="width: 100%;">
                 <span class="comment-and-username">
-                    <button class="like-button" [routerLink]="[ '/profile/', comment.username]">
+                    <button class="like-button" style="padding-left: 0px;" [routerLink]="[ '/profile/', comment.username]">
                     <strong>
                         {{comment.username}}
                     </strong></button>
                     {{comment.text}}
                 </span>    
                 <div class="right-align" style="flex-direction: column;">
-                    <button class="like" style="border-color: transparent" *ngIf="!comment.liked" (click)="like(comment)"><i class="fa fa-heart-o like-icon"></i></button>
-                    <button class="like" *ngIf="comment.liked"><i class="fa fa-heart like-icon" (click)="unlike(comment)"></i></button>
-                    <span *ngIf="comment.deleteable" dropdown [dropup]="true" placement="top right" class="bottom-line">
-                        <button type="button" class="dropup" dropdownToggle>
-                           <i class="fa fa-ellipsis-h ellipse-icon"></i>
-                        </button>
-                        <ul class="dropdown-menu mb-3" [ngClass]="{'dropdown-menu-right': true}" role="menu"  *dropdownMenu>
-                           <li *ngIf="myPost" role="menuitem"><a class="dropdown-item" (click)="deleteComment(comment)">Delete Comment</a></li>
-                         </ul>
-                    </span>
+                    
                 </div>
                 <div style="clear: both;"></div>
                 <p>
@@ -35,6 +26,19 @@
                      </a>
                  </span>
                 </div>
+                <div style="flex-direction: column; align-items: center; display: flex;">
+                    <button class="like" style="border-color: transparent" *ngIf="!comment.liked" (click)="like(comment)"><i class="fa fa-heart-o like-icon"></i></button>
+                    <button class="like" *ngIf="comment.liked"><i class="fa fa-heart like-icon" (click)="unlike(comment)"></i></button>
+                    <span *ngIf="comment.deleteable" style="padding-left: 0px;" dropdown [dropup]="true" placement="top right" class="bottom-line">
+                        <button type="button" class="dropup" dropdownToggle>
+                           <i class="fa fa-ellipsis-h ellipse-icon"></i>
+                        </button>
+                        <ul class="dropdown-menu mb-3" [ngClass]="{'dropdown-menu-right': true}" role="menu"  *dropdownMenu>
+                           <li *ngIf="myPost" role="menuitem"><a class="dropdown-item" (click)="deleteComment(comment)">Delete Comment</a></li>
+                         </ul>
+                    </span>
+                </div>
+                
             </li>
         </div>
     </div>

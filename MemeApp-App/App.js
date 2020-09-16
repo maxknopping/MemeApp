@@ -18,7 +18,7 @@ import React from 'react';
 import {setNavigator} from './src/helpers/navigationRef';
 import {StatusBar} from 'react-native';
 import LoadingScreen from './src/screens/LoadingScren';
-import {Feather, Ionicons} from 'react-native-vector-icons';
+import {Feather, Ionicons, MaterialCommunityIcons} from 'react-native-vector-icons';
 import NewPost from './src/screens/NewPost';
 import EditProfile from './src/screens/EditProfile'
 import MessageList from './src/screens/MessageList';
@@ -43,49 +43,54 @@ import SwipeNew from './src/screens/SwipeNew';
 
 const theme = Appearance.getColorScheme();
 
+const authFlow = {screen: createStackNavigator({
+  SignIn: SignIn,
+  SignUp: SignUp,
+  ForgotUsername: ForgotUsername,
+  ForgotPassword: ForgotPassword,
+  TemporaryPassword: TemporaryPassword,
+  AuthSinglePost: AuthSinglePost,
+  Banned: Banned
+}, {
+  initialRouteName: 'SignIn',
+  defaultNavigationOptions: ({navigation}) => ({
+  headerBackImage: () => {
+    return <Ionicons style={styles.backIcon} name="ios-arrow-back"/>
+  },
+  headerBackTitleVisible: false
+})}),
+path: ''};
+
+const feedFlow = {screen: createStackNavigator({
+  Feed: Feed,
+  List: List,
+  Profile: Profile,
+  Comments: Comments,
+  Messages: MessageList,
+  MessageThread: MessageThread,
+  SinglePost: {
+    screen: SinglePost,
+    path: 'post/:postId'},
+  Notifications: Notifications,
+  GroupMessageThread: GroupMessageThread,
+  GroupManager: GroupManager
+},{
+initialRouteName: 'Feed',
+defaultNavigationOptions: ({navigation}) => ({
+  headerBackImage: () => {
+    return <Ionicons style={styles.backIcon} name="ios-arrow-back"/>
+  },
+  headerBackTitleVisible: false
+})
+}),
+path: ''};
+
+
 const switchNavigator = createSwitchNavigator({
-  Loading: LoadingScreen,
-  authFlow: {screen: createStackNavigator({
-    SignIn: SignIn,
-    SignUp: SignUp,
-    ForgotUsername: ForgotUsername,
-    ForgotPassword: ForgotPassword,
-    TemporaryPassword: TemporaryPassword,
-    AuthSinglePost: AuthSinglePost,
-    Banned: Banned
-  }, {
-    initialRouteName: 'SignIn',
-    defaultNavigationOptions: ({navigation}) => ({
-    headerBackImage: () => {
-      return <Ionicons style={styles.backIcon} name="ios-arrow-back"/>
-    },
-    headerBackTitleVisible: false
-  })}),
-  path: ''},
+  Loading: {screen: LoadingScreen, path: ''},
+  authFlow: authFlow,
   mainFlow: {screen: createBottomTabNavigator({
-    feedFlow: {screen: createStackNavigator({
-        Feed: Feed,
-        List: List,
-        Profile: Profile,
-        Comments: Comments,
-        Messages: MessageList,
-        MessageThread: MessageThread,
-        SinglePost: {
-          screen: SinglePost,
-          path: 'post/:postId'},
-        Notifications: Notifications,
-        GroupMessageThread: GroupMessageThread,
-        GroupManager: GroupManager
-    },{
-      initialRouteName: 'Feed',
-      defaultNavigationOptions: ({navigation}) => ({
-        headerBackImage: () => {
-          return <Ionicons style={styles.backIcon} name="ios-arrow-back"/>
-        },
-        headerBackTitleVisible: false
-      })
-    }),
-    path: ''},
+    feedFlow: feedFlow,
     featuredFlow: createStackNavigator({
         Featured: Featured,
         List: List,
@@ -98,6 +103,29 @@ const switchNavigator = createSwitchNavigator({
     },
     {
       initialRouteName: 'Featured',
+      defaultNavigationOptions: ({navigation}) => ({
+        headerBackImage: () => {
+          return <Ionicons style={styles.backIcon} name="ios-arrow-back"/>
+        },
+        headerBackTitleVisible: false
+      })
+    }),
+    joustFlow: createStackNavigator({
+      Profile: Profile,
+      List: List,
+      Settings: Settings,
+      Comments: Comments,
+      EditProfile: EditProfile,
+      OtherProfile: Profile,
+      SinglePost: SinglePost,
+      JoustHome: JoustHome,
+      SinglePost: SinglePost,
+      Joust: Joust,
+      Swipe: SwipeNew
+      
+    },
+    {
+      initialRouteName: 'JoustHome',
       defaultNavigationOptions: ({navigation}) => ({
         headerBackImage: () => {
           return <Ionicons style={styles.backIcon} name="ios-arrow-back"/>
@@ -170,8 +198,24 @@ const switchNavigator = createSwitchNavigator({
           iconName = 'search';
         } else if (routeName === 'profileFlow') {
           iconName = 'user';
+        } else if (routeName === 'joustFlow') {
+          return <MaterialCommunityIcons color={tintColor} style={styles.icon} name="sword-cross"/>
         }
         return <Feather color={tintColor} style={styles.icon} name={`${iconName}`} />;
+      },
+      tabBarOnPress: ({navigation, defaultHandler}) => {
+        let routeName = navigation.state.key;
+        console.log(navigation.state);
+        defaultHandler();
+        if (routeName === 'feedFlow' || routeName === 'featuredFlow' || routeName === 'profileFlow' || routeName === 'joustFlow') {
+          const navigationInRoute = navigation.state.routes[0];
+          if (!!navigationInRoute && !!navigationInRoute.params && !!navigationInRoute.params.scrollToTop) {
+            const scrollToTop = navigation.state.routes[0].params.scrollToTop;
+            if (typeof(scrollToTop) != "undefined") {
+              scrollToTop();
+            }
+          }
+        }
       }
     }),
     tabBarOptions: {
@@ -184,6 +228,8 @@ const switchNavigator = createSwitchNavigator({
 
     }
   }), path: ''}
+}, {
+  initialRouteName: 'Loading'
 });
 
 const crimson = '#DC143C';
@@ -202,8 +248,8 @@ const styles = EStyleSheet.create({
     fontSize: '1.7rem'
   },
   backIcon: {
-    fontSize: '1.7rem',
-    marginLeft: '.5rem',
+    fontSize: '1.85rem',
+    marginLeft: '.85rem',
     color: '$textColor'
   }
 });

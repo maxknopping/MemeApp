@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState, useRef} from 'react';
 import { Text, View, ScrollView, Image, ActivityIndicator, Dimensions, RefreshControl, SafeAreaView, FlatList, ListView, TouchableOpacity } from 'react-native';
 import {Button, Badge, Icon, withBadge} from 'react-native-elements';
 import {Button as NativeButton} from 'native-base';
@@ -19,7 +19,9 @@ const Feed = ({
     const [loadingMore, setLoadingMore] = useState(false);
     const [posts, setPosts] = useState([]);
     const [doneLoading, setLoading] = useState(true);
+    const flatList = useRef(null);
     useEffect(() => {
+        navigation.setParams({scrollToTop: scrollToTop});
         userService.get(`/feed/${state.username}/0`, {
             headers: {
                 'Authorization': `Bearer ${state.token}`
@@ -45,6 +47,13 @@ const Feed = ({
                 setRefreshing(false);
             });
     }, []);
+
+    const scrollToTop = () => {
+        // Scroll to top, in this case I am using FlatList
+        if (!!flatList.current) {
+          flatList.current.scrollToOffset({ offset: 0, animated: true });
+        }
+      }
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
@@ -106,9 +115,12 @@ const Feed = ({
             <View>
                 <WelcomeModal pagekey={"Feed"} title={"Welcome to MemeClub"} description={description}/>
             </View>
-            {posts.length === 0 && !doneLoading && !refreshing ? <View style={{flex: 1, alignItems: 'center', marginTop: 10}}>
+            {posts.length === 0 && !doneLoading && !refreshing ? <ScrollView refreshControl={
+                <RefreshControl onRefresh={onRefresh}
+                refreshing={refreshing} colors={EStyleSheet.value('$textColor')} tintColor={EStyleSheet.value('$textColor')}/>
+            } style={{flex: 1, alignItems: 'center', marginTop: 10}}>
                     <Text style={styles.text}>When you follow other users, their posts will appear here.</Text>
-                </View>: 
+                </ScrollView>: 
             <FlatList
             contentContainerStyle={{
                 flexDirection: 'column'
@@ -119,6 +131,7 @@ const Feed = ({
             onEndReached={() => loadMore()}
             onEndReachedThreshold={0.5}
             initialNumToRender={3}
+            ref={flatList}
             refreshControl={
                 <RefreshControl onRefresh={onRefresh}
                 refreshing={refreshing} colors={EStyleSheet.value('$textColor')} tintColor={EStyleSheet.value('$textColor')}/>
@@ -137,7 +150,7 @@ Feed.navigationOptions = ({navigation}) => {
         headerRight: () => (<TouchableOpacity onPress={() => {
                     navigation.navigate('Messages');
                 }}>
-                <View style={newMessages == 0 ? {marginRight: 10} : {marginRight: 10}}>
+                <View style={newMessages == 0 ? {marginRight: 15} : {marginRight: 15}}>
                     <Feather style={styles.gearIcon} name="message-circle"/>
                     {newMessages > 0 ? <Badge value={newMessages} badgeStyle={{backgroundColor: 'crimson'}}
                         containerStyle={{position: 'absolute', top: -4, right: -4}}/>:
@@ -146,7 +159,7 @@ Feed.navigationOptions = ({navigation}) => {
             </TouchableOpacity>),
         headerLeft: () => (
             <TouchableOpacity onPress={() => {navigation.navigate('Notifications');}}>
-                <View style={{marginLeft: 10}}>
+                <View style={{marginLeft: 15}}>
                     <Feather style={styles.bellIcon} name="bell"/>
                     {newNotifications > 0 ? <Badge value={newNotifications} badgeStyle={{backgroundColor: 'crimson'}} 
                         containerStyle={{position: 'absolute', top: -4, right: -4}}/> :
@@ -155,7 +168,9 @@ Feed.navigationOptions = ({navigation}) => {
             </TouchableOpacity>
         ),
         headerTitle: () => (
-            <Image style={styles.image} source={theme === 'white' ? require('./img/logo.png') : require('./img/MemeClub.png')}/>
+            <TouchableOpacity onPress={() => navigation.getParam('scrollToTop')()}>
+                <Image style={styles.image} source={theme === 'white' ? require('./img/logo.png') : require('./img/MemeClub.png')}/>
+            </TouchableOpacity>
         )
     };
 };
@@ -165,11 +180,11 @@ const styles = EStyleSheet.create({
         color: '$textColor'
     },
     gearIcon: {
-        fontSize: '1.7rem',
+        fontSize: '1.9rem',
         color: '$textColor'
     },
     bellIcon: {
-        fontSize: '1.7rem',
+        fontSize: '1.9rem',
         color: '$textColor'
     },
     image: {
