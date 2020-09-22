@@ -18,6 +18,8 @@ const Joust = ({
     const {width, height} = Dimensions.get('window');
     const [posts, setPosts] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
+    const [leftmodalVisible, setLeftModalVisible] = useState(false);
+    const [rightmodalVisible, setRightModalVisible] = useState(false);
 
     useEffect(() => {
         getNewPosts();
@@ -67,7 +69,9 @@ const Joust = ({
                                         require('./../../assets/user.png')} />
                                     <Text style={styles.headerUsername}>{post.username}</Text>
                                 </View>
-                                <Image style={styles.mainImage} source={{uri: post.url}}/>
+                                <TouchableOpacity onPress={() => navigation.push('SinglePost', {postId: post.id})}>
+                                    <Image style={styles.mainImage} source={{uri: post.url}}/>
+                                </TouchableOpacity>
                                 <View style={styles.bottomView}>
                                     <Text style={styles.caption}>
                                                 <Text style={styles.bottomUsername}>
@@ -76,6 +80,12 @@ const Joust = ({
                                             {' '}{post.caption}
                                     </Text>
                                 </View>
+                                <Overlay animated animationType={"slide"} onBackdropPress={() => {
+                                    setLeftModalVisible(false);
+                                    setRightModalVisible(false);
+                                }} isVisible={index == 0 ? leftmodalVisible: rightmodalVisible} fullScreen={true}>
+                                    <PostCard post={post} navigation={navigation}/>
+                                </Overlay>
                             </View>
                         )
                     })}
@@ -88,6 +98,7 @@ const Joust = ({
                 :
                 <ActivityIndicator size="large" color={EStyleSheet.value("$crimson")}/>
             }
+
         </ScrollView>
     );
 };

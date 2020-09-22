@@ -2,6 +2,7 @@ import { User } from './User';
 import { Like } from './Like';
 import { Post } from './Post';
 import { CommentLike } from './CommentLike';
+import { Reply } from './Reply';
 
 
 export interface Comment {
@@ -15,6 +16,9 @@ export interface Comment {
     creatorId: number;
     photoUrl: string;
     likeList: CommentLike[];
+    replies: Reply[];
     liked: boolean;
     deleteable: boolean;
+    replying: boolean;
+    replyText: string;
 }

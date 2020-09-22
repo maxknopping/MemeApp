@@ -3,14 +3,16 @@ using System;
 using MemeApp.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MemeApp.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200919193117_replies")]
+    partial class replies
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -428,10 +430,9 @@ namespace MemeApp.API.Migrations
                         .HasForeignKey("RecipientId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("MemeApp.API.Models.Reply", "Reply")
+                    b.HasOne("MemeApp.API.Models.Reply")
                         .WithMany("Notifications")
-                        .HasForeignKey("ReplyId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("ReplyId");
                 });
 
             modelBuilder.Entity("MemeApp.API.Models.Post", b =>

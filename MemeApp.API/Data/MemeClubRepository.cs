@@ -198,7 +198,8 @@ namespace MemeApp.API.Data
 
         public IEnumerable<Comment> GetComments(int postId)
         {
-            return context.Comments.Where(c => c.PostId == postId).Include(c => c.LikeList);
+            return context.Comments.Where(c => c.PostId == postId).Include(c => c.LikeList).Include(c=> c.Replies)
+                .ThenInclude(r => r.LikeList);
         }
 
         public async Task<CommentLike> GetCommentLike(int userId, int commentId)
@@ -209,7 +210,10 @@ namespace MemeApp.API.Data
 
         public async Task<Comment> GetComment(int commentId)
         {
-            var comment = await context.Comments.Include(p => p.LikeList).Include(c => c.Notifications).FirstOrDefaultAsync(p => p.Id == commentId);
+            var comment = await context.Comments.Include(p => p.LikeList).Include(c => c.Notifications)
+            .Include(c => c.Replies).ThenInclude(r => r.Notifications).Include(c => c.Replies).ThenInclude(r => r.LikeList)
+            
+                .FirstOrDefaultAsync(p => p.Id == commentId);
             return comment;
         }
 
@@ -515,6 +519,23 @@ namespace MemeApp.API.Data
         {
             var allReported = await context.Users.Where(p => p.IsReported == true).ToListAsync();
             return allReported;
+        }
+
+        public async Task<Reply> GetReply(int replyId)
+        {
+            return await context.Replies.Include(r => r.LikeList).Include(r => r.Notifications)
+                .FirstOrDefaultAsync(r => r.Id == replyId);
+        }
+
+        public async Task<ReplyLike> GetReplyLike(int userId, int replyId)
+        {
+            return await context.ReplyLikes
+                .FirstOrDefaultAsync(u => u.LikerId == userId && u.ReplyId == replyId);
+        }
+
+        public IEnumerable<Reply> GetReplies(int commentId)
+        {
+            return context.Replies.Where(c => c.CommentId == commentId).Include(c => c.LikeList);
         }
     }
 }

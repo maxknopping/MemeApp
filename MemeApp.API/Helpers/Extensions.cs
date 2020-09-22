@@ -27,5 +27,10 @@ namespace MemeApp.API.Helpers
             comments = comments.OrderByDescending(c => c.LikeList.Count).ToList();
             return comments;
         }
+
+        public static List<ReplyDto> SortReplies (this List<ReplyDto> comments) {
+            comments = comments.OrderByDescending(c => c.Created).ToList();
+            return comments;
+        }
     }
 }

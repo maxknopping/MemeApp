@@ -23,6 +23,7 @@ const JoustHome = ({
     const [posts, setPosts] = useState([]);
     const [loadingMore, setLoadingMore] = useState(false);
     const flatList = useRef(null);
+    const index = useRef(0);
 
     const segmentClicked = (index) => {
         setActiveIndex(index);
@@ -35,7 +36,7 @@ const JoustHome = ({
         setRefreshing(true);
         async function load() {
             let newPosts = [];
-            for (var i = 0; i < 12; i++) {
+            for (var i = 0; i < 15; i++) {
                 try {
 
                 var response = await loadInitialPost(i);
@@ -47,6 +48,7 @@ const JoustHome = ({
                 }
             }
             setPosts(newPosts);
+            index.current = 15;
             setRefreshing(false);
         }
 
@@ -63,6 +65,7 @@ const JoustHome = ({
                 newPosts.push(response.data);
             }
             setPosts(newPosts);
+            index.current = 12;
             setRefreshing(false);
         }
 
@@ -75,7 +78,7 @@ const JoustHome = ({
                 'Authorization': `Bearer ${state.token}`
             }
         }).catch(error => console.log(error));
-    }
+    };
 
     const loadInitialPost = (index) => {
         return userService.get(`/joust/top/${index}`,  {
@@ -171,27 +174,28 @@ const JoustHome = ({
         numColumns={activeIndex === 0 ? 3 : 1}
         key={activeIndex === 0 ? '0' : '1'}
         keyExtractor={(item, i) => item.id.toString()}
-        onEndReached={() => {
+        onMomentumScrollBegin={async () => {
 
             async function load() {
+                
                 let newPosts = posts;
-                const responseOne = await loadPost(posts.length);
+                const responseOne = await loadPost(index.current);
                 if (typeof responseOne !== 'undefined') {
                     newPosts.push(responseOne.data);
                 }
-                const responseTwo = await loadPost(posts.length+1);
+                const responseTwo = await loadPost(index.current + 1);
                 if (typeof responseTwo !== 'undefined') {
                     newPosts.push(responseTwo.data);
                 }
-                const responseThree = await loadPost(posts.length+2);
+                const responseThree = await loadPost(index.current+2);
                 if (typeof responseThree !== 'undefined') {
                     newPosts.push(responseThree.data);
                 }
-                setPosts(newPosts);
-                console.log(newPosts);
+                console.log(`index: at end: ${index.current}`);
+                index.current += 3;
             }
 
-            load();
+            await load();
         }}
         loadingMore={loadingMore}
         

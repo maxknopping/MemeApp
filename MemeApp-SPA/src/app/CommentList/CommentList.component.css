@@ -40,35 +40,42 @@
     vertical-align: middle;
 }
 
-.bottom-line {
-    padding-left: 10px;
+@media only screen and (min-width: 900px) {
+    .bottom-line {
+        padding-left: 40px;
+    }
+} @media only screen and (max-width: 899px) {
+    .bottom-line {
+        padding-left: 15px;
+    }
 }
+
 
 .first-bottom-line {
     padding-left: 6px;
-    padding-right: 30px;
+    color: gray
 }
 
-a:link {
-    color: #919AA1;
+a {
+    color: gray;
     background-color: transparent;
     text-decoration: none;
   }
   
   a:visited {
-    color: #919AA1;
+    color: gray;
     background-color: transparent;
     text-decoration: none;
   }
   
   a:hover {
-    color: #919AA1;
+    color: gray;
     background-color: transparent;
     text-decoration: none;
   }
   
   a:active {
-    color: #919AA1;
+    color: gray;
     background-color: transparent;
     text-decoration: none;
   }
@@ -77,6 +84,6 @@ a:link {
     -webkit-appearance: none;
     background-color: transparent;
     cursor: pointer;
-    color: #919AA1;
+    color: gray;
     border: 0px;
 }

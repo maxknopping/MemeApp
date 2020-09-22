@@ -32,6 +32,12 @@ namespace MemeApp.API.Data
 
          Task<Comment> GetComment(int commentId);
 
+         IEnumerable<Reply> GetReplies(int commentId);
+
+         Task<Reply> GetReply(int replyId);
+
+         Task<ReplyLike> GetReplyLike(int userId, int replyId);
+
          Task<CommentLike> GetCommentLike(int userId, int commentId);
 
          Task<Message> GetMessage(int id);

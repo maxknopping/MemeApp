@@ -1,27 +1,30 @@
 using System;
 using System.Collections.Generic;
 
-namespace MemeApp.API.Models
+namespace MemeApp.API.Dtos
 {
-    public class Comment
+    public class ReplyDto
     {
         public int Id { get; set; }
+
         public string Text { get; set; }
 
         public int Likes { get; set; }
 
         public int CommenterId { get; set; }
 
-        public IList<CommentLike> LikeList { get; set; }
-
-        public IList<Reply> Replies { get; set; }
+        public IList<ReplyLikeDto> LikeList { get; set; }
 
         public DateTime Created { get; set; }
 
-        public Post Post { get; set; }
-
         public int PostId { get; set; }
 
-        public IList<Notification> Notifications { get; set; }
+
+        public int CommentId { get; set; }
+
+        public string Username { get; set; }
+
+        public string PhotoUrl { get; set; }
+
     }
 }

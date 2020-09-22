@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState, useRef} from 'react';
-import { Text, View, ScrollView, Image, ActivityIndicator, Dimensions, RefreshControl, SafeAreaView, FlatList, ListView, TouchableOpacity } from 'react-native';
+import { Text, View, ScrollView, Image, ActivityIndicator, Dimensions, RefreshControl, SafeAreaView, FlatList, ListView, TouchableOpacity, Platform } from 'react-native';
 import {Button, Badge, Icon, withBadge} from 'react-native-elements';
 import {Button as NativeButton} from 'native-base';
 import {Context} from './../context/AuthContext';
@@ -10,6 +10,7 @@ import Constants from 'expo-constants';
 import PostCard from './PostCard';
 import InfiniteScrollView from 'react-native-infinite-scroll-view';
 import WelcomeModal from './WelcomeModal';
+import { Notifications } from 'expo';
 
 const Feed = ({
     navigation,
@@ -21,6 +22,11 @@ const Feed = ({
     const [doneLoading, setLoading] = useState(true);
     const flatList = useRef(null);
     useEffect(() => {
+        navigation.addListener('willFocus', () => {
+            if (Platform.OS === 'ios') {
+                Notifications.setBadgeNumberAsync(0);
+            }
+        });
         navigation.setParams({scrollToTop: scrollToTop});
         userService.get(`/feed/${state.username}/0`, {
             headers: {

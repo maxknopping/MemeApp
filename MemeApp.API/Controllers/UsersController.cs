@@ -508,6 +508,108 @@ namespace MemeApp.API.Controllers
 
         }
 
+        [HttpPost("reply")]
+        public async Task<IActionResult> PostReply(ReplyForCreationDto reply) {
+            if (reply.CommenterId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
+                return Unauthorized();
+            }
+
+            var recipient = await repo.GetPost(reply.PostId);
+            if (recipient == null) {
+                return NotFound();
+            }
+
+            var comment = await repo.GetComment(reply.CommentId);
+            if (comment == null) {
+                return NotFound();
+            }
+
+            var fullReply = mapper.Map<Reply>(reply);
+            fullReply.Created = DateTime.Now;
+            repo.Add<Reply>(fullReply);
+
+
+            if(await repo.SaveAll()) {
+
+                //notification for owner of post
+                if (recipient.UserId != reply.CommenterId) {
+                    var notification = new Notification("comment")
+                    {
+                        RecipientId = recipient.UserId,
+                        CauserId = reply.CommenterId,
+                        PostId = recipient.Id,
+                        ReplyId = fullReply.Id
+                    };
+                    repo.Add(notification);
+                    var notificationCount = await repo.HasNewNotifications(recipient.UserId);
+                    var userRecipient = await repo.GetUser(recipient.UserId);
+                    var commenter = await repo.GetUser(reply.CommenterId);
+
+                    if (userRecipient.PushToken != null) {
+                        var client = new PushClient();
+                        var pushNotification = new PushMessage(userRecipient.PushToken, 
+                            data: new {type = "reply"},
+                            title: "MemeClub", 
+                            body: $"@{commenter.Username} {notification.Message}\"{notification.Reply.Text}\"", 
+                            sound: PushSounds.Default, 
+                            badge: notificationCount,
+                            displayInForeground: true
+                        );
+
+                        try
+                        {
+                            await client.Publish(pushNotification);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
+                    }
+                }
+
+                //notification for comment that is replied to
+                if (comment.CommenterId != reply.CommenterId) {
+                    var notification = new Notification("reply")
+                    {
+                        RecipientId = comment.CommenterId,
+                        CauserId = reply.CommenterId,
+                        PostId = recipient.Id,
+                        ReplyId = fullReply.Id
+                    };
+                    repo.Add(notification);
+                    var notificationCount = await repo.HasNewNotifications(comment.CommenterId);
+                    var userRecipient = await repo.GetUser(comment.CommenterId);
+                    var commenter = await repo.GetUser(reply.CommenterId);
+
+                    if (userRecipient.PushToken != null) {
+                        var client = new PushClient();
+                        var pushNotification = new PushMessage(userRecipient.PushToken, 
+                            data: new {type = "reply"},
+                            title: "MemeClub", 
+                            body: $"@{commenter.Username} {notification.Message}\"{notification.Reply.Text}\"", 
+                            sound: PushSounds.Default, 
+                            badge: notificationCount,
+                            displayInForeground: true
+                        );
+
+                        try
+                        {
+                            await client.Publish(pushNotification);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
+                    }
+                }
+                await repo.SaveAll();
+                return Ok();
+            }
+
+            return BadRequest("failed to make comment");
+
+        }
+
         [HttpGet("comments/{postId}")]
         public async Task<IActionResult> GetComments(int postId)
         {
@@ -533,6 +635,34 @@ namespace MemeApp.API.Controllers
             comments = comments.SortComments();
 
             return Ok(comments);
+
+        }
+
+        [HttpGet("replies/{commentId}")]
+        public async Task<IActionResult> GetReplies(int commentId)
+        {
+
+            var replies = repo.GetReplies(commentId);
+
+            var repliesToReturn = new List<ReplyDto>();
+            foreach (var reply in replies)
+            {
+                var commenter = await repo.GetUser(reply.CommenterId);
+                var commentToReturn = mapper.Map<ReplyDto>(reply);
+                var likes = new List<ReplyLikeDto>();
+                foreach(var like in reply.LikeList) {
+                    var newLike = mapper.Map<ReplyLikeDto>(like);
+                    likes.Add(newLike);
+                }
+                commentToReturn.LikeList = likes;
+                commentToReturn.PhotoUrl = commenter.PhotoUrl;
+                commentToReturn.Username = commenter.Username;
+                repliesToReturn.Add(commentToReturn);
+            }
+
+            repliesToReturn = repliesToReturn.SortReplies();
+
+            return Ok(repliesToReturn);
 
         }
 
@@ -685,6 +815,17 @@ namespace MemeApp.API.Controllers
             foreach(var notification in comment.Notifications) {
                 repo.Delete<Notification>(notification);
             }
+
+            foreach(var reply in comment.Replies) {
+                foreach(var replyLike in reply.LikeList) {
+                    repo.Delete<ReplyLike>(replyLike);
+                }
+
+                foreach(var notification in reply.Notifications) {
+                    repo.Delete<Notification>(notification);
+                }
+                repo.Delete<Reply>(reply);
+            }
             
             repo.Delete<Comment>(comment);
 
@@ -694,6 +835,168 @@ namespace MemeApp.API.Controllers
 
             return BadRequest("failed to delete comment");
             
+        }
+
+        [HttpDelete("{replyId}/deleteReply")]
+        public async Task<IActionResult> DeleteReply(int replyId) {
+            var reply = await repo.GetReply(replyId);
+
+            if (reply == null) {
+                //follow
+                return BadRequest("This reply doesn't exist");
+            }
+
+            foreach(var like in reply.LikeList) {
+                repo.Delete<ReplyLike>(like);
+            }
+
+            foreach(var notification in reply.Notifications) {
+                repo.Delete<Notification>(notification);
+            }
+            
+            repo.Delete<Reply>(reply);
+
+            if (await repo.SaveAll()) {
+                return Ok();
+            }
+
+            return BadRequest("failed to delete reply");
+            
+        }
+
+        [HttpPost("{id}/reply/like/{recipientId}/{postId}/{commentId}")]
+        public async Task<IActionResult> Like(int id, int recipientId, int postId, int commentId) {
+            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
+                return Unauthorized();
+            }
+            var like = await repo.GetReplyLike(id, recipientId);
+
+            if (like != null) {
+                //unfollow
+                return BadRequest("You already like this post");
+            }
+
+            var recipient = await repo.GetReply(recipientId);
+            var post = await repo.GetPost(postId);
+            var comment = await repo.GetComment(commentId);
+            if (recipient == null || post == null || comment == null) {
+                return NotFound();
+            }
+
+            var user = await repo.GetUser(id);
+            
+            like = new ReplyLike {
+                LikerId = id,
+                ReplyId = recipientId,
+                PostId = postId,
+                Post = post,
+                Reply = recipient,
+                Liker = user
+            };
+
+            var notification = new Notification("commentLike")
+            {
+                RecipientId = recipient.CommenterId,
+                CauserId = id,
+                PostId = postId,
+                ReplyId = recipientId
+            };
+
+            repo.Add<Notification>(notification);
+
+            repo.Add<ReplyLike>(like);
+
+            var liker = await repo.GetUser(id);
+
+            if (await repo.SaveAll()) {
+                if (id != recipient.CommenterId) {
+                    var notificationCount = await repo.HasNewNotifications(recipient.CommenterId);
+                    var userRecipient = await repo.GetUser(recipient.CommenterId);
+
+                    if (userRecipient.PushToken != null) {
+                        var client = new PushClient();
+                        var pushNotification = new PushMessage(userRecipient.PushToken, 
+                            data: new {type = "like"},
+                            title: "MemeClub", 
+                            body: $"@{liker.Username} {notification.Message}\"{notification.Reply.Text}\"", 
+                            sound: PushSounds.Default, 
+                            badge: notificationCount,
+                            displayInForeground: true
+                        );
+
+                        try
+                        {
+                            await client.Publish(pushNotification);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
+                    }
+                }
+                return Ok();
+            }
+
+            return BadRequest("failed to like comment");
+            
+        }
+
+        [HttpPost("{id}/reply/unlike/{recipientId}/{postId}/{commentId}")]
+        public async Task<IActionResult> UnLikeReply(int id, int recipientId, int postId, int commentId) {
+            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
+                return Unauthorized();
+            }
+            var like = await repo.GetReplyLike(id, recipientId);
+
+            if (like == null) {
+                //unfollow
+                return BadRequest("You don't already like this post");
+            }
+
+            var recipient = await repo.GetReply(recipientId);
+            var post = await repo.GetPost(postId);
+            var comment = await repo.GetComment(commentId);
+            if (recipient == null || post == null || comment == null) {
+                return NotFound();
+            }
+
+
+            repo.Delete<ReplyLike>(like);
+
+            if (await repo.SaveAll()) {
+                return Ok();
+            }
+
+            return BadRequest("failed to unlike comment");
+            
+        }
+
+        [HttpGet("{userId}/replyLikers/{replyId}")]
+        public async Task<IActionResult> GetReplyLikers(int replyId, int userId)
+        {
+
+            var reply = await repo.GetReply(replyId);
+
+            var likers = new List<UserForListDto>();
+            foreach (var like in reply.LikeList)
+            {
+                var liker = await repo.GetUser(like.LikerId);
+                var userToReturn = mapper.Map<UserForManipulationDto>(liker);
+                userToReturn.FollowButton = "Follow";
+                    if (userToReturn.Id == userId) {
+                        userToReturn.FollowButton = "Myself";
+                    }
+                    foreach(var f in userToReturn.Followers) {
+                        if (f.FollowerId == userId) {
+                          userToReturn.FollowButton = "Following";
+                        }
+                    }
+                var userWithoutFollowers = mapper.Map<UserForListDto>(userToReturn);
+                likers.Add(userWithoutFollowers);
+            }
+
+            return Ok(likers);
+
         }
 
         [HttpGet("search/{id}/{query}/{fullResult}")]

@@ -88,6 +88,10 @@ export class UserService {
     return this.http.get(`${this.baseUrl}/${userId}/commentLikers/${commentId}`);
   }
 
+  geReplyLikers(replyId, userId) {
+    return this.http.get(`${this.baseUrl}/${userId}/replyLikers/${replyId}`);
+  }
+
   sendComment(comment, postId, commenterId) {
     commenterId = +commenterId;
     return this.http.post(`${this.baseUrl}/comment`,
@@ -98,20 +102,48 @@ export class UserService {
     });
   }
 
+  sendReply(comment, postId, commenterId, commentId) {
+    commenterId = +commenterId;
+    return this.http.post(`${this.baseUrl}/reply`,
+    {
+      postId: postId,
+      text: comment,
+      commenterId: commenterId,
+      commentId: commentId
+    });
+  }
+
   getComments(postId) {
     return this.http.get(`${this.baseUrl}/comments/${postId}`);
+  }
+
+  getReplies(commentId) {
+    return this.http.get(`${this.baseUrl}/replies/${commentId}`);
   }
 
   likeComment(commenterId, postId, commentId) {
     return this.http.post(`${this.baseUrl}/${commenterId}/comment/like/${commentId}/${postId}`, {});
   }
 
+
   unlikeComment(commenterId, postId, commentId) {
     return this.http.post(`${this.baseUrl}/${commenterId}/comment/unlike/${commentId}/${postId}`, {});
   }
 
+  likeReply(commenterId, postId, commentId, replyId) {
+    return this.http.post(`${this.baseUrl}/${commenterId}/reply/like/${replyId}/${postId}/${commentId}`, {});
+  }
+
+  unlikeReply(commenterId, postId, commentId, replyId) {
+    return this.http.post(`${this.baseUrl}/${commenterId}/reply/unlike/${replyId}/${postId}/${commentId}`, {});
+  }
+
   deleteComment(commentId) {
     return this.http.delete(`${this.baseUrl}/${commentId}/deleteComment`);
+  }
+
+  deleteReply(replyId) {
+    return this.http.delete(`${this.baseUrl}/${replyId}/deleteReply`);
   }
 
   getMessages(id: number) {

@@ -15,6 +15,8 @@ namespace MemeApp.API.Dtos
 
         public int CommenterId { get; set; }
 
+        public IList<ReplyDto> Replies { get; set; }
+
         public DateTime Created { get; set; }
 
         public int PostId { get; set; }

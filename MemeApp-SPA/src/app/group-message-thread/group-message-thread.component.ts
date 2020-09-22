@@ -94,7 +94,9 @@ export class GroupMessageThreadComponent implements OnInit {
     if (i == 0) {
       return false;
     }
-    return this.messages[i - 1].senderId == this.id && Date.parse(this.messages[i - 1].messageSent) - Date.parse(message.messageSent)
+    const isLastMessageMine = this.messages[i - 1].senderId == this.id;
+    const isThisMessageMine = message.senderId == this.id;
+    return isLastMessageMine && isThisMessageMine && Date.parse(this.messages[i - 1].messageSent) - Date.parse(message.messageSent)
     > -1 * 2 * 60 * 60 * 1000;
   }
 

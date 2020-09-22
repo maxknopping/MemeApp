@@ -42,6 +42,11 @@ namespace MemeApp.API.Helpers
             CreateMap<MessageGroupForCreationDto, Message>();
             CreateMap<User, UserForSendPostDto>();
             CreateMap<User, UserForReportDto>();
+            CreateMap<Reply, ReplyDto>().ForMember(dest => dest.PhotoUrl, opt => 
+                opt.MapFrom(src => src.Commenter.PhotoUrl)).ForMember(dest => dest.Username, opt => 
+                opt.MapFrom(src => src.Commenter.Username));
+            CreateMap<ReplyLike, ReplyLikeDto>();
+            CreateMap<ReplyForCreationDto, Reply>();
 
         }
     }

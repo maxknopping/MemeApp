@@ -28,6 +28,10 @@ namespace MemeApp.API.Data
 
         public DbSet<Group> Groups { get; set; }
 
+        public DbSet<Reply> Replies { get; set; }
+
+        public DbSet<ReplyLike> ReplyLikes { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder) {
             builder.Entity<Follow>().HasKey(p => new {p.FollowerId, p.FolloweeId});
 
@@ -62,12 +66,28 @@ namespace MemeApp.API.Data
                 .HasForeignKey(u => u.PostId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            builder.Entity<Reply>().Property(p => p.Id).ValueGeneratedOnAdd();
+            
+            builder.Entity<Reply>()
+                .HasOne(u => u.Comment)
+                .WithMany(p => p.Replies)
+                .HasForeignKey(u => u.CommentId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             builder.Entity<CommentLike>().HasKey(k => new {k.CommenterId, k.CommentId});
 
             builder.Entity<CommentLike>()
                 .HasOne(u => u.Comment)
                 .WithMany(p => p.LikeList)
                 .HasForeignKey(u => u.CommentId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<ReplyLike>().HasKey(k => new {k.LikerId, k.ReplyId});
+
+            builder.Entity<ReplyLike>()
+                .HasOne(u => u.Reply)
+                .WithMany(p => p.LikeList)
+                .HasForeignKey(u => u.ReplyId)
                 .OnDelete(DeleteBehavior.Restrict);
 
 
@@ -132,6 +152,13 @@ namespace MemeApp.API.Data
                 .HasOne(n => n.Post)
                 .WithMany(c => c.Notifications)
                 .HasForeignKey(n => n.PostId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Notification>()
+                .HasOne(n => n.Reply)
+                .WithMany(c => c.Notifications)
+                .HasForeignKey(n => n.ReplyId)
                 .IsRequired(false)
                 .OnDelete(DeleteBehavior.Restrict);
         }

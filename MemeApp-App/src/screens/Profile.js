@@ -461,7 +461,8 @@ Profile.navigationOptions = ({navigation}) => {
     return {
         headerTitle: () => (
             <TouchableOpacity onPress={() => navigation.getParam('scrollToTop')()}>
-                <Text style={{fontSize: EStyleSheet.value('1.4rem'), fontWeight: 'bold'}}>{navigation.getParam('username')}</Text>
+                <Text style={{fontSize: EStyleSheet.value('1.4rem'), fontWeight: 'bold', color: EStyleSheet.value('$textColor')}}>
+                    {navigation.getParam('username')}</Text>
             </TouchableOpacity>
         ),
         headerRight: () => (<>

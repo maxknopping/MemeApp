@@ -167,7 +167,9 @@ const styles = EStyleSheet.create({
     },
     image: {
         alignSelf: 'center',
-        marginTop: '55%'
+        marginTop: '55%',
+        width: '90%',
+        resizeMode: 'contain'
     }
 });
 

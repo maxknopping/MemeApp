@@ -15,7 +15,7 @@ export class SinglePostComponent implements OnInit {
   post: Post;
 
   constructor(private route: ActivatedRoute, private seo: SEOService, private alertify: AlertifyService, 
-              private user: UserService, private authSerce: AuthService, private router: Router) { }
+              private user: UserService, private authService: AuthService, private router: Router) { }
 
   ngOnInit() {
     this.route.data.subscribe(data => {
@@ -24,6 +24,8 @@ export class SinglePostComponent implements OnInit {
       this.seo.addTag('og:image', this.post.url);
     });
   }
+
+  ngon
 
   ngOnDestroy(): void {
     //Called once, before the instance is destroyed.

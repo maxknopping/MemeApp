@@ -29,6 +29,10 @@ namespace MemeApp.API.Models
 
         public int? CommentId { get; set; }
 
+        public Reply Reply { get; set; }
+
+        public int? ReplyId { get; set; }
+
         public bool Followed { get; set; }
 
         public string Type { get; set; }
@@ -59,8 +63,11 @@ namespace MemeApp.API.Models
                     this.Message = "followed you.";
                     this.Followed = true;
                     break;
-                case "updateUser":
+                case "updateuser":
                     this.Message = "Your account was flagged as being inappropriate and we changed your profile. You are at risk for your account being deleted or banned.";
+                    break;
+                case "reply": 
+                    this.Message = "replied to your comment: ";
                     break;
                 default: 
                     this.Message = "";

@@ -16,7 +16,7 @@
                     
                 </div>
                 <div style="clear: both;"></div>
-                <p>
+                <p style="margin-bottom: 0px;">
                  <span class="first-bottom-line">
                         {{comment.created | timeAgo}}
                  </span>
@@ -25,6 +25,9 @@
                             {{comment.likes}} Likes
                      </a>
                  </span>
+                 <span class="bottom-line" (click)="toggleReplying(comment)" style="cursor: pointer;">
+                        Reply
+                </span>
                 </div>
                 <div style="flex-direction: column; align-items: center; display: flex;">
                     <button class="like" style="border-color: transparent" *ngIf="!comment.liked" (click)="like(comment)"><i class="fa fa-heart-o like-icon"></i></button>
@@ -38,7 +41,59 @@
                          </ul>
                     </span>
                 </div>
-                
+            </li>
+            <li *ngFor="let reply of comment.replies" class="list-group-item title" style="list-style-type: none; padding-left: 10%; display: flex; flex-direction: row;">
+                <img class="profile-picture mr-2" src="{{reply.photoUrl || '../../../assets/user.png'}}" alt="">
+                <div style="width: 100%;">
+                    <span class="comment-and-username">
+                        <button class="like-button" style="padding-left: 0px;" [routerLink]="[ '/profile/', comment.username]">
+                        <strong>
+                            {{reply.username}}
+                        </strong></button>
+                        {{reply.text}}
+                    </span>    
+                    <div class="right-align" style="flex-direction: column;">
+                        
+                    </div>
+                    <div style="clear: both;"></div>
+                    <p style="margin-bottom: 0px;">
+                     <span class="first-bottom-line">
+                            {{reply.created | timeAgo}}
+                     </span>
+                     <span class="bottom-line" *ngIf="reply.likes > 0">
+                         <a [routerLink]="[ '/list/', comment.id, 'commentLikers' ]">
+                                {{reply.likes}} Likes
+                         </a>
+                     </span>
+                    </div>
+                    <div style="flex-direction: column; align-items: center; display: flex;">
+                        <button class="like" style="border-color: transparent" *ngIf="!reply.liked" (click)="likeReply(reply)"><i class="fa fa-heart-o like-icon"></i></button>
+                        <button class="like" *ngIf="reply.liked"><i class="fa fa-heart like-icon" (click)="unlikeReply(reply)"></i></button>
+                        <span *ngIf="reply.deleteable" style="padding-left: 0px;" dropdown [dropup]="true" placement="top right" class="bottom-line">
+                            <button type="button" class="dropup" dropdownToggle>
+                               <i class="fa fa-ellipsis-h ellipse-icon"></i>
+                            </button>
+                            <ul class="dropdown-menu mb-3" [ngClass]="{'dropdown-menu-right': true}" role="menu"  *dropdownMenu>
+                               <li *ngIf="myPost" (click)="deleteReply(reply)" role="menuitem"><a class="dropdown-item">Delete Comment</a></li>
+                             </ul>
+                        </span>
+                    </div>
+            </li>
+            <li class="list-group-item title" style="list-style-type: none; padding-left: 10%; display: flex; flex-direction: row;" *ngIf="comment.replying">
+                <img class="profile-picture mr-2" src="{{authService.currentUser.photoUrl || '../../../assets/user.png'}}" alt="">
+                <div style="width: 60%; border-radius: 50rem; border-width: 1px; border-style: solid;">
+                    <input type="text" style="background-color: transparent; margin-left: 20px; margin-right: 20px;
+                    border-width: 0px; height: 100%; width: 94%; padding: 10px;" 
+                      [(ngModel)]="comment.replyText"
+                      placeholder="Reply..."
+                      >
+                  </div>
+                <span (click)="postReply(comment)" style="color: crimson; margin-left: 10px; cursor: pointer; display: inline-flex; align-items: center;">
+                    Post
+                </span>
+                <a (click)="toggleReplying(comment)" style="cursor: pointer; margin-left: auto; display: inline-flex; align-items: center;">
+                    <i-feather name="x"></i-feather>
+                </a>
             </li>
         </div>
     </div>

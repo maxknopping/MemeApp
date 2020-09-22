@@ -357,6 +357,33 @@ namespace MemeApp.API.Controllers
 
             if (await repo.SaveAll()) {
                 var messageToReturn = mapper.Map<MessageForListDto>(fullMessage);
+                var notificationCount = await repo.HasNewNotifications(message.RecipientId);
+                var userRecipient = await repo.GetUser(message.RecipientId);
+                var sender = await repo.GetUser(userId);
+
+                if (userRecipient.PushToken != null) {
+                        var client = new PushClient();
+                        var pushNotification = new PushMessage(userRecipient.PushToken, 
+                            data: new {type = "groupMessage"},
+                            title: "MemeClub", 
+                            body: $"@{sender.Username} {notification.Message}: Post by user: {post.User.Username}", 
+                            sound: PushSounds.Default, 
+                            badge: notificationCount,
+                            displayInForeground: true
+                        );
+
+                        try
+                        {
+                            await client.Publish(pushNotification);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
+                    }
+
+
+
                 return CreatedAtRoute("GetMessage", new {id = fullMessage.Id}, messageToReturn);
             }
 
