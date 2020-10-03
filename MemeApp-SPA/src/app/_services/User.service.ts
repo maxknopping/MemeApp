@@ -88,7 +88,7 @@ export class UserService {
     return this.http.get(`${this.baseUrl}/${userId}/commentLikers/${commentId}`);
   }
 
-  geReplyLikers(replyId, userId) {
+  getReplyLikers(replyId, userId) {
     return this.http.get(`${this.baseUrl}/${userId}/replyLikers/${replyId}`);
   }
 

@@ -61,7 +61,7 @@
                             {{reply.created | timeAgo}}
                      </span>
                      <span class="bottom-line" *ngIf="reply.likes > 0">
-                         <a [routerLink]="[ '/list/', comment.id, 'commentLikers' ]">
+                         <a [routerLink]="[ '/list/', reply.id, 'replyLikers' ]">
                                 {{reply.likes}} Likes
                          </a>
                      </span>

@@ -56,6 +56,14 @@ export class FollowingListResolver implements Resolve<User[]> {
                     return of(null);
                 })
             );
+        } else if (route.params['type'] === 'replyLikers') {
+            return this.userService.getReplyLikers(route.params['username'], this.auth.decodedToken.nameid).pipe(
+                catchError(error => {
+                    this.alertify.error('Problem retreiving data');
+                    this.router.navigate(['/feed']);
+                    return of(null);
+                })
+            );
         }
 
     }

@@ -18,6 +18,12 @@
 
 
 
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none;
+}
 
 .tab-panel {
     border: 0px solid #ddd;

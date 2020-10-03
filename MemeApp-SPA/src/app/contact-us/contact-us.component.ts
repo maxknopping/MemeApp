@@ -2,11 +2,11 @@ import { Component, OnInit, Renderer2, Inject } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 
 @Component({
-  selector: 'app-privacy-policy',
-  templateUrl: './privacy-policy.component.html',
-  styleUrls: ['./privacy-policy.component.css']
+  selector: 'app-contact-us',
+  templateUrl: './contact-us.component.html',
+  styleUrls: ['./contact-us.component.css']
 })
-export class PrivacyPolicyComponent implements OnInit {
+export class ContactUsComponent implements OnInit {
 
   constructor(@Inject(DOCUMENT) private document: Document,
   private renderer: Renderer2) { }

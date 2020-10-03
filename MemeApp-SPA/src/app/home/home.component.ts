@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject, Renderer2 } from '@angular/core';
 import { AuthService } from '../_services/auth.service';
 import { AlertifyService } from '../_services/alertify.service';
 import { User } from '../_models/User';
+import { Router } from '@angular/router';
+import { DOCUMENT } from '@angular/common';
+import {ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-home',
@@ -18,10 +21,26 @@ export class HomeComponent implements OnInit {
   tempPassword = '';
   newPassword = '';
   confirmNewPassword = '';
+  model: any = {};
 
-  constructor(private auth: AuthService, private alertify: AlertifyService) { }
+  constructor(private auth: AuthService, private alertify: AlertifyService, private router: Router,  
+    @Inject(DOCUMENT) private document: Document, private cdref: ChangeDetectorRef,
+  private renderer: Renderer2) { }
 
   ngOnInit() {
+    this.renderer.setStyle(this.document.body, 'background-color', 'black');
+
+  }
+
+  ngAfterContentChecked() {
+    this.cdref.detectChanges();
+    
+     }
+
+  calculateMargin() {
+    var footer = document.getElementsByClassName('revealFooter');
+    var outerHeight = footer[0].clientHeight;
+    return `${outerHeight}px`;
   }
 
   registerToggle() {
@@ -73,6 +92,26 @@ export class HomeComponent implements OnInit {
 
   cancelRegisterMode(registerMode: boolean) {
     this.registerMode = registerMode;
+  }
+
+  login() {
+    this.auth.login(this.model).subscribe(
+      next => {
+        this.alertify.success('logged in successfully');
+      },
+      error => {
+        this.alertify.error('failed to log in');
+      }, () => {
+
+        this.renderer.setStyle(this.document.body, 'background-color', 'white');
+        this.router.navigate(['/feed']);
+      }
+    );
+    this.username = localStorage.getItem('username');
+  }
+
+  loggedIn() {
+    return this.auth.loggedIn();
   }
 
 }

@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { AuthService } from '../_services/auth.service';
 import { AlertifyService } from '../_services/alertify.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRouteSnapshot } from '@angular/router';
 import { UserService } from '../_services/User.service';
+import { HomeComponent } from '../home/home.component';
 
 interface NotificationCount {
   count: number;
@@ -33,12 +34,14 @@ export class NavComponent implements OnInit {
 
   ngOnInit() {
     this.authService.currentPhotoUrl.subscribe(photoUrl => this.photoUrl = photoUrl);
+    if (this.loggedIn()) {
     this.user.hasNewMessages(this.authService.decodedToken.nameid).subscribe((res: NotificationCount) => {
       this.messageCount = res.count;
     });
     this.user.hasNewNotifications(this.authService.decodedToken.nameid).subscribe((res: NotificationCount) => {
       this.notificationCount = res.count;
     });
+  }
   }
 
   login() {

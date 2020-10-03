@@ -865,7 +865,7 @@ namespace MemeApp.API.Controllers
         }
 
         [HttpPost("{id}/reply/like/{recipientId}/{postId}/{commentId}")]
-        public async Task<IActionResult> Like(int id, int recipientId, int postId, int commentId) {
+        public async Task<IActionResult> LikeReply(int id, int recipientId, int postId, int commentId) {
             if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
                 return Unauthorized();
             }

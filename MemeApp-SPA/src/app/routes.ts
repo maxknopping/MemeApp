@@ -33,13 +33,17 @@ import { TermsAndConditionsComponent } from './Terms and privacy/terms-and-condi
 import { PrivacyPolicyComponent } from './Terms and privacy/privacy-policy/privacy-policy.component';
 import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
 import { BannedComponentComponent } from './banned-component/banned-component.component';
+import { AboutUsComponent } from './about-us/about-us.component';
+import { ContactUsComponent } from './contact-us/contact-us.component';
 
 export const appRoutes: Routes = [
     {path: '', component: HomeComponent},
     {path: 'post/:postId', component: SinglePostComponent, resolve: {post: SinglePostResolver}},
+    {path: 'contact', component: ContactUsComponent},
     {path: 'terms', component: TermsAndConditionsComponent},
     {path: 'privacy', component: PrivacyPolicyComponent},
     {path: 'banned', component: BannedComponentComponent},
+    {path: 'about', component: AboutUsComponent},
     {
         path: '',
         runGuardsAndResolvers: 'always',

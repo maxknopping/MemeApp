@@ -68,6 +68,16 @@ const List = ({
                     setList(response.data);
                 }
             ).catch(error => console.log(error));
+        } else if (listType === 'replyLikers') {
+            userService.get(`/${state.id}/replyLikers/${identifier}`, {
+                headers: {
+                    'Authorization': `Bearer ${state.token}`
+                }
+            }).then(
+                function (response) {
+                    setList(response.data);
+                }
+            ).catch(error => console.log(error)); 
         }
     }
 

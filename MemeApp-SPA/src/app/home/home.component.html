@@ -1,5 +1,59 @@
+<div class="revealFooter fixed-bottom">
+  <div class="py-2">
+    <div class="container">
+      <div class="row" style="display: flex; justify-content: center;" >
+        <div class="col-4 col-sm-3">
+          <a class="footer-text" style="color: white;" [routerLink]="['/contact']">Contact Us</a> <hr>
+          <a class="footer-text" style="color: white;" [routerLink]="['/about']">About Us</a>
+        </div>
+        <div class="col-4 col-sm-3">
+          <a class="footer-text" style="color: white;" [routerLink]="['/terms']">Terms and Conditions</a> <hr>
+          <a class="footer-text" style="color: white;" [routerLink]="['/privacy']">Privacy Policy</a>
+        </div>
+        <div class="col-4 col-sm-3">
+          <br>
+          <span class="footer-text" style="color: white;">&copy; Copyright Memeclub Inc. 2020</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div [ngStyle]="{'margin-bottom': calculateMargin()}" (window:resize)="calculateMargin()" style="background-color: black" class="main-container">
 <div class="container mt-5">
-    <div *ngIf="!registerMode && !forgotUsernameMode && !forgotPasswordMode && !tempPasswordMode" style="text-align: center">
+    <div *ngIf="!registerMode && !forgotUsernameMode && !forgotPasswordMode && !tempPasswordMode" class="col-sm-6 ml-auto mr-auto" style="text-align: center">
+      <img class="logo" src="{{'../../assets/MemeClub.png'}}">
+      <form  #loginForm="ngForm" class="my-2 my-lg-0" (ngSubmit)="login()">
+        <div class="logo" style="width: 100%; margin-top: 15px; margin-bottom: 15px; border-color: gray !important; border-radius: 50rem; border-width: 1px; border-style: solid; -webkit-animation-delay: .2s; animation-delay: .2s;">
+          <input type="text" class="logo textInputLogin" style="background-color: transparent; color: gray !important; margin-left: 20px; margin-right: 20px;
+          border-width: 0px; height: 100%; width: 94%; padding: 10px; -webkit-animation-delay: .2s; animation-delay: .2s;" 
+            [(ngModel)]="model.username"
+            placeholder="Username..."
+            name="username"
+            required
+            >
+        </div>
+        <div class="logo" style="width: 100%; margin-top: 15px; margin-bottom: 15px; border-color: gray !important; border-radius: 50rem; border-width: 1px; border-style: solid; -webkit-animation-delay: .4s; animation-delay: .4s;">
+          <input type="password" class="logo textInputLogin" style="background-color: transparent; color: gray !important; margin-left: 20px; margin-right: 20px;
+          border-width: 0px; height: 100%; width: 94%; padding: 10px; -webkit-animation-delay: .4s; animation-delay: .4s;" 
+            [(ngModel)]="model.password"
+            placeholder="Password..."
+            name="password"
+            required
+            >
+        </div>
+        <button [disabled]="!loginForm.valid" style="background-color: crimson; color: white; border-radius: 10px; margin-bottom: 15px; height: 2.87rem; font-size: large; animation-delay: .6s; -webkit-animation-delay: .6s;" class="btn my-2 my-sm-0 logo" type="submit">Login</button>
+        <p class="logo p" style="margin-top: 15px; animation-delay: .6s; -webkit-animation-delay: .6s;">
+          <span style="color: white;">Don't have an account?</span>
+          <span (click)="registerToggle()" style="color: crimson; cursor: pointer;"><a>{{' '}}Sign Up</a></span>
+          <br>
+          <span (click)="forgotUsernameToggle()" style="color: crimson; cursor: pointer;">Forgot Username? {{' '}}</span>
+          <span (click)="forgotPasswordToggle()" style="color: crimson; cursor: pointer;">Forgot Password?</span>
+        </p>
+      </form>
+
+
+      <!--
       <h1>MemeClub</h1>
       <p style="margin-bottom: 24px;" class="lead">The meme social media.</p>
       <div class="text-center" style="display: flex; flex-direction: column; align-items: center;">
@@ -7,6 +61,8 @@
         <button class="btn btn-info btn-md mb-2" (click)="forgotUsernameToggle()">Forgot Username?</button>
         <button class="btn btn-success btn-md mb-2" (click)="forgotPasswordToggle()">Forgot Password?</button>
       </div>
+    -->
+  
     </div>
   
     <div *ngIf="registerMode" class="container mt-5">
@@ -22,7 +78,7 @@
     <div class="row justify-content-center">
       <div class="col-4">
         <div class="form-group">
-          <h2>Email</h2>
+          <h2 style="color: white;">Email</h2>
           <input name="email" class="form-control" id="email-input" [(ngModel)]="email">
         </div>
         <div class="text-center">
@@ -38,7 +94,7 @@
     <div class="row justify-content-center">
       <div class="col-4">
         <div class="form-group">
-          <h2>Username</h2>
+          <h2 style="color: white;">Username</h2>
           <input name="username" class="form-control" id="username-input" [(ngModel)]="username">
         </div>
         <div class="text-center">
@@ -53,16 +109,16 @@
     <div class="row justify-content-center">
       <div class="col-4">
         <div class="form-group">
-          <h3>Temporary Password From Email</h3>
+          <h3 style="color: white;">Temporary Password From Email</h3>
           <input name="tempPassword" type="password" class="form-control" id="tempPassword-input" [(ngModel)]="tempPassword">
         </div>
         <div class="form-group">
-          <h3>New Password</h3>
+          <h3 style="color: white;">New Password</h3>
           <input name="newPassword" type="password" class="form-control" id="newPassword-input" [(ngModel)]="newPassword">
           <p *ngIf="newPassword.length < 8" style="color: crimson;">Password must be at least 8 characters</p>
         </div>
         <div class="form-group">
-          <h2>Confirm Password</h2>
+          <h2 style="color: white;">Confirm Password</h2>
           <input name="confirmPassword" type="password" class="form-control" id="confirmPassword-input" [(ngModel)]="confirmNewPassword">
           <p *ngIf="newPassword !== confirmNewPassword" style="color: crimson;">Passwords must match</p>
         </div>
@@ -73,3 +129,5 @@
       </div>
     </div>
   </div>
+</div>
+

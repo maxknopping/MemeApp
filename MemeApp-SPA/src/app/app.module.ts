@@ -72,13 +72,15 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
 import { ResizableModule } from 'angular-resizable-element';
 import { RichTextEditorAllModule, RichTextEditorModule } from '@syncfusion/ej2-angular-richtexteditor';
 import { SafeHtmlPipe } from './_pipes/safeHtml.pipe';
+import { AboutUsComponent } from './about-us/about-us.component';
+import { ContactUsComponent } from './contact-us/contact-us.component';
 
 export function tokenGetter() {
    return localStorage.getItem('token');
 }
 
 @NgModule({
-   declarations: [
+   declarations: [		
       AppComponent,
       NavComponent,
       HomeComponent,
@@ -112,7 +114,9 @@ export function tokenGetter() {
       PostManagementComponent,
       AdminManagementComponent,
       BannedComponentComponent,
-      SafeHtmlPipe
+      SafeHtmlPipe,
+      AboutUsComponent,
+      ContactUsComponent
    ],
    imports: [
       HttpClientModule,

@@ -1,6 +1,6 @@
-<nav style="background-color: black;" class="navbar navbar-expand-lg navbar-collapse fixed-top navbar-dark">
+<nav *ngIf="loggedIn()" style="background-color: black;" class="navbar navbar-expand-lg navbar-collapse fixed-top navbar-dark">
   <div class="container-fluid">
-      <img class="logo" src="{{'../../assets/MemeClub.png'}}">
+      <img *ngIf="loggedIn()" class="logo" src="{{'../../assets/MemeClub.png'}}">
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" 
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" (click)="toggleCollapsed()">
         <span class="navbar-toggler-icon"></span>
@@ -51,8 +51,9 @@
 
       </div>
   
+      <!--
       <div class="navbar-collapse collapse" *ngIf="!loggedIn()" style="width: 100%; flex-direction: column;" id="navbarSupportedContent" [ngClass]="{'collapse': collapsed, 'navbar-collapse': true}">
-      <form *ngIf="!loggedIn()"  #loginForm="ngForm" class="my-2 my-lg-0 ml-auto form-inline" (ngSubmit)="login()">
+      <form *ngIf="!loggedIn() && loggedIn()"  #loginForm="ngForm" class="my-2 my-lg-0 ml-auto form-inline" (ngSubmit)="login()">
         <input class="form-control mr-sm-2" type="text" name="username" 
           placeholder="Username" required [(ngModel)]="model.username">
         <input class="form-control mr-sm-2" type="password" name="password"
@@ -60,5 +61,6 @@
         <button [disabled]="!loginForm.valid" style="background-color: crimson; color: white; height: 2.87rem;" class="btn my-2 my-sm-0" type="submit">Login</button>
       </form>
     </div>
+    -->
   </div>
 </nav>

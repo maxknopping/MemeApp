@@ -1,11 +1,11 @@
-import React, {useEffect, useState, useContext} from 'react';
+import React, {useEffect, useState, useContext, useRef} from 'react';
 import { Text, View, ScrollView, TextInput, KeyboardAvoidingView, TouchableOpacity, Alert, Keyboard, Dimensions } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import userService from './../apis/user';
 import { Context } from '../context/AuthContext';
 import { FlatList } from 'react-native-gesture-handler';
 import { ListItem } from 'react-native-elements';
-import {FontAwesome} from 'react-native-vector-icons';
+import {FontAwesome, Feather} from 'react-native-vector-icons';
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
 
@@ -20,6 +20,9 @@ const Comments = ({
     const myPost = navigation.getParam('myPost');
     const [offest, setOffset] = useState(0);
     const [commentInput, changeInput] = useState('');
+    const textInput = useRef(null);
+    const [replying, setReplying] = useState(false);
+    const [replyingComment, setReplyingComment] = useState(null);
     console.log(comments);
     TimeAgo.addLocale(en)
     const timeAgo = new TimeAgo('en-US');
@@ -41,6 +44,18 @@ const Comments = ({
                         if (e.commenterId == state.id) {
                           element.liked = true;
                         }
+                    });
+                    element.replies.forEach(reply => {
+                        reply.likes = reply.likeList.length;
+                        if (reply.commenterId == state.id || myPost) {
+                            reply.deleteable = true;
+                        }
+                        reply.liked = false;
+                        reply.likeList.forEach(e => {
+                            if (e.likerId == state.id) {
+                              reply.liked = true;
+                            }
+                        });
                     });
                 });
                 setComments(response.data);
@@ -67,6 +82,18 @@ const Comments = ({
                           element.liked = true;
                         }
                     });
+                    element.replies.forEach(reply => {
+                        reply.likes = reply.likeList.length;
+                        if (reply.commenterId == state.id || myPost) {
+                            reply.deleteable = true;
+                        }
+                        reply.liked = false;
+                        reply.likeList.forEach(e => {
+                            if (e.commenterId == state.id) {
+                              reply.liked = true;
+                            }
+                        });
+                    });
                 });
                 setComments(response.data);
             }).catch(error => {
@@ -87,6 +114,25 @@ const Comments = ({
         ).catch(error => console.log(error));
     };
 
+    //comment is the reply
+    const deleteReply = (comment) => {
+        userService.delete(`/${comment.id}/deleteReply`, {
+            headers: {
+                'Authorization': `Bearer ${state.token}`
+            }
+        })
+        .then(
+            function (response) {
+                var fullComment = comments.find(item => item.id == comment.commentId);
+                var reply = fullComment.replies.find(item => item.id == comment.id);
+                var repliesNew = fullComment.replies.filter(item => item.id !== reply.id);
+                fullComment.replies = repliesNew;
+                const old = comments.filter((item) => item.id !== comment.commentId);
+                setComments([...old, fullComment]);
+            }
+        ).catch(error => console.log(error));
+    };
+
     const likeComment = (comment) => {
         userService.post(`/${state.id}/comment/like/${comment.id}/${postId}`, {} , {
             headers: {
@@ -102,6 +148,27 @@ const Comments = ({
         ).catch(error => console.log(error));
     }
 
+    const likeReply = (comment) => {
+        userService.post(`/${state.id}/reply/like/${comment.id}/${postId}/${comment.commentId}`, {} , {
+            headers: {
+                'Authorization': `Bearer ${state.token}`
+            }
+        }).then(
+            function (response) {
+                var fullComment = comments.find(item => item.id == comment.commentId);
+                var reply = fullComment.replies.find(item => item.id == comment.id);
+                reply.liked = true;
+                reply.likes++;
+                var repliesNew = fullComment.replies.filter(item => item.id !== reply.id);
+                repliesNew.push(reply);
+                fullComment.replies = repliesNew;
+                console.log(fullComment);
+                const old = comments.filter((item) => item.id !== comment.commentId);
+                setComments([...old, fullComment]);
+            }
+        ).catch(error => console.log(error));
+    }
+
     const unlikeComment = (comment) => {
         userService.post(`/${state.id}/comment/unlike/${comment.id}/${postId}`, {} , {
             headers: {
@@ -109,15 +176,38 @@ const Comments = ({
             }
         }).then(
             function (response) {
+
                 comment.liked = false;
                 comment.likes--;
                 const old = comments.filter((item) => item.id !== comment.id);
                 setComments([...old, comment]);
             }
         ).catch(error => console.log(error));
-    }
+    };
+
+    const unlikeReply = (comment) => {
+        userService.post(`/${state.id}/reply/unlike/${comment.id}/${postId}/${comment.commentId}`, {} , {
+            headers: {
+                'Authorization': `Bearer ${state.token}`
+            }
+        }).then(
+            function (response) {
+                var fullComment = comments.find(item => item.id == comment.commentId);
+                var reply = fullComment.replies.find(item => item.id == comment.id);
+                reply.liked = false;
+                reply.likes--;
+                var repliesNew = fullComment.replies.filter(item => item.id !== reply.id);
+                repliesNew.push(reply);
+                fullComment.replies = repliesNew;
+                console.log(fullComment);
+                const old = comments.filter((item) => item.id !== comment.commentId);
+                setComments([...old, fullComment]);
+            }
+        ).catch(error => console.log(error));
+    };
 
     const sendComment = (text) => {
+        console.log(replying);
         if (text !== '') {
             let comment = {postId: postId, text: text, commenterId: state.id};
             userService.post(`/comment`, comment , {
@@ -133,6 +223,25 @@ const Comments = ({
         }
     };
 
+    const sendReply = (text) => {
+        console.log('replying');
+        if (text !== '') {
+            let comment = {postId: postId, text: text, commentId: replyingComment.id, commenterId: state.id};
+            userService.post(`/reply`, comment , {
+                headers: {
+                    'Authorization': `Bearer ${state.token}`
+                }
+            }).then(
+                function(response) {
+                    getComments();
+                    changeInput('');
+                    setReplying(false);
+                    setReplyingComment(null);
+                }
+            ).catch(error => console.log(error));
+        }
+    };
+
     const onLayout = ({
         nativeEvent: { layout: { height } },
       }) => {
@@ -140,11 +249,25 @@ const Comments = ({
         setOffset(off);
       }
 
+    const onReplyPress = (comment) => {
+        if (textInput.current != null) {
+            setReplying(true);
+            setReplyingComment(comment);
+            textInput.current.focus();
+        }
+    };
+
+    const onXPress = () => {
+        setReplying(false);
+        setReplyingComment(null);
+    };
+
     return (
         <View style={{flex: 1}} onLayout={onLayout}>
         <KeyboardAvoidingView keyboardVerticalOffset={offest} behavior={Platform.OS === "ios" ? "padding" : null} style={{flex: 1}} enabled>
             <ScrollView>
                 {comments.map((comment, index) => (
+                    <>
                     <ListItem
                     key={index}
                     containerStyle={{backgroundColor: EStyleSheet.value('$backgroundColor')}}
@@ -176,6 +299,9 @@ const Comments = ({
                                 navigation.push('List', {type: 'commentLikers', identifier: comment.id})}>
                                     <Text style={styles.timeAgo}>{comment.likes} Likes</Text>
                                 </TouchableOpacity> : null}
+                            <TouchableOpacity onPress={() => onReplyPress(comment)}>
+                                <Text style={styles.timeAgo}>Reply</Text>
+                            </TouchableOpacity>
                             {comment.deleteable ?
                             <TouchableOpacity onPress={() => {
                                 Alert.alert(
@@ -197,14 +323,75 @@ const Comments = ({
                         </View>
                     }
                     />
+                    {comment.replies.map((comment, index) => (
+                        <ListItem
+                        key={comment.id}
+                        containerStyle={{backgroundColor: EStyleSheet.value('$backgroundColor'), marginLeft: 30}}
+                        leftAvatar={{source: comment.photoUrl ? {uri: comment.photoUrl} : 
+                            require('./../../assets/user.png')}}
+                        title={
+                            <View style={styles.commentWrapper}>
+                                <TouchableOpacity onPress={() => navigation.push('Profile', {username: comment.username})}>
+                                    <Text style={styles.username}>{comment.username}</Text>
+                                </TouchableOpacity>
+                                <Text style={styles.commentText}>{comment.text}</Text>
+                            </View>
+                        }
+                        chevron={
+                            !comment.liked ? 
+                                (
+                                    <TouchableOpacity onPress={() => likeReply(comment)} style={styles.touchableOpacityLike}>
+                                        <FontAwesome style={styles.likeButtonO} name="heart-o"></FontAwesome>
+                                    </TouchableOpacity>) :
+                                (
+                                    <TouchableOpacity onPress={() => unlikeReply(comment)} style={styles.touchableOpacityLike}>
+                                        <FontAwesome style={styles.likeButton} name="heart"></FontAwesome>
+                                    </TouchableOpacity>)
+                        }
+                        subtitle={
+                            <View style={styles.secondLineWrapper}>
+                                <Text style={styles.timeAgo}>{timeAgo.format(Date.parse(comment.created), 'twitter')}</Text>
+                                {comment.likes > 0 ? <TouchableOpacity onPress={() => 
+                                    navigation.push('List', {type: 'replyLikers', identifier: comment.id})}>
+                                        <Text style={styles.timeAgo}>{comment.likes} Likes</Text>
+                                    </TouchableOpacity> : null}
+                                {comment.deleteable ?
+                                <TouchableOpacity onPress={() => {
+                                    Alert.alert(
+                                        'Delete Comment',
+                                        'Are you sure you want to delete this comment?',
+                                        [
+                                          {
+                                            text: 'Cancel',
+                                            style: 'cancel',
+                                          },
+                                          {text: 'Yes', onPress: () => deleteReply(comment)},
+                                        ],
+                                        {cancelable: false},
+                                      );
+                                }}>
+                                    <FontAwesome style={styles.trashIcon} name="trash-o"/>
+                                </TouchableOpacity> : null
+                                }
+                            </View>
+                        }
+                        />
+                    ))}
+                    </>
                 ))}
             </ScrollView>
             <View style={styles.bottomBorder}>
+                {replying ? <View style={{backgroundColor: 'gray', width: '100%', padding: 10, flexDirection: 'row', alignItems: 'center'}}>
+                <Text>Replying to {replyingComment.username}'s comment</Text>
+                <TouchableOpacity onPress={() => onXPress()} style={{marginLeft: 'auto'}}>
+                    <Feather style={{fontSize: 20}} name="x"/>
+                </TouchableOpacity>
+                </View>: null}
                 <View style={styles.inputContainer}>
-                    <TextInput placeholderTextColor="gray" style={styles.input} value={commentInput} 
-                        onChangeText={(text) => changeInput(text)} onSubmitEditing={() => sendComment(commentInput)} 
+                    <TextInput ref={textInput} placeholderTextColor="gray" style={styles.input} value={commentInput} 
+                        onChangeText={(text) => changeInput(text)} onSubmitEditing={() => replying ? sendReply(commentInput) : sendComment(commentInput)} 
                         returnKeyType="send" placeholder="Leave a comment..."/>
-                    <TouchableOpacity onPress={() => sendComment(commentInput)}>
+                    <TouchableOpacity onPress={() => replying ? sendReply(commentInput) : sendComment(commentInput)}>
                         <Text style={styles.postButton}>Post</Text>
                     </TouchableOpacity>
                 </View>
@@ -267,7 +454,7 @@ const styles = EStyleSheet.create({
     timeAgo: {
         fontSize: '.75rem',
         color: 'gray',
-        marginRight: '.75rem'
+        marginRight: '1rem'
     },
     secondLineWrapper: {
         flexDirection: 'row',

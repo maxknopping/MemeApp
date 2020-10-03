@@ -39,6 +39,7 @@ import AuthSinglePost from './src/screens/AuthSinglePost';
 import Banned from './src/screens/Banned';
 import MemeMaker from './src/screens/MemeMaker';
 import SwipeNew from './src/screens/SwipeNew';
+import { Clipboard } from 'react-native'
 
 
 const theme = Appearance.getColorScheme();
@@ -263,6 +264,10 @@ if (theme === "light") {
 const App = createAppContainer(switchNavigator);
 
 const prefix = Linking.makeUrl('/');
+
+if (__DEV__) {
+  Clipboard.setString('')
+}
 
 export default () => {
   return (
