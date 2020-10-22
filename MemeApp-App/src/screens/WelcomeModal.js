@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import EStyleSheet from 'react-native-extended-stylesheet';
 import {Overlay} from 'react-native-elements';
+import { intlDateTimeFormatSupportedLocale } from "javascript-time-ago";
 
 export default class WelcomeModal extends Component {
   constructor(props) {
@@ -91,7 +92,7 @@ ftreContainer:{
 	ftreDescription:{
 		color:'white',
         fontSize:15,
-		marginRight:20,
+		    marginRight:20,
         marginLeft:20,
         marginBottom: 10
 	},

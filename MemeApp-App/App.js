@@ -39,10 +39,20 @@ import AuthSinglePost from './src/screens/AuthSinglePost';
 import Banned from './src/screens/Banned';
 import MemeMaker from './src/screens/MemeMaker';
 import SwipeNew from './src/screens/SwipeNew';
-import { Clipboard } from 'react-native'
+import { Clipboard, Text, TextInput } from 'react-native';
+import * as Analytics from 'expo-firebase-analytics';
 
 
 const theme = Appearance.getColorScheme();
+
+Text.defaultProps = Text.defaultProps || {};
+Text.defaultProps.allowFontScaling = false;
+
+Text.defaultProps = {};
+Text.defaultProps.maxFontSizeMultiplier = 1.0;
+
+TextInput.defaultProps = {};
+TextInput.defaultProps.maxFontSizeMultiplier = 1.0;
 
 const authFlow = {screen: createStackNavigator({
   SignIn: SignIn,
@@ -251,6 +261,7 @@ const styles = EStyleSheet.create({
   backIcon: {
     fontSize: '1.85rem',
     marginLeft: '.85rem',
+    paddingRight: '1rem',
     color: '$textColor'
   }
 });
@@ -269,11 +280,26 @@ if (__DEV__) {
   Clipboard.setString('')
 }
 
+function getActiveRouteName(navigationState) {
+  if (!navigationState) return null;
+  const route = navigationState.routes[navigationState.index];
+  // Parse the nested navigators
+  if (route.routes) return getActiveRouteName(route);
+  return route.routeName;
+}
+
 export default () => {
   return (
     <AppearanceProvider>
       <AuthProvider>
-        <App theme={theme} uriPrefix={prefix} ref={(navigator) => {setNavigator(navigator)}}/>
+        <App onNavigationStateChange={(prevState, currentState) => {
+      const currentScreen = getActiveRouteName(currentState);
+      const prevScreen = getActiveRouteName(prevState);
+      if (prevScreen !== currentScreen) {
+        // Update Firebase with the name of your screen
+        Analytics.setCurrentScreen(currentScreen);
+      }
+    }} theme={theme} uriPrefix={prefix} ref={(navigator) => {setNavigator(navigator)}}/>
       </AuthProvider>
     </AppearanceProvider>
   );

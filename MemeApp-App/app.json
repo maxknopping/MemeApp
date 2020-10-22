@@ -10,7 +10,7 @@
       "ios",
       "web"
     ],
-    "version": "1.0.7",
+    "version": "1.0.8",
     "orientation": "portrait",
     "icon": "/Users/maxknopping/Desktop/MemeApp/MemeApp-App/assets/meme_club_logo.png",
     "splash": {
@@ -26,9 +26,10 @@
       "**/*"
     ],
     "ios": {
+      "googleServicesFile": "./GoogleService-Info.plist",
       "supportsTablet": false,
       "bundleIdentifier": "co.memeclub",
-      "buildNumber": "2.0.7",
+      "buildNumber": "2.0.8",
       "infoPlist": {
         "NSAppTransportSecurity" : {
           "NSAllowsLocalNetworking": true,
@@ -44,6 +45,20 @@
       },
       "config": {
         "usesNonExemptEncryption": false 
+      }
+    },
+    "web": {
+      "config": {
+        "firebase": {
+          "apiKey": "AIzaSyCpZC1FLophvxbbGMUGa6OMRIK4wTwScDI",
+          "authDomain": "memeclub-8ad37.firebaseapp.com",
+          "databaseURL": "https://memeclub-8ad37.firebaseio.com",
+          "projectId": "memeclub-8ad37",
+          "storageBucket": "memeclub-8ad37.appspot.com",
+          "messagingSenderId": "537604362525",
+          "appId": "1:537604362525:web:59ffc3daf041107d9591f4",
+          "measurementId": "G-QK77Y6ZSTL"
+        }
       }
     }
   }

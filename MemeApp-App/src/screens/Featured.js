@@ -90,8 +90,7 @@ const Featured = ({
         });
     };
 
-    const description = "This is the featured page. Here you will see popular posts from the community." +
-        " Next, click on the sword icon in the top right corner. This will take you to the home page for Joust mode.";
+    const description = "This is the featured page. Here you will see popular posts from the community.";
 
     return (
         <>

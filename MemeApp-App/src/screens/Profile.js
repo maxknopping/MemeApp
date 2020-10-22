@@ -299,7 +299,7 @@ const Profile = ({
                 <View style={{flexDirection: 'row', flex: 1}}>
                 {followButton === 'Follow' ? <Button containerStyle={{width: '90%'}} buttonStyle={{backgroundColor: EStyleSheet.value('$crimson'), 
                     borderRadius: EStyleSheet.value('.8rem')}} style={styles.followButton} title={followButton} onPress={follow}/> :
-                    followButton === 'Edit Profile' ? <Button buttonStyle={{backgroundColor: 'gray', 
+                    followButton === 'Edit Profile' ? <Button buttonStyle={{backgroundColor: EStyleSheet.value('$crimson'), 
                     borderRadius: EStyleSheet.value('.8rem')}} containerStyle={{width: '100%'}} style={styles.followButton} title={followButton} onPress={() => {
                         navigation.navigate('EditProfile', {username: state.username});
                     }}/> :

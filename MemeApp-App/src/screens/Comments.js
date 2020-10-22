@@ -409,7 +409,7 @@ const styles = EStyleSheet.create({
     },
     bottomBorder: {
         borderTopWidth: '.03rem',
-        borderColor: 'gray',
+        borderColor: 'gray',            
         backgroundColor: '$backgroundColor'
     },
     input: {

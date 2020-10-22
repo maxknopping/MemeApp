@@ -76,6 +76,17 @@ const UploadPost = ({
         }
       };
 
+
+      renderOverlay = () => {
+        return (
+          <View style={styles.overlay}>
+            <Image
+              style={styles.overlayHeart}
+            />
+          </View>
+        );
+      }
+
       const description = "This is the Upload page. Here you can choose a meme to upload. When creating your post, if you opt to include it in Joust and Swipe, it will be shown to other users in Joust and Swipe modes.";
 
 
@@ -109,7 +120,7 @@ const UploadPost = ({
           <View>
                 <WelcomeModal pagekey={"UploadPost"} title={"Upload"} description={description}/>
           </View>
-          <View>
+          <View style={{flexDirection: 'row', justifyContent: 'space-around', width: '100%', flex: 1}}>
           <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center',}} onPress={takePhoto}>
               <Text style={styles.text}>
                 Take

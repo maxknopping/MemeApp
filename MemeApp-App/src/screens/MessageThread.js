@@ -132,6 +132,17 @@ const MessageThread = ({
         return array;
     }
 
+    function convertUTCDateToLocalDate(date) {
+        var newDate = new Date(date.getTime()+date.getTimezoneOffset()*60*1000);
+    
+        var offset = date.getTimezoneOffset() / 60;
+        var hours = date.getHours();
+    
+        newDate.setHours(hours - offset);
+    
+        return newDate;   
+    }
+
     const styleOfCenterDates = {
         flavour: 'long',
         gradation: [
@@ -311,7 +322,7 @@ const MessageThread = ({
     };
 
     const renderTimeText = (message, i) => {
-        var d = new Date(message.messageSent);
+        var d = convertUTCDateToLocalDate(new Date(message.messageSent));
         var time = d.toLocaleTimeString(en);
         var timeToReturn = time.substring(0, time.length - 6).concat(` ${time.substring(time.length - 2)}`);
         return <Text style={[styles.timeAgo, message.senderId == state.id ? {alignSelf: 'flex-end'}:
@@ -326,7 +337,7 @@ const MessageThread = ({
                 {messages.map((message, i) => (
                     <View key={i}>
                     {i == 0 || Date.parse(messages[i-1].messageSent) - Date.parse(message.messageSent)  < -1 * 2 * 60 * 60 * 1000 ? 
-                        <Text style={{color: 'gray', alignSelf: 'center', marginBottom: 10}}>{timeAgo.format(Date.parse(message.messageSent), styleOfCenterDates)}</Text>: null}
+                        <Text style={{color: 'gray', alignSelf: 'center', marginBottom: 10}}>{timeAgo.format(convertUTCDateToLocalDate(new Date(message.messageSent)), styleOfCenterDates)}</Text>: null}
                     <View key={i} style={renderchatBubbleStyles(message, i)}>
                         {message.post ? (
                             <TouchableOpacity onPress={() => navigation.push('SinglePost', {postId: message.post.id})}>

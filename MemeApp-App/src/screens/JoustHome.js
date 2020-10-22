@@ -11,6 +11,7 @@ import Constants from 'expo-constants';
 import PostCard from './PostCard';
 import WelcomeModal from './WelcomeModal';
 import Image from 'react-native-image-progress';
+import * as Font from 'expo-font';
 
 
 const JoustHome = ({
@@ -24,6 +25,8 @@ const JoustHome = ({
     const [loadingMore, setLoadingMore] = useState(false);
     const flatList = useRef(null);
     const index = useRef(0);
+    Font.loadAsync({Tinder: require('./../../assets/fonts/ChaletNewYorkNineteenSeventy.ttf')});
+    Font.loadAsync({Montserrat: require('./../../assets/fonts/Montserrat-Black.ttf')});
 
     const segmentClicked = (index) => {
         setActiveIndex(index);
@@ -70,6 +73,7 @@ const JoustHome = ({
         }
 
         load();
+
     }, []);
 
     const loadPost = (index) => {
@@ -114,35 +118,39 @@ const JoustHome = ({
         ListHeaderComponentStyle={{flex: 1}}
         ListHeaderComponent={(
             <View style={{flex: 1}}>
-                <Button 
-                    linearGradientProps={{
-                        colors: ['gold', '#A2790E'],
-                        start: { x: .6, y: .75 },
-                        end: { x: 1, y: 1 },
+                <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: '5%'}}>
+                    <Button 
+                        linearGradientProps={{
+                            colors: ['#D4AF37', '#ffffff'],
+                            start: { x: .4, y: .4 },
+                            end: { x: 1, y: 1 },
 
-                    }}
-                    buttonStyle={{borderRadius: EStyleSheet.value('.8rem')}} 
-                    titleStyle={{color: 'black'}}
-                    style={[styles.followButton, {marginTop: '5%'}]} 
-                    title="Start Jousting"
-                    onPress={() => {
-                        navigation.navigate('Joust');
-                    }}
-                    />
-                <Button 
-                    linearGradientProps={{
-                        colors: ['#FD3177', '#FE6D61'],
-                        start: { x: .5, y: .75 },
-                        end: { x: 1, y: 1 },
+                        }}
+                        buttonStyle={{borderRadius: EStyleSheet.value('.8rem'), padding: 30}} 
+                        titleStyle={{color: 'black'}}
+                        style={[styles.followButton, {marginTop: '15%', marginRight: 15}]} 
+                        title="Joust"
+                        titleStyle={{fontFamily: Font.isLoaded('Tinder') ? 'Tinder': 'Arial', fontSize: 30, color: 'black'}}
+                        onPress={() => {
+                            navigation.navigate('Joust');
+                        }}
+                        />
+                    <Button 
+                        linearGradientProps={{
+                            colors: ['#FD3177', '#FE6D61'],
+                            start: { x: .4, y: .4 },
+                            end: { x: 1, y: 1 },
 
-                    }}
-                    buttonStyle={{borderRadius: EStyleSheet.value('.8rem')}} 
-                    style={styles.followButton} 
-                    title="Start Swiping"
-                    onPress={() => {
-                        navigation.navigate('Swipe');
-                    }}
-                    />
+                        }}
+                        buttonStyle={{borderRadius: EStyleSheet.value('.8rem'), padding: 30}} 
+                        style={[styles.followButton, {marginTop: '15%', marginLeft: 15}]} 
+                        title="Swipe"
+                        titleStyle={{fontFamily: Font.isLoaded('Tinder') ? 'Tinder': 'Arial', fontSize: 30}}
+                        onPress={() => {
+                            navigation.navigate('Swipe');
+                        }}
+                        />
+                </View>
                 <Text style={styles.headerLabel}>Top Ranked Posts</Text>
                 <View style={styles.tabView}>
                     <NativeButton onPress={() => segmentClicked(0)} active={activeIndex === 0} transparent>

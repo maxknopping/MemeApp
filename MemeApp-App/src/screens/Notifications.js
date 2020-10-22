@@ -58,6 +58,17 @@ const Notifications = ({
             });
     }, [refreshing]);
 
+    function convertUTCDateToLocalDate(date) {
+        var newDate = new Date(date.getTime()+date.getTimezoneOffset()*60*1000);
+    
+        var offset = date.getTimezoneOffset() / 60;
+        var hours = date.getHours();
+    
+        newDate.setHours(hours - offset);
+    
+        return newDate;   
+    }
+
 
     return (
         <ScrollView style={{flex: 1}} refreshControl={
@@ -85,7 +96,7 @@ const Notifications = ({
                     </>
                 }
                 subtitle={
-                    <Text style={styles.timeAgo}>{timeAgo.format(Date.parse(item.created), 'twitter')}</Text>
+                    <Text style={styles.timeAgo}>{timeAgo.format(convertUTCDateToLocalDate(new Date(item.created)), 'twitter')}</Text>
                 }
                 containerStyle={styles.containerStyle}
                 

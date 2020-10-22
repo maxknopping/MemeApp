@@ -24,6 +24,15 @@ const MemeMaker = ({
     const url = navigation.getParam('url');
     const [modalVisible, setModalVisible] = useState(false); 
     Font.loadAsync({Impact: require('./../../assets/fonts/impact.ttf')});
+    Font.loadAsync({Montserrat: require('./../../assets/fonts/Montserrat-Black.ttf')});
+    Font.loadAsync({MontBold: require('./../../assets/fonts/Montserrat-Bold.ttf')});
+    Font.loadAsync({LuckiestGuy: require('./../../assets/fonts/LuckiestGuy-Regular.ttf')});
+    Font.loadAsync({PermanentMarker: require('./../../assets/fonts/PermanentMarker-Regular.ttf')});
+    Font.loadAsync({Piedra: require('./../../assets/fonts/Piedra-Regular.ttf')});
+    Font.loadAsync({PressStart: require('./../../assets/fonts/PressStart2P-Regular.ttf')});
+    Font.loadAsync({Roboto: require('./../../assets/fonts/Roboto-Black.ttf')});
+    Font.loadAsync({RobotoBold: require('./../../assets/fonts/Roboto-Bold.ttf')});
+    Font.loadAsync({SpecialElite: require('./../../assets/fonts/SpecialElite-Regular.ttf')});
     const [fontValue, setFontValue] = useState('Arial');
     const [currentColor, setCurrentColor] = useState('#000000');
     const [fontSize, setFontSize] = useState(14);
@@ -98,6 +107,25 @@ const MemeMaker = ({
         nextButtonClicked.current = true;
     };
 
+    const onClickBold = () => {
+        switch (fontValue) {
+            case 'MontBold':
+                setFontValue('Montserrat');
+                break;
+            case 'Montserrat':
+                setFontValue('MontBold');
+                break;
+            case 'RobotoBold':
+                setFontValue('Roboto');
+                break;
+            case 'Roboto':
+                setFontValue('RobotoBold');
+                break;
+        }
+        setIsBold(!isBold);
+
+    }
+
     useEffect(() => {
         if (nextButtonClicked.current) {
             onSavePicture();
@@ -154,7 +182,7 @@ const MemeMaker = ({
 
 
             <Overlay isVisible={modalVisible} height={'auto'} onBackdropPress={() => setModalVisible(false)} animationType={'fade'} 
-                overlayStyle={{borderRadius: 30}}
+                overlayStyle={{borderRadius: 30, width: '100%'}}
                 children={
                 <View>
                     <TextInput style={[ isBold ? {fontWeight: 'bold'} : null, {
@@ -168,7 +196,7 @@ const MemeMaker = ({
                         
                         />
                     <View style={{flexDirection: 'row', justifyContent: 'center', paddingTop: 5}}>
-                        <TouchableOpacity onPress={() => setIsBold(!isBold)} style={[{marginRight: 15, alignSelf: 'center', 
+                        <TouchableOpacity onPress={() => onClickBold()} style={[{marginRight: 15, alignSelf: 'center', 
                             paddingHorizontal: 6, borderRadius: 5}, isBold ? {backgroundColor: 'lightgray'} : null]}>
                             <Text style={{fontWeight: 'bold', fontSize: 25}}>B</Text>
                         </TouchableOpacity>
@@ -176,22 +204,38 @@ const MemeMaker = ({
                                 defaultValue={fontValue}
                                 labelStyle={{fontSize: 20}}
                                 placeholder="Arial" 
-                                containerStyle={{height: 50, width: 100}}
+                                containerStyle={{height: 50, width: 150}}
                                 onChangeItem={item => setFontValue(item.value)}
                                 items={[
                                     {label: 'Arial', value: 'Arial'},
                                     {value: 'Impact', icon: () => <Text style={{fontFamily: 'Impact', fontSize:  20}}>Impact</Text>},
+                                    {value: isBold ? 'Montserrat' : 'MontBold', icon: () => <Text style={{fontFamily: isBold ? 'Montserrat' : 'MontBold' , fontSize:  20}}>Montserrat</Text>},
+                                    {value: 'LuckiestGuy', icon: () => <Text style={{fontFamily: 'LuckiestGuy', fontSize:  20}}>Luckiest Guy</Text>},
+                                    {value: 'PermanentMarker', icon: () => <Text style={{fontFamily: 'PermanentMarker', fontSize:  20}}>Permanent Marker</Text>},
+                                    {value: 'Piedra', icon: () => <Text style={{fontFamily: 'Piedra', fontSize:  20}}>Piedra</Text>},
+                                    {value: 'PressStart', icon: () => <Text style={{fontFamily: 'PressStart', fontSize:  20}}>Press Start</Text>},
+                                    {value: isBold ? 'Roboto' : 'RobotoBold', icon: () => <Text style={{fontFamily: isBold ? 'Roboto' : 'RobotoBold', fontSize:  20}}>Roboto</Text>},
+                                    {value: 'SpecialElite', icon: () => <Text style={{fontFamily: 'SpecialElite', fontSize:  20}}>Special Elite</Text>},
                                 ]}
                             >
                             </DropDownPicker>
                             <DropDownPicker
                                 defaultValue={currentColor}
-                                containerStyle={{height: 50, width: 60, borderWidth: 0}}
+                                containerStyle={{height: 50, width: 60, borderWidth: 0, zIndex: 1000}}
+                                dropDownStyle={{zIndex: 99999999}}
                                 onChangeItem={item => setCurrentColor(item.value)}
+                                style={{zIndex: 9999999}}
                                 items={[
                                     {value: '#000000', icon: () => <View style={{width: 20, height: 20, backgroundColor: '#000000'}}></View>},
                                     {value: '#ffffff', icon: () => <View style={{width: 20, height: 20, borderWidth: 1, backgroundColor: '#ffffff'}}></View>},
                                     {value: '#ff3333', icon: () => <View style={{width: 20, height: 20, backgroundColor: '#ff3333'}}></View>},
+                                    {value: '#ff7f00', icon: () => <View style={{width: 20, height: 20, backgroundColor: '#ff7f00'}}></View>},
+                                    {value: '#ffff00', icon: () => <View style={{width: 20, height: 20, backgroundColor: '#ffff00'}}></View>},
+                                    {value: '#00ff00', icon: () => <View style={{width: 20, height: 20, backgroundColor: '#00ff00'}}></View>},
+                                    {value: '#0000ff', icon: () => <View style={{width: 20, height: 20, backgroundColor: '#0000ff'}}></View>},
+                                    {value: '#2e2b5f', icon: () => <View style={{width: 20, height: 20, backgroundColor: '#2e2b5f'}}></View>},
+                                    {value: '#8b00ff', icon: () => <View style={{width: 20, height: 20, backgroundColor: '#8b00ff'}}></View>},
+                                    
                                 ]}
                             >
                             </DropDownPicker>
@@ -211,7 +255,7 @@ const MemeMaker = ({
                             >
                             </DropDownPicker>
                     </View>
-                    <TouchableOpacity onPress={() => saveSettings()} style={{alignSelf: 'center', marginTop: 10}}>
+                    <TouchableOpacity onPress={() => saveSettings()} style={{alignSelf: 'center', marginTop: 10, zIndex: -1}}>
                         <Feather style={{fontSize: 30}} name="check-circle"></Feather>
                     </TouchableOpacity>
                 </View>

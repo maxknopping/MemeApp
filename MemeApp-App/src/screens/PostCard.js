@@ -1,6 +1,6 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useEffect, useContext, useRef} from 'react';
 import { Text, View, TouchableOpacity, Dimensions, TextInput, ScrollView, 
-    ActivityIndicator, Alert, TouchableWithoutFeedback, Share, Platform, Image as RNImage } from 'react-native';
+    ActivityIndicator, Alert, TouchableWithoutFeedback, Share, Platform, Image as RNImage, Animated } from 'react-native';
 import {Overlay, ListItem, CheckBox, Button} from 'react-native-elements';
 import {Context} from './../context/AuthContext';
 import userService from './../apis/user';
@@ -13,6 +13,7 @@ import * as Permissions from 'expo-permissions';
 import getPermissions from './../helpers/getPermissions';
 import Image from 'react-native-image-progress';
 import * as Progress from 'react-native-progress';
+import {MaterialCommunityIcons} from 'react-native-vector-icons'
 
 
 const PostCard = ({
@@ -34,6 +35,7 @@ const PostCard = ({
 
     TimeAgo.addLocale(en)
     const timeAgo = new TimeAgo('en-US');
+    var animatedValue = useRef(new Animated.Value(0));
 
     useEffect(() => {
         setPost(post);
@@ -49,6 +51,41 @@ const PostCard = ({
             setMyPost(true);
         }
     }, []);
+
+    function convertUTCDateToLocalDate(date) {
+        var newDate = new Date(date.getTime()+date.getTimezoneOffset()*60*1000);
+    
+        var offset = date.getTimezoneOffset() / 60;
+        var hours = date.getHours();
+    
+        newDate.setHours(hours - offset);
+    
+        return newDate;   
+    }
+
+    const renderOverlay = () => {
+
+        const imageStyles = [
+            styles.heartOverlay,
+            {
+              opacity: animatedValue.current,
+              transform: [
+                {
+                  scale: animatedValue.current.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [0.7, 1.5],
+                  }),
+                },
+              ],
+            },
+          ];
+      
+        return (
+          <Animated.View style={styles.heartOverlayContainer}>
+            <Animated.Image style={imageStyles} source={require('./../../assets/heart.png')}/>
+          </Animated.View>
+        );
+      }
 
     const getWatermarkedImage = async () => {
             console.log('started');
@@ -86,6 +123,10 @@ const PostCard = ({
                 function (response) {
                     setLiked(true);
                     setLikes(likes + 1);
+                    Animated.sequence([
+                        Animated.spring(animatedValue.current, { toValue: 1}),
+                        Animated.spring(animatedValue.current, { toValue: 0}),
+                      ]).start();
                 }
             ).catch(error => console.log(error));
     };
@@ -294,6 +335,7 @@ const PostCard = ({
                 <TouchableWithoutFeedback onPress={() => handleDoubleTap()}>
                     <Image indicator={Progress.Bar} indicatorProps={{color: EStyleSheet.value('$crimson')}} style={{width: width, height: width}} source={{uri: postState.url}}/>
                 </TouchableWithoutFeedback>
+                {renderOverlay()}
                 <View style={styles.iconsContainer}>
                     {!liked ? 
                         (
@@ -441,8 +483,8 @@ const PostCard = ({
                     <TouchableOpacity onPress={() => navigation.push('List', {type: 'likers', identifier: post.id})}>
                         <Text style={styles.likeCount}>{likes} Likes</Text>
                     </TouchableOpacity>
-                    {postState.inJoust ? (<><EvilIcons name="trophy" style={styles.trophyIcon}/>
-                        <Text style={styles.caption}>{' '}{postState.joustRating}</Text></>): null}
+                    {postState.inJoust ? (<><MaterialCommunityIcons style={styles.trophyIcon} name="sword-cross"/>
+                        <Text style={[styles.caption, {color: '#D4AF37'}]}>{' '}{postState.joustRating}</Text></>): null}
                 </View>
                 <View style={styles.captionWrapper}>
                         
@@ -462,7 +504,7 @@ const PostCard = ({
                     : null
                 }
                 <View style={styles.timeAgoWrapper}>
-                        <Text style={styles.timeAgo}>{timeAgo.format(Date.parse(postState.created))}</Text>
+                        <Text style={styles.timeAgo}>{timeAgo.format(convertUTCDateToLocalDate(new Date(postState.created)))}</Text>
                 </View>
                 </View>
                 : null}
@@ -639,8 +681,19 @@ const styles = EStyleSheet.create({
     },
     trophyIcon: {
         fontSize: '1.5rem',
-        color: '$textColor',
+        color: '#D4AF37',
         marginLeft: '.25rem'
+    },
+    heartOverlay: {
+    },
+    heartOverlayContainer: {
+        position: 'absolute',
+        alignItems: 'center',
+        justifyContent: 'center',
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0
     }
 });
 

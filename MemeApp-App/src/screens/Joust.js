@@ -72,14 +72,6 @@ const Joust = ({
                                 <TouchableOpacity onPress={() => navigation.push('SinglePost', {postId: post.id})}>
                                     <Image style={styles.mainImage} source={{uri: post.url}}/>
                                 </TouchableOpacity>
-                                <View style={styles.bottomView}>
-                                    <Text style={styles.caption}>
-                                                <Text style={styles.bottomUsername}>
-                                                    {post.username}
-                                                </Text>
-                                            {' '}{post.caption}
-                                    </Text>
-                                </View>
                                 <Overlay animated animationType={"slide"} onBackdropPress={() => {
                                     setLeftModalVisible(false);
                                     setRightModalVisible(false);
@@ -91,8 +83,8 @@ const Joust = ({
                     })}
                 </View>
                 <View style={styles.selectionContainer}>
-                    <Button buttonStyle={styles.leftButton} title="Left is better" onPress={() => sendResult(0)}/>
-                    <Button buttonStyle={styles.rightButton} title="Right is better" onPress={() => sendResult(1)}/>
+                    <Button containerStyle={{width: '40%'}} style={{marginRight: '10%'}} buttonStyle={[styles.leftButton, {paddingVertical: 20}]} title="Left" onPress={() => sendResult(0)}/>
+                    <Button containerStyle={{width: '40%'}} style={{marginLeft: '10%'}} buttonStyle={[styles.rightButton, {paddingVertical: 20}]} title="Right" onPress={() => sendResult(1)}/>
                 </View>
             </View>
                 :
@@ -145,7 +137,7 @@ const styles = EStyleSheet.create({
     selectionContainer: {
         flexDirection: 'row',
         margin: '1rem',
-        justifyContent: 'space-around'
+        justifyContent: 'center'
     },
     leftButton: {
         backgroundColor: 'blue',
