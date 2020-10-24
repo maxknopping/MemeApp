@@ -4,7 +4,7 @@ import {useContext} from 'react';
 import { AsyncStorage } from 'react-native';
 
 export default userService = axios.create({
-    baseURL: 'https://memeclub.co/api/users',
+    baseURL: 'http://localhost:5000/api/users',
     headers: {
         'Content-Type': 'application/json',
     }

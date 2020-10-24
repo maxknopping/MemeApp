@@ -9,10 +9,6 @@ namespace MemeApp.API.Dtos
         public string Caption { get; set; }
 
         public bool InJoust { get; set; }
-        
-         public IList<Comment> Comments {get; set; }
-
-         public int Likes { get; set; }
 
     }
 }

@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState, useRef} from 'react';
-import { Text, View, ScrollView, Image, ActivityIndicator, Dimensions, RefreshControl, SafeAreaView, FlatList, ListView, TouchableOpacity, Platform } from 'react-native';
+import { Text, View, ScrollView, Image, ActivityIndicator, Dimensions, RefreshControl, SafeAreaView, FlatList, ListView, TouchableOpacity, Platform, Share } from 'react-native';
 import {Button, Badge, Icon, withBadge} from 'react-native-elements';
 import {Button as NativeButton} from 'native-base';
 import {Context} from './../context/AuthContext';
@@ -34,7 +34,7 @@ const Feed = ({
             }
         }).then(
             function (response) {
-                setPosts([response.data]);
+                setPosts([response.data, 'Invite']);
                 setLoading(false);
                 userService.get(`/hasNewMessages/${state.id}`, {
                     headers: {
@@ -70,7 +70,7 @@ const Feed = ({
             }
         }).then(
             function (response) {
-                setPosts([response.data]);
+                setPosts([response.data, 'Invite']);
                 userService.get(`/hasNewMessages/${state.id}`, {
                     headers: {
                         'Authorization': `Bearer ${state.token}`
@@ -112,6 +112,19 @@ const Feed = ({
         });
     };
 
+    const onShare = async () => {
+        if (Platform.OS === 'ios') {
+            const baseUrl = 'https://apps.apple.com/us/app/memeclub/id1529161180'
+            Share.share({
+                message: `${baseUrl}`
+            }, {
+                excludedActivityTypes: [
+                    'com.apple.UIKit.activity.AirDrop'
+                ]
+            });
+        }
+    };
+
     const description = "Welcome to MemeClub! This tab is your feed. Here you will see posts from the accounts that you follow." +
         " To see your messages, click on the message icon in the top right corner. To see any notifications, click on " +
         "the bell icon in the top left corner.";
@@ -133,7 +146,14 @@ const Feed = ({
             }}
             keyExtractor={(post) => `${post.id}`}
             data={posts}
-            renderItem={({item}) => <PostCard post={item} navigation={navigation}/>}
+            renderItem={({item}) => item == 'Invite' ? <TouchableOpacity onPress={onShare}>
+                    <View style={{alignItems: 'center', justifyContent: 'center', 
+                        height: 75, borderRadius: 10, margin: 25, flexDirection: 'row', backgroundColor: EStyleSheet.value('$crimson')}}>
+                            <Text style={{fontWeight: 'bold', fontSize: EStyleSheet.value('1rem'), color: 'white'}}>Invite Your Friends To MemeClub</Text>
+                            <Feather style={styles.shareIcon} name="external-link"/>
+                    </View>
+                </TouchableOpacity>
+            : <PostCard post={item} navigation={navigation}/>}
             onEndReached={() => loadMore()}
             onEndReachedThreshold={0.5}
             initialNumToRender={3}
@@ -197,7 +217,12 @@ const styles = EStyleSheet.create({
         width: '8rem',
         height: '6rem',
         resizeMode: 'contain'
-    }
+    },
+    shareIcon: {
+        fontSize: '1.5rem',
+        color: 'white',
+        marginLeft: '.7rem'
+    },
 });
 
 export default Feed;

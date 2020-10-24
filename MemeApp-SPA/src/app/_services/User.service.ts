@@ -48,6 +48,10 @@ export class UserService {
     return this.http.delete(this.baseUrl + '/' + userId + '/posts/' + postId);
   }
 
+  updatePost(userId: number, post: any, postId: number) {
+    return this.http.put(`${this.baseUrl}/${userId}/posts/${postId}`, post);
+  }
+
   followUser(id: number, recipientId: number) {
     return this.http.post(`${this.baseUrl}/${id}/follow/${recipientId}`, {});
   }

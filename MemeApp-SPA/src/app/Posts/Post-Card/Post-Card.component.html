@@ -1,4 +1,4 @@
-<div class="card mb-4">
+¨<div class="card mb-4">
   <ul class="list-group list-group-flush">
     <li class="list-group-item title text-left text-dark">
       <button class="like-button" [routerLink]="[ '/profile/', post.username]" style="color: black; font-size: large; font-weight: bold;">
@@ -18,6 +18,7 @@
           </button>
           <ul class="dropdown-menu mb-3" [ngClass]="{'dropdown-menu-right': true}" role="menu"  *dropdownMenu>
             <li *ngIf="myPost" role="menuitem"><a class="dropdown-item" (click)="deletePost(post.id)">Delete Post</a></li>
+            <li *ngIf="myPost" role="menuitem"><a class="dropdown-item" (click)="editCaption()">Edit Caption</a></li>
             <li role="menuitem"><a href="{{post.url}}" download="{{post.username}}_on_Memeclub.png" 
               target="_blank" class="dropdown-item">Save Image</a></li>
             <li role="menuitem"><a class="dropdown-item" (click)="reportPost()">Report</a></li>

@@ -86,7 +86,7 @@ const SwipeNew = ({
                         ref={swiper}
                         onSwipedAll={() => {console.log('onSwipedAll')}}
                         cardIndex={cardIndex.current}
-                        backgroundColor={'#000000'}
+                        backgroundColor={EStyleSheet.value('$backgroundColor')}
                         containerStyle={{alignItems: 'center'}}
                         useViewOverflow={false}
                         onSwipedLeft={(index) => {

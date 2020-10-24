@@ -94,7 +94,8 @@ const MemeMaker = ({
         let uri = null;
         captureRef(viewShot, {
                 format: 'png',
-                result: 'tmpfile'
+                result: 'tmpfile',
+                quality: 1
             }).then(uriResult => {
                 nextButtonClicked.current = false;
                 setResizeHidden(false);
@@ -208,14 +209,14 @@ const MemeMaker = ({
                                 onChangeItem={item => setFontValue(item.value)}
                                 items={[
                                     {label: 'Arial', value: 'Arial'},
-                                    {value: 'Impact', icon: () => <Text style={{fontFamily: 'Impact', fontSize:  20}}>Impact</Text>},
-                                    {value: isBold ? 'Montserrat' : 'MontBold', icon: () => <Text style={{fontFamily: isBold ? 'Montserrat' : 'MontBold' , fontSize:  20}}>Montserrat</Text>},
-                                    {value: 'LuckiestGuy', icon: () => <Text style={{fontFamily: 'LuckiestGuy', fontSize:  20}}>Luckiest Guy</Text>},
-                                    {value: 'PermanentMarker', icon: () => <Text style={{fontFamily: 'PermanentMarker', fontSize:  20}}>Permanent Marker</Text>},
-                                    {value: 'Piedra', icon: () => <Text style={{fontFamily: 'Piedra', fontSize:  20}}>Piedra</Text>},
-                                    {value: 'PressStart', icon: () => <Text style={{fontFamily: 'PressStart', fontSize:  20}}>Press Start</Text>},
-                                    {value: isBold ? 'Roboto' : 'RobotoBold', icon: () => <Text style={{fontFamily: isBold ? 'Roboto' : 'RobotoBold', fontSize:  20}}>Roboto</Text>},
-                                    {value: 'SpecialElite', icon: () => <Text style={{fontFamily: 'SpecialElite', fontSize:  20}}>Special Elite</Text>},
+                                    {label: '', value: 'Impact', icon: () => <Text style={{fontFamily: 'Impact', fontSize:  20}}>Impact</Text>},
+                                    {label: '', value: isBold ? 'Montserrat' : 'MontBold', icon: () => <Text style={{fontFamily: isBold ? 'Montserrat' : 'MontBold' , fontSize:  20}}>Montserrat</Text>},
+                                    {label: '', value: 'LuckiestGuy', icon: () => <Text style={{fontFamily: 'LuckiestGuy', fontSize:  20}}>Luckiest Guy</Text>},
+                                    {label: '', value: 'PermanentMarker', icon: () => <Text style={{fontFamily: 'PermanentMarker', fontSize:  20}}>Permanent Marker</Text>},
+                                    {label: '', value: 'Piedra', icon: () => <Text style={{fontFamily: 'Piedra', fontSize:  20}}>Piedra</Text>},
+                                    {label: '', value: 'PressStart', icon: () => <Text style={{fontFamily: 'PressStart', fontSize:  20}}>Press Start</Text>},
+                                    {label: '', value: isBold ? 'Roboto' : 'RobotoBold', icon: () => <Text style={{fontFamily: isBold ? 'Roboto' : 'RobotoBold', fontSize:  20}}>Roboto</Text>},
+                                    {label: '', value: 'SpecialElite', icon: () => <Text style={{fontFamily: 'SpecialElite', fontSize:  20}}>Special Elite</Text>},
                                 ]}
                             >
                             </DropDownPicker>
@@ -226,15 +227,15 @@ const MemeMaker = ({
                                 onChangeItem={item => setCurrentColor(item.value)}
                                 style={{zIndex: 9999999}}
                                 items={[
-                                    {value: '#000000', icon: () => <View style={{width: 20, height: 20, backgroundColor: '#000000'}}></View>},
-                                    {value: '#ffffff', icon: () => <View style={{width: 20, height: 20, borderWidth: 1, backgroundColor: '#ffffff'}}></View>},
-                                    {value: '#ff3333', icon: () => <View style={{width: 20, height: 20, backgroundColor: '#ff3333'}}></View>},
-                                    {value: '#ff7f00', icon: () => <View style={{width: 20, height: 20, backgroundColor: '#ff7f00'}}></View>},
-                                    {value: '#ffff00', icon: () => <View style={{width: 20, height: 20, backgroundColor: '#ffff00'}}></View>},
-                                    {value: '#00ff00', icon: () => <View style={{width: 20, height: 20, backgroundColor: '#00ff00'}}></View>},
-                                    {value: '#0000ff', icon: () => <View style={{width: 20, height: 20, backgroundColor: '#0000ff'}}></View>},
-                                    {value: '#2e2b5f', icon: () => <View style={{width: 20, height: 20, backgroundColor: '#2e2b5f'}}></View>},
-                                    {value: '#8b00ff', icon: () => <View style={{width: 20, height: 20, backgroundColor: '#8b00ff'}}></View>},
+                                    {label: '', value: '#000000', icon: () => <View style={{width: 20, height: 20, backgroundColor: '#000000'}}></View>},
+                                    {label: '', value: '#ffffff', icon: () => <View style={{width: 20, height: 20, borderWidth: 1, backgroundColor: '#ffffff'}}></View>},
+                                    {label: '', value: '#ff3333', icon: () => <View style={{width: 20, height: 20, backgroundColor: '#ff3333'}}></View>},
+                                    {label: '', value: '#ff7f00', icon: () => <View style={{width: 20, height: 20, backgroundColor: '#ff7f00'}}></View>},
+                                    {label: '', value: '#ffff00', icon: () => <View style={{width: 20, height: 20, backgroundColor: '#ffff00'}}></View>},
+                                    {label: '', value: '#00ff00', icon: () => <View style={{width: 20, height: 20, backgroundColor: '#00ff00'}}></View>},
+                                    {label: '', value: '#0000ff', icon: () => <View style={{width: 20, height: 20, backgroundColor: '#0000ff'}}></View>},
+                                    {label: '', value: '#2e2b5f', icon: () => <View style={{width: 20, height: 20, backgroundColor: '#2e2b5f'}}></View>},
+                                    {label: '', value: '#8b00ff', icon: () => <View style={{width: 20, height: 20, backgroundColor: '#8b00ff'}}></View>},
                                     
                                 ]}
                             >
@@ -245,12 +246,12 @@ const MemeMaker = ({
                                 onChangeItem={item => setFontSize(item.value)}
                                 dropDownStyle={{height: 400}}
                                 items={[
-                                    {value: 10, icon: () => <Text style={{fontSize: 20}}>10 pt</Text>},
-                                    {value: 12, icon: () => <Text style={{fontSize: 20}}>12 pt</Text>},
-                                    {value: 14, icon: () => <Text style={{fontSize: 20}}>14 pt</Text>},
-                                    {value: 18, icon: () => <Text style={{fontSize: 20}}>18 pt</Text>},
-                                    {value: 24, icon: () => <Text style={{fontSize: 20}}>24 pt</Text>},
-                                    {value: 36, icon: () => <Text style={{fontSize: 20}}>36 pt</Text>},
+                                    {label: '',value: 10, icon: () => <Text style={{fontSize: 20}}>10 pt</Text>},
+                                    {label: '',value: 12, icon: () => <Text style={{fontSize: 20}}>12 pt</Text>},
+                                    {label: '',value: 14, icon: () => <Text style={{fontSize: 20}}>14 pt</Text>},
+                                    {label: '',value: 18, icon: () => <Text style={{fontSize: 20}}>18 pt</Text>},
+                                    {label: '',value: 24, icon: () => <Text style={{fontSize: 20}}>24 pt</Text>},
+                                    {label: '',value: 36, icon: () => <Text style={{fontSize: 20}}>36 pt</Text>},
                                 ]}
                             >
                             </DropDownPicker>

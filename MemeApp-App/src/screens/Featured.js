@@ -1,5 +1,6 @@
 import React, {useContext, useEffect, useState, useRef} from 'react';
-import { Text, View, ScrollView, Image, ActivityIndicator, FlatList, ListView, TouchableOpacity, RefreshControl, Platform } from 'react-native';
+import { Text, View, ScrollView, Image, ActivityIndicator, FlatList, ListView, 
+         TouchableOpacity, RefreshControl, Platform, Share } from 'react-native';
 import {Button} from 'react-native-elements';
 import {Button as NativeButton} from 'native-base';
 import {Context} from './../context/AuthContext';
@@ -35,7 +36,7 @@ const Featured = ({
             }
         }).then(
             function (response) {
-                setPosts([response.data]);
+                setPosts([response.data, 'Invite']);
             }).catch(error => {
                 console.log(error);
                 setRefreshing(false);
@@ -58,7 +59,7 @@ const Featured = ({
             }
         }).then(
             function (response) {
-                setPosts([response.data]);
+                setPosts([response.data, 'Invite']);
                 setRefreshing(false);
             }).catch(error => {
                 console.log(error);
@@ -90,6 +91,19 @@ const Featured = ({
         });
     };
 
+    const onShare = async () => {
+        if (Platform.OS === 'ios') {
+            const baseUrl = 'https://apps.apple.com/us/app/memeclub/id1529161180'
+            Share.share({
+                message: `${baseUrl}`
+            }, {
+                excludedActivityTypes: [
+                    'com.apple.UIKit.activity.AirDrop'
+                ]
+            });
+        }
+    };
+
     const description = "This is the featured page. Here you will see popular posts from the community.";
 
     return (
@@ -103,7 +117,14 @@ const Featured = ({
             }}
             keyExtractor={(post) => `${post.id}`}
             data={posts}
-            renderItem={({item}) => <PostCard post={item} navigation={navigation}/>}
+            renderItem={({item}) => item == 'Invite' ? <TouchableOpacity onPress={onShare}>
+                    <View style={{alignItems: 'center', justifyContent: 'center', 
+                        height: 75, borderRadius: 10, margin: 25, flexDirection: 'row', backgroundColor: EStyleSheet.value('$crimson')}}>
+                            <Text style={{fontWeight: 'bold', fontSize: EStyleSheet.value('1rem'), color: 'white'}}>Invite Your Friends To MemeClub</Text>
+                            <Feather style={styles.shareIcon} name="external-link"/>
+                    </View>
+                </TouchableOpacity>
+            : <PostCard post={item} navigation={navigation}/>}
             onEndReached={() => loadMore()}
             onEndReachedThreshold={0.5}
             initialNumToRender={3}
@@ -134,7 +155,12 @@ const styles = EStyleSheet.create({
         color: '$textColor',
         fontWeight: 'bold',
         marginBottom: 10
-    }
+    },
+    shareIcon: {
+        fontSize: '1.5rem',
+        color: 'white',
+        marginLeft: '.7rem'
+    },
 });
 
 

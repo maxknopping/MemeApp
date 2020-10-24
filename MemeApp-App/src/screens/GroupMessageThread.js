@@ -449,7 +449,7 @@ const styles = EStyleSheet.create({
         borderBottomRightRadius: '1.25rem'
     },
     chatBubbleSent: {
-        backgroundColor: '#0084ff',
+        backgroundColor: '$crimson',
         alignSelf: 'flex-end',
         borderBottomLeftRadius: '1.25rem',
 

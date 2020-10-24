@@ -284,7 +284,8 @@ const styles = EStyleSheet.create({
     headerLabel: {
         color: '$textColor',
         fontSize: '1.1rem',
-        marginHorizontal: '5%'
+        marginHorizontal: '5%',
+        marginBottom: '.2rem'
     },
     text : {
         fontSize: '1.1rem',

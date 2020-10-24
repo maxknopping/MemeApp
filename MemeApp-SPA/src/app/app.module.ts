@@ -74,13 +74,14 @@ import { RichTextEditorAllModule, RichTextEditorModule } from '@syncfusion/ej2-a
 import { SafeHtmlPipe } from './_pipes/safeHtml.pipe';
 import { AboutUsComponent } from './about-us/about-us.component';
 import { ContactUsComponent } from './contact-us/contact-us.component';
+import { UpdateCaptionComponent } from './update-caption/update-caption.component';
 
 export function tokenGetter() {
    return localStorage.getItem('token');
 }
 
 @NgModule({
-   declarations: [		
+   declarations: [			
       AppComponent,
       NavComponent,
       HomeComponent,
@@ -116,7 +117,8 @@ export function tokenGetter() {
       BannedComponentComponent,
       SafeHtmlPipe,
       AboutUsComponent,
-      ContactUsComponent
+      ContactUsComponent,
+      UpdateCaptionComponent
    ],
    imports: [
       HttpClientModule,
@@ -180,7 +182,8 @@ export function tokenGetter() {
    entryComponents: [
       CroppingModalComponent,
       PasswordModalComponent,
-      SendPostModalComponent
+      SendPostModalComponent,
+      UpdateCaptionComponent
    ]
 })
 export class AppModule { }

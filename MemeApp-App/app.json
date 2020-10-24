@@ -1,10 +1,9 @@
 {
   "expo": {
-    "name": "Meme Club",
+    "name": "MemeClub",
     "slug": "MemeClub",
     "scheme": "memeclub",
     "privacy": "public",
-    "sdkVersion": "36.0.0",
     "userInterfaceStyle": "automatic",
     "platforms": [
       "ios",
@@ -31,7 +30,7 @@
       "bundleIdentifier": "co.memeclub",
       "buildNumber": "2.0.8",
       "infoPlist": {
-        "NSAppTransportSecurity" : {
+        "NSAppTransportSecurity": {
           "NSAllowsLocalNetworking": true,
           "NSExceptionDomains": {
             "http://192.168.0.4:5000": {
@@ -44,7 +43,7 @@
         }
       },
       "config": {
-        "usesNonExemptEncryption": false 
+        "usesNonExemptEncryption": false
       }
     },
     "web": {

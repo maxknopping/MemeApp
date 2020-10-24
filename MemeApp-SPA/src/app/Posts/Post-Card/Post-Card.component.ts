@@ -9,6 +9,7 @@ import {Router} from '@angular/router';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { SendPostModalComponent } from '../SendPostModal/SendPostModal.component';
 import { Message } from 'src/app/_models/Message';
+import { UpdateCaptionComponent } from 'src/app/update-caption/update-caption.component';
 
 @Component({
   selector: 'app-Post-Card',
@@ -99,6 +100,17 @@ export class PostCardComponent implements OnInit {
         const message = {senderId: this.authService.decodedToken.nameid, recipientId: element, postId: this.post.id};
         this.user.sendMessageWithPost(this.authService.decodedToken.nameid, message).subscribe();
       });
+    });
+  }
+
+  editCaption() {
+    this.bsModalRef = this.modalService.show(UpdateCaptionComponent, {
+    });
+    this.bsModalRef.content.sendPassword.subscribe(value => {
+      this.user.updatePost(this.authService.decodedToken.nameid, {caption: value.CurrentPassword, inJoust: this.post.inJoust}, 
+        this.post.id).subscribe(() => {
+          this.post.caption = value.CurrentPassword;
+        });
     });
   }
 

@@ -164,7 +164,7 @@ namespace MemeApp.API.Controllers
             }
             var post = await repo.GetPost(id);
 
-            if (postForUpdate.InJoust) {
+            if (postForUpdate.InJoust && post.JoustRating == 0) {
                 post.JoustRating = 1000;
             }
 

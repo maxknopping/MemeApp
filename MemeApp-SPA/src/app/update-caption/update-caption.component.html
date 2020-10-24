@@ -1,0 +1,25 @@
+<div class="modal-header">
+  <h4 class="modal-title pull-left">Edit Caption</h4>
+  <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+  <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<form [formGroup]="myform" (submit)="submit()" fxFlex="100">
+  <div
+    fxFlex="500px"
+    fxLayoutAlign="center center"
+    fxLayout="column"
+    fxFlexOffset="calc(50% - 250px)"
+    fxFlex.xs="100"
+    fxFlexOffset.xs="0"
+    style="padding: 10px; text-align: center;"
+  >
+  <div class="form-group">
+    <input class="form-control" formControlName = "CurrentPassword" placeholder="New Caption">
+  </div>
+    <br>
+    <button class="btn-success" fxFlex color="primary">
+      Submit
+    </button>
+  </div>
+</form>

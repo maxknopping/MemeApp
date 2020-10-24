@@ -17,7 +17,7 @@ import {Provider as AuthProvider} from './src/context/AuthContext';
 import React from 'react';
 import {setNavigator} from './src/helpers/navigationRef';
 import {StatusBar} from 'react-native';
-import LoadingScreen from './src/screens/LoadingScren';
+import LoadingScreen from './src/screens/LoadingScreen';
 import {Feather, Ionicons, MaterialCommunityIcons} from 'react-native-vector-icons';
 import NewPost from './src/screens/NewPost';
 import EditProfile from './src/screens/EditProfile'

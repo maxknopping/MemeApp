@@ -31,6 +31,8 @@ const PostCard = ({
     const [searchVisible, setSearchVisible] = useState(false);
     const [postOptionsVisible, setOptionsVisible] = useState(false);
     const [userIds, setUserIds] = useState([]);
+    const [editCaptionVisible, setEditCaptionVisible] = useState(false);
+    const [caption, setCaption] = useState('');
     let lastTap = null;
 
     TimeAgo.addLocale(en)
@@ -124,8 +126,8 @@ const PostCard = ({
                     setLiked(true);
                     setLikes(likes + 1);
                     Animated.sequence([
-                        Animated.spring(animatedValue.current, { toValue: 1}),
-                        Animated.spring(animatedValue.current, { toValue: 0}),
+                        Animated.spring(animatedValue.current, { toValue: 1, useNativeDriver: true}),
+                        Animated.spring(animatedValue.current, { toValue: 0, useNativeDriver: true}),
                       ]).start();
                 }
             ).catch(error => console.log(error));
@@ -285,6 +287,22 @@ const PostCard = ({
             MediaLibrary.saveToLibraryAsync(post.url).then(() => setOptionsVisible(false));
         }
     }
+
+    const sendNewCaption = () => {
+        userService.put(`/${state.id}/posts/${post.id}`,{
+            caption: caption,
+            inJoust: postState.inJoust
+        }, {
+            headers: {
+                'Authorization': `Bearer ${state.token}`
+            }
+        }).then(() => {
+            setPost({...postState, caption: caption});
+            setCaption('');
+            setEditCaptionVisible(false);
+            setOptionsVisible(false);
+        }).catch(err => console.log(err));
+    }
     
     return (
         <View style={{flex: 1}}>
@@ -308,7 +326,12 @@ const PostCard = ({
                             <Text onPress={onSaveImage} style={styles.text}>
                                 Save Image
                             </Text>
-                            {myPost ? <Text onPress={() => {
+                            {myPost ? <>
+                            <Text onPress={() => setEditCaptionVisible(true)} style={styles.text}>
+                                Edit Caption
+                            </Text>
+                            
+                            <Text onPress={() => {
                                 Alert.alert(
                                     'Delete Post',
                                     'Are you sure you want to delete this post?',
@@ -323,19 +346,40 @@ const PostCard = ({
                                   );
                             }} style={[styles.text, {color: '#DC143C'}]}>
                                 Delete Post
-                            </Text> : null}
+                            </Text></> : null}
                             <Text onPress={() => setOptionsVisible(false)} style={[styles.text, {color: '#DC143C'}]}>
                                 Cancel
                             </Text>
+                            <Overlay isVisible={editCaptionVisible} onBackdropPress={() => {
+                                setEditCaptionVisible(false); 
+                                setOptionsVisible(false);
+                                }} height={'auto'} width={'auto'} animationType={'fade'}>
+                                <Text style={styles.text}>Edit Caption</Text>
+                                <TextInput style={styles.textInput} placeholderTextColor="gray" placeholder="Add a caption..." multiline 
+                                    value={caption}
+                                    onChangeText={(text) => setCaption(text)}/>
+                                <TouchableOpacity onPress={() => sendNewCaption()}>
+                                    <Text style={styles.text}>OK</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => {
+                                    setEditCaptionVisible(false);
+                                    }}>
+                                    <Text style={[styles.text, {color: '#DC143C'}]}>
+                                        Cancel
+                                    </Text>
+                                </TouchableOpacity>
+                            </Overlay>
                             </>
                             } onBackdropPress={() => setOptionsVisible(false)} height={'auto'} width={'auto'} animationType={'fade'}>
                         </Overlay>
                     </View>
                 </View>
                 <TouchableWithoutFeedback onPress={() => handleDoubleTap()}>
-                    <Image indicator={Progress.Bar} indicatorProps={{color: EStyleSheet.value('$crimson')}} style={{width: width, height: width}} source={{uri: postState.url}}/>
+                    <View>
+                        <Image indicator={Progress.Bar} indicatorProps={{color: EStyleSheet.value('$crimson')}} style={{width: width, height: width}} source={{uri: postState.url}}/>
+                        {renderOverlay()}
+                    </View>
                 </TouchableWithoutFeedback>
-                {renderOverlay()}
                 <View style={styles.iconsContainer}>
                     {!liked ? 
                         (
@@ -694,6 +738,12 @@ const styles = EStyleSheet.create({
         right: 0,
         top: 0,
         bottom: 0
+    },
+    textInput: {
+        width: '60%',
+        aspectRatio: 1.7143/1,
+        marginLeft: '1rem',
+        color: '$textColor'
     }
 });
 

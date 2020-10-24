@@ -106,7 +106,7 @@ const EditProfile = ({
                         setWhatHasChanged({...whatHasChanged, bio: false, username: false, email: false, name: false});
                         navigation.navigate('Profile', {username: user.username});
                     }
-                ).catch(error => setErrorMessage(error.response.data));
+                ).catch(error => setErrorMessage('Failed to Save Changes. Did you change anything?'));
             }
       };
 

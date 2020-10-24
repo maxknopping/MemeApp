@@ -3,7 +3,7 @@ import auth from './../apis/auth';
 import {AsyncStorage, Platform} from 'react-native';
 import {navigate} from './../helpers/navigationRef';
 import authFrisbee from './../apis/authFrisbee';
-import { Notifications } from 'expo';
+import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
 import Constants from 'expo-constants';
 
@@ -45,19 +45,23 @@ const tryLocalSignIn = (dispatch) => async () => {
             response.data.pushToken == null ? pushToken : response.data.pushToken, isAdmin: response.data.user.isAdmin}});
         await AsyncStorage.setItem('token', response.data.token);
         if (Platform.OS === 'ios') {
-            Notifications.setBadgeNumberAsync(0);
+            Notifications.setBadgeCountAsync(0);
         }
         if (response.data.user.isBanned) {
             dispatch({type: 'banned', payload: response.data.user.banEnds});
-            navigate('Banned');
+            //navigate('Banned');
+            return 'Banned';
         } else {
-            navigate('Feed');
+            //navigate('Feed');
+            return 'Feed';
         }
     } else {
-        navigate('SignIn');
+        //navigate('SignIn');
+        return 'SignIn';
     }
     } catch (err) {
-        navigate('SignIn');
+        //navigate('SignIn');
+        return 'SignIn';
     }
 };
 
@@ -99,7 +103,7 @@ const signin = (dispatch) => async ({username, password}) => {
                 id: response.data.user.id, username: response.data.user.username, expoPushToken: 
                 response.data.pushToken == null ? pushToken : response.data.pushToken, isAdmin: response.data.user.isAdmin}});
             if (Platform.OS === 'ios') {
-                Notifications.setBadgeNumberAsync(0);
+                Notifications.setBadgeCountAsync(0);
             }
             console.log(response.data.user);
             if (response.data.user.isBanned) {
