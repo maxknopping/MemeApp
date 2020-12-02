@@ -35,6 +35,8 @@ namespace MemeApp.API.Data
            var user = await context.Users
                 .Include(p => p.Following)
                 .Include(p => p.Followers)
+                .Include(p => p.Blockers)
+                .Include(p => p.Blockees)
                 .Include(p => p.MessagesReceived)
                 .Include(p => p.MessagesSent)
                 .Include(p => p.NotificationsReceived)
@@ -66,6 +68,8 @@ namespace MemeApp.API.Data
             var user = await context.Users
                 .Include(p => p.Following)
                 .Include(p => p.Followers)
+                .Include(p => p.Blockers)
+                .Include(p => p.Blockees)
                 .Include(p => p.MessagesReceived)
                 .Include(p => p.MessagesSent)
                 .FirstOrDefaultAsync(x => x.Username == username);
@@ -136,9 +140,11 @@ namespace MemeApp.API.Data
             return feed;
         }
 
-        public async Task<PostForDetailedDto> GetFeatured(int index)
+        public async Task<PostForDetailedDto> GetFeatured(int id, int index)
         {
+            Console.WriteLine($"[PRINT] id: {id}");
             var posts = await GetAllPosts();
+            posts = posts.Where(p => !p.User.Blockers.Select(b => b.BlockerId).Contains(id)).ToList();
             posts = posts.OrderByDescending(p => p.Created).ToList();
             var allPosts = new List<PostForDetailedDto>();
             foreach (var post in posts)
@@ -165,7 +171,6 @@ namespace MemeApp.API.Data
                 }
             }
             var feed = allPosts[index];
-
             return feed;
         }
 
@@ -181,7 +186,7 @@ namespace MemeApp.API.Data
         }
 
         public async Task<IList<Post>> GetAllPosts() { //need to do only posts from last x amount of time (eventually)
-            var post = await context.Posts.Include(p => p.LikeList).Include(p => p.Comments).Include(p => p.User).OrderByDescending(p => p.LikeList.Count).ToListAsync();
+            var post = await context.Posts.Include(p => p.LikeList).Include(p => p.Comments).Include(p => p.User).ThenInclude(u => u.Blockers).OrderByDescending(p => p.LikeList.Count).ToListAsync();
             return post;
         }
 
@@ -286,12 +291,11 @@ namespace MemeApp.API.Data
             return messagesToReturn.ToList();
         }
 
-        public async Task<IList<User>> SearchForUser(string query, bool fullResult)
+        public async Task<IList<User>> SearchForUser(int id, string query, bool fullResult)
         {
             var arrayOfChars = query.ToCharArray();
             var allMatches = new List<KeyValuePair<string, int>>();
-
-            foreach(var user in context.Users) {
+            foreach(var user in context.Users.Where(u => !u.Blockees.Select(b => b.BlockeeId).Contains(id) && !u.Blockers.Select(b => b.BlockerId).Contains(id))) {
                 var usernameToChar = user.Username.ToCharArray();
                 var matches = SimpleTextSearch(arrayOfChars, usernameToChar);
                 allMatches.Add(new KeyValuePair<string, int>(user.Username, matches));
@@ -441,7 +445,7 @@ namespace MemeApp.API.Data
 
         public async Task<IList<Post>> GetJoustPosts()
         {
-            var allJoustPosts = await context.Posts.Where(p => p.inJoust == true).ToListAsync();
+            var allJoustPosts = await context.Posts.Where(p => p.inJoust == true && p.isReported == false).ToListAsync();
             var random = new Random();
             var randomOne = random.Next(0, allJoustPosts.Count);
             var randomTwo = random.Next(0, allJoustPosts.Count);
@@ -485,7 +489,7 @@ namespace MemeApp.API.Data
 
         public async Task<Post> GetSwipePost()
         {
-            var allJoustPosts = await context.Posts.Where(p => p.inJoust == true).ToListAsync();
+            var allJoustPosts = await context.Posts.Where(p => p.inJoust == true && p.isReported == false).ToListAsync();
             var random = new Random();
             var randomOne = random.Next(0, allJoustPosts.Count);
             var postOne = await GetPost(allJoustPosts[randomOne].Id);
@@ -536,6 +540,10 @@ namespace MemeApp.API.Data
         public IEnumerable<Reply> GetReplies(int commentId)
         {
             return context.Replies.Where(c => c.CommentId == commentId).Include(c => c.LikeList);
+        }
+
+        public async Task<Block> GetBlock(int blockerId, int blockeeId) {
+            return await context.Blocks.FirstOrDefaultAsync(b => b.BlockeeId == blockeeId && b.BlockerId == blockerId);
         }
     }
 }

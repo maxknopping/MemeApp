@@ -36,6 +36,11 @@ const Settings = ({
                 </TouchableOpacity>
             </Card>
             <Card containerStyle={{margin: 0, backgroundColor: EStyleSheet.value('$backgroundColor')}}>
+                <TouchableOpacity onPress={() => navigation.navigate('Blocked')}>
+                    <Text style={styles.changePassword}>Blocked Users</Text>
+                </TouchableOpacity>
+            </Card>
+            <Card containerStyle={{margin: 0, backgroundColor: EStyleSheet.value('$backgroundColor')}}>
                 <TouchableOpacity onPress={signout}>
                     <Text style={styles.logOut}>Log Out</Text>
                 </TouchableOpacity>

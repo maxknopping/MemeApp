@@ -20,7 +20,7 @@ namespace MemeApp.API.Data
 
          Task<PostForDetailedDto> GetFeed(User user, int index);
 
-         Task<PostForDetailedDto> GetFeatured(int index);
+         Task<PostForDetailedDto> GetFeatured(int id, int index);
 
          Task<Post> GetPost(int id);
 
@@ -47,7 +47,7 @@ namespace MemeApp.API.Data
          Task<IList<UserForSendPostDto>> GetConversationUsers(int userId);
          Task<IList<Message>> GetMessageThread(int userId, int recipientId);
 
-        Task<IList<User>> SearchForUser(string query, bool fullResult);
+        Task<IList<User>> SearchForUser(int id, string query, bool fullResult);
 
         Task<IList<Notification>> GetNotifications(int userId);
 
@@ -74,5 +74,8 @@ namespace MemeApp.API.Data
         Task<IList<User>> getReportedUsers();
 
         Task<IList<Post>> getReportedPosts();
+
+        Task<Block> GetBlock(int blockerId, int blockeeId);
+
     }
 }

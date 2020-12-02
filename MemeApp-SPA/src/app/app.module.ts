@@ -75,6 +75,7 @@ import { SafeHtmlPipe } from './_pipes/safeHtml.pipe';
 import { AboutUsComponent } from './about-us/about-us.component';
 import { ContactUsComponent } from './contact-us/contact-us.component';
 import { UpdateCaptionComponent } from './update-caption/update-caption.component';
+import { BlurredImageComponent } from 'ngx-blurred-image/components';
 
 export function tokenGetter() {
    return localStorage.getItem('token');

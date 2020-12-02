@@ -41,6 +41,7 @@ import MemeMaker from './src/screens/MemeMaker';
 import SwipeNew from './src/screens/SwipeNew';
 import { Clipboard, Text, TextInput } from 'react-native';
 import * as Analytics from 'expo-firebase-analytics';
+import Blocked from './src/screens/Blocked';
 
 
 const theme = Appearance.getColorScheme();
@@ -181,7 +182,8 @@ const switchNavigator = createSwitchNavigator({
       EditProfile: EditProfile,
       OtherProfile: Profile,
       SinglePost: SinglePost,
-      ChangePassword: ChangePassword
+      ChangePassword: ChangePassword,
+      Blocked: Blocked
     },
     {
       initialRouteName: 'Profile',

@@ -138,7 +138,7 @@ const MessageThread = ({
         var offset = date.getTimezoneOffset() / 60;
         var hours = date.getHours();
     
-        newDate.setHours(hours - offset);
+        newDate.setHours(hours - offset -24);
     
         return newDate;   
     }

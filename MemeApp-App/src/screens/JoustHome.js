@@ -128,6 +128,7 @@ const JoustHome = ({
                         }}
                         buttonStyle={{borderRadius: EStyleSheet.value('.8rem'), padding: 30}} 
                         titleStyle={{color: 'black'}}
+                        containerStyle={{width:'50%'}}
                         style={[styles.followButton, {marginTop: '15%', marginRight: 15}]} 
                         title="Joust"
                         titleStyle={{fontFamily: Font.isLoaded('Tinder') ? 'Tinder': 'Arial', fontSize: 30, color: 'black'}}
@@ -142,6 +143,7 @@ const JoustHome = ({
                             end: { x: 1, y: 1 },
 
                         }}
+                        containerStyle={{width:'50%'}}
                         buttonStyle={{borderRadius: EStyleSheet.value('.8rem'), padding: 30}} 
                         style={[styles.followButton, {marginTop: '15%', marginLeft: 15}]} 
                         title="Swipe"
@@ -285,7 +287,7 @@ const styles = EStyleSheet.create({
         color: '$textColor',
         fontSize: '1.1rem',
         marginHorizontal: '5%',
-        marginBottom: '.2rem'
+        marginBottom: '2%'
     },
     text : {
         fontSize: '1.1rem',

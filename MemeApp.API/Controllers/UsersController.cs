@@ -103,8 +103,8 @@ namespace MemeApp.API.Controllers
         public async Task<IActionResult> GetFeatured(int index)
         {
             try {
-
-                var post = await repo.GetFeatured(index);
+                var id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                var post = await repo.GetFeatured(id, index);
 
                 return Ok(post);
             } catch {
@@ -1001,10 +1001,8 @@ namespace MemeApp.API.Controllers
 
         [HttpGet("search/{id}/{query}/{fullResult}")]
         public async Task<IActionResult> SearchForUser(int id, string query, bool fullResult) {
-            var users = await repo.SearchForUser(query.ToLower(), fullResult);
-
+            var users = await repo.SearchForUser(id, query.ToLower(), fullResult);
             var usersToReturn = mapper.Map<IList<UserForManipulationDto>>(users);
-
             foreach(var user in usersToReturn) {
                 user.FollowButton = "Follow";
                     if (user.Id == id) {
@@ -1015,9 +1013,7 @@ namespace MemeApp.API.Controllers
                           user.FollowButton = "Following";
                         }
             }
-
             var usersWithoutFollowers = mapper.Map<IList<UserForListDto>>(usersToReturn);
-
             return Ok(usersWithoutFollowers);
         }
 
@@ -1116,6 +1112,87 @@ namespace MemeApp.API.Controllers
             return Ok();
         }
 
+        [HttpGet("blocked/{userId}")]
+        public async Task<IActionResult> GetBlockedUsers(int userId) {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
+                return Unauthorized();
+            }
+
+            var user = await repo.GetUser(userId);
+
+            var blockees = new List<UserForListDto>();
+            foreach (var follow in user.Blockees)
+            {
+                var follower = await repo.GetUser(follow.BlockeeId);
+                var userToReturn = mapper.Map<UserForManipulationDto>(follower);
+                var userWithoutFollowers = mapper.Map<UserForListDto>(userToReturn);
+                blockees.Add(userWithoutFollowers);
+
+            }
+
+            return Ok(blockees);
+
+        }
+
+        [HttpPost("{userId}/block/{recipientId}")]
+        public async Task<IActionResult> BlockUser(int userId, int recipientId) {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
+                return Unauthorized();
+            }
+            var block = await repo.GetBlock(userId, recipientId);
+
+            if (block != null) {
+                //unfollow
+                return BadRequest("You've already blocked this user");
+            }
+
+            var recipient = await repo.GetUser(recipientId);
+            if (recipient == null) {
+                return NotFound();
+            }
+
+            var follower = await repo.GetUser(userId);
+            
+            block = new Block {
+                BlockerId = userId,
+                BlockeeId = recipientId
+            };
+
+            repo.Add<Block>(block);
+            var response = await UnfollowUser(userId, recipientId);
+
+            if (await repo.SaveAll()) {
+                return Ok();
+            }
+
+            return BadRequest("failed to block user");
+        }
+
+        [HttpPost("{id}/unblock/{recipientId}")]
+        public async Task<IActionResult> UnBlockUser(int id, int recipientId) {
+            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
+                return Unauthorized();
+            }
+            var block = await repo.GetBlock(id, recipientId);
+
+            if (block == null) {
+                //unfollow
+                return BadRequest("You haven't blocked this user");
+            }
+
+            var recipient = await repo.GetUser(recipientId);
+            if (recipient == null) {
+                return NotFound();
+            }
+
+            repo.Delete(block);
+
+            if (await repo.SaveAll()) {
+                return Ok();
+            }
+
+            return BadRequest("failed to unblock user");
+        }
 
     }
 }

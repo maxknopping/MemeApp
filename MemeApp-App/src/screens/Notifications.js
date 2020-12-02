@@ -21,7 +21,6 @@ const Notifications = ({
     TimeAgo.addLocale(en);
     const timeAgo = new TimeAgo('en-US');
 
-    console.log(list);
     useEffect(() => {
         setLoading(true);
         userService.get(`/notifications/${state.id}`, {
@@ -60,12 +59,15 @@ const Notifications = ({
 
     function convertUTCDateToLocalDate(date) {
         var newDate = new Date(date.getTime()+date.getTimezoneOffset()*60*1000);
-    
+        console.log(`Date without offset: ${newDate}`);
         var offset = date.getTimezoneOffset() / 60;
         var hours = date.getHours();
     
-        newDate.setHours(hours - offset);
-    
+        newDate.setHours(hours - offset - 24);
+        console.log('Date of server');
+        console.log(date);
+        console.log('Date of client');
+        console.log(newDate);
         return newDate;   
     }
 

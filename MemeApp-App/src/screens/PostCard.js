@@ -14,6 +14,7 @@ import getPermissions from './../helpers/getPermissions';
 import Image from 'react-native-image-progress';
 import * as Progress from 'react-native-progress';
 import {MaterialCommunityIcons} from 'react-native-vector-icons'
+import { rgbaToInt } from 'jimp';
 
 
 const PostCard = ({
@@ -60,7 +61,7 @@ const PostCard = ({
         var offset = date.getTimezoneOffset() / 60;
         var hours = date.getHours();
     
-        newDate.setHours(hours - offset);
+        newDate.setHours(hours - offset - 24);
     
         return newDate;   
     }
@@ -375,9 +376,22 @@ const PostCard = ({
                     </View>
                 </View>
                 <TouchableWithoutFeedback onPress={() => handleDoubleTap()}>
-                    <View>
-                        <Image indicator={Progress.Bar} indicatorProps={{color: EStyleSheet.value('$crimson')}} style={{width: width, height: width}} source={{uri: postState.url}}/>
+                    <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                        <Image indicator={Progress.Bar} indicatorProps={{color: EStyleSheet.value('$crimson')}} style={[{width: width, height: width}, postState.isReported ? {backgroundColor: 'rgba(0, 0,0, 0.5)'}: null]}
+                        blurRadius={postState.isReported ? 30: 0} source={{uri: postState.url}}/>
                         {renderOverlay()}
+                        {postState.isReported ? <View style={{position: 'absolute', justifyContent: 'center', alignItems: 'center'}}>
+                            <Text style={{color: 'white', fontSize: EStyleSheet.value('1rem'), textAlign: 'center'}}>This post may contain offensive content and is under review.</Text>
+                            <TouchableOpacity style={{borderColor: 'white', borderWidth: '1', borderRadius: '10px', padding: 7, marginTop: 10}} onPress={() => {
+                                //let newPost = postState;
+                                //console.log(postState);
+                                //newPost.isReported = false;
+                                setPost({...postState, isReported: false});
+                            }}>
+                                <Text style={{color: 'white', fontSize: EStyleSheet.value('1rem'), textAlign: 'center'}}>
+                                    View Anyway 
+                                </Text></TouchableOpacity>
+                        </View>: null}
                     </View>
                 </TouchableWithoutFeedback>
                 <View style={styles.iconsContainer}>

@@ -183,7 +183,7 @@ const Profile = ({
         }
     }
     
-    follow = () => {
+    const follow = () => {
             userService.post(`/${state.id}/follow/${user.id}`, {}, {
                 headers: {
                     'Authorization': `Bearer ${state.token}`
@@ -197,7 +197,20 @@ const Profile = ({
             ).catch(error => console.log(error));
     };
 
-    unfollow = () => {
+    const blockUser = () => {
+        userService.post(`/${state.id}/block/${user.id}`, {}, {
+            headers: {
+                'Authorization': `Bearer ${state.token}`
+            }
+        })
+        .then(
+            function (response) {
+                Alert.alert('Successfully blocked user!');
+            }
+        ).catch(error => console.log(error));
+    };
+
+    const unfollow = () => {
         userService.post(`/${state.id}/unfollow/${user.id}`, {}, {
             headers: {
                 'Authorization': `Bearer ${state.token}`
@@ -236,6 +249,9 @@ const Profile = ({
                             <Text style={styles.text} onPress={reportUser}>
                                 Report
                             </Text>
+                            {followButton !== 'Edit Profile' ? <Text style={styles.text} onPress={blockUser}>
+                                Block
+                            </Text>: null}
                             <Text onPress={() => setModalVisible(false)} style={[styles.text, {color: '#DC143C'}]}>
                                 Cancel
                             </Text>

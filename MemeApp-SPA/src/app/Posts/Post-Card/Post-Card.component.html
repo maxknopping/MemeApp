@@ -5,8 +5,15 @@
         <img class="profile-picture mr-2" src="{{post.profilePictureUrl || '../../../assets/user.png'}}" alt="">{{post.username}}</button>
 
     </li>
-    <div class="card-img-wrapper">
-      <img class="card-img-top"  src="{{post.url}}" alt="{{post.caption}}">
+    <div class="card-img-wrapper" style="position: relative;">
+      <img *ngIf="post.isReported" class="card-img-top blur"  src="{{post.url}}" alt="{{post.caption}}">
+      <img *ngIf="!post.isReported" class="card-img-top"  src="{{post.url}}" alt="{{post.caption}}">
+      <div *ngIf="post.isReported" style="position: absolute; z-index: 1000; top: 50%; width: 100%; text-align: center;">
+          <span style="color: white;">This post may contain offensive content and is under review.</span>
+          <br>
+          <button (click)="post.isReported = false;" style="background-color: transparent; border-color: white; 
+              color: white; border-width: 2px; border-radius: 10px; padding: 5px; outline: inherit; margin-top: 15px">View Anyway</button>
+      </div>
     </div>
     <li class="list-group-item">
         <div class="btn-group" dropdown [dropup]="true" placement="top right">

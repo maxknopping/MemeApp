@@ -28,6 +28,10 @@ namespace MemeApp.API.Models
 
         public IList<Follow> Following { get; set; }
 
+        public IList<Block> Blockees { get; set; }
+
+        public IList<Block> Blockers { get; set; }
+
         public string Bio { get; set; }
 
         public string Name { get; set; }

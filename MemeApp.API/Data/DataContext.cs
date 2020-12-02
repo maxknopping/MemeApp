@@ -32,6 +32,8 @@ namespace MemeApp.API.Data
 
         public DbSet<ReplyLike> ReplyLikes { get; set; }
 
+        public DbSet<Block> Blocks { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder) {
             builder.Entity<Follow>().HasKey(p => new {p.FollowerId, p.FolloweeId});
 
@@ -48,6 +50,23 @@ namespace MemeApp.API.Data
                 .HasOne(u => u.Followee)
                 .WithMany(u => u.Followers)
                 .HasForeignKey(u => u.FolloweeId)
+                .OnDelete(DeleteBehavior.Restrict);
+            
+            builder.Entity<Block>().HasKey(p => new {p.BlockerId, p.BlockeeId});
+
+            builder.Entity<Block>().Property(p => p.BlockeeId).ValueGeneratedNever();
+            builder.Entity<Block>().Property(p => p.BlockerId).ValueGeneratedNever();
+
+            builder.Entity<Block>()
+                .HasOne(u => u.Blocker)
+                .WithMany(u => u.Blockees)
+                .HasForeignKey(u => u.BlockerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Block>()
+                .HasOne(u => u.Blockee)
+                .WithMany(u => u.Blockers)
+                .HasForeignKey(u => u.BlockeeId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<Like>().HasKey(k => new {k.LikerId, k.PostId});

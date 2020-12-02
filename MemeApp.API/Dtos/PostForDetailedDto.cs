@@ -30,5 +30,7 @@ namespace MemeApp.API.Dtos
 
         public int JoustRating { get; set; }
 
+        public bool isReported { get; set; }
+
     }
 }

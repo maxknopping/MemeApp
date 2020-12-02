@@ -18,6 +18,11 @@ p {
 
 }
 
+.blur {
+    filter: blur(20px) brightness(50%);
+    -webkit-filter: blur(20px) brightness(50%);
+}
+
 .card-img-wrapper:hover .member-icons {
     bottom: 0;
     opacity: .5;

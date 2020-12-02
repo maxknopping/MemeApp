@@ -93,7 +93,8 @@ const Joust = ({
                     })}
                 </View>
                 <View style={styles.selectionContainer}>
-                    <Button containerStyle={{width: '40%'}} style={{marginRight: '10%'}} buttonStyle={[styles.leftButton, {paddingVertical: 20}]} title="Left" onPress={() => sendResult(0)}/>
+                    <Button containerStyle={{width: '40%'}} style={{marginRight: '10%'}} buttonStyle={[styles.leftButton, {paddingVertical: 20}]} titleStyle={{color: 'black'}} 
+                        title="Left" onPress={() => sendResult(0)}/>
                     <Button containerStyle={{width: '40%'}} style={{marginLeft: '10%'}} buttonStyle={[styles.rightButton, {paddingVertical: 20}]} title="Right" onPress={() => sendResult(1)}/>
                 </View>
             </View>
@@ -151,7 +152,7 @@ const styles = EStyleSheet.create({
         marginTop: '70%'
     },
     leftButton: {
-        backgroundColor: 'blue',
+        backgroundColor: '#D4AF37',
         borderRadius: '.5rem'
     },
     rightButton: {

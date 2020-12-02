@@ -15,4 +15,5 @@ export interface Post {
     profilePictureUrl: string;
     inJoust: boolean;
     joustRating: number;
+    isReported: boolean;
 }
