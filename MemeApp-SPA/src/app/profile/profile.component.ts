@@ -85,4 +85,10 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  block() {
+    this.userService.blockUser(this.authService.decodedToken.nameid, this.user.id).subscribe(() => {
+        this.alertify.success('Successfully blocked this user');
+    });
+  }
+
 }

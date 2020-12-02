@@ -1,0 +1,39 @@
+.profile-picture {
+    max-height: 50px;
+    max-width: 50px;
+    border-radius: 50%;
+}
+
+.like-button {
+    cursor: pointer;
+    size: scale(10);
+    border: 0px;
+    color: black;
+    background-color: transparent;
+}
+
+.like-button:hover {
+    background: transparent
+}
+
+.listItem {
+    flex-direction: row !important;
+    display: flex;
+}
+
+.submit {
+    background-color: crimson; 
+    color: white;
+}
+
+.submit[disabled] {
+    background-color: gray;
+}
+
+.following {
+    background-color: crimson;
+    color: white;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: .75rem;
+}

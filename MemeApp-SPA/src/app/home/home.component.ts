@@ -110,6 +110,12 @@ export class HomeComponent implements OnInit {
     this.username = localStorage.getItem('username');
   }
 
+  ngOnDestroy(): void {
+    //Called once, before the instance is destroyed.
+    //Add 'implements OnDestroy' to the class.
+    this.renderer.setStyle(this.document.body, 'background-color', 'white');
+  }
+
   loggedIn() {
     return this.auth.loggedIn();
   }

@@ -1159,7 +1159,11 @@ namespace MemeApp.API.Controllers
             };
 
             repo.Add<Block>(block);
-            var response = await UnfollowUser(userId, recipientId);
+            try {
+                var response = await UnfollowUser(userId, recipientId);
+            } catch (Exception e) {
+                Console.WriteLine(e);
+            }
 
             if (await repo.SaveAll()) {
                 return Ok();

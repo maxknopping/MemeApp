@@ -35,6 +35,8 @@ import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
 import { BannedComponentComponent } from './banned-component/banned-component.component';
 import { AboutUsComponent } from './about-us/about-us.component';
 import { ContactUsComponent } from './contact-us/contact-us.component';
+import { BlockedComponent } from './blocked/blocked.component';
+import { BlockedResolver } from './_resolvers/blocked.resolver';
 
 export const appRoutes: Routes = [
     {path: '', component: HomeComponent},
@@ -66,7 +68,8 @@ export const appRoutes: Routes = [
             {path: 'group/:groupId/:groupName', component: GroupManagerComponent, resolve: {users: GroupManagerResolver}},
             {path: 'notifications', component: NotificationsComponent, resolve: {notifications: NotificationsResolver}},
             {path: 'search', component: SearchComponent},
-            {path: 'admin', component: AdminPanelComponent, data: {roles: 'Admin'}}
+            {path: 'admin', component: AdminPanelComponent, data: {roles: 'Admin'}},
+            {path: 'blocked', component: BlockedComponent, resolve: {users: BlockedResolver}}
         ]
     },
     {path: '**', redirectTo: '', pathMatch: 'full'}

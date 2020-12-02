@@ -75,14 +75,15 @@ import { SafeHtmlPipe } from './_pipes/safeHtml.pipe';
 import { AboutUsComponent } from './about-us/about-us.component';
 import { ContactUsComponent } from './contact-us/contact-us.component';
 import { UpdateCaptionComponent } from './update-caption/update-caption.component';
-import { BlurredImageComponent } from 'ngx-blurred-image/components';
+import { BlockedComponent } from './blocked/blocked.component';
+import { BlockedResolver } from './_resolvers/blocked.resolver';
 
 export function tokenGetter() {
    return localStorage.getItem('token');
 }
 
 @NgModule({
-   declarations: [			
+   declarations: [				
       AppComponent,
       NavComponent,
       HomeComponent,
@@ -119,7 +120,8 @@ export function tokenGetter() {
       SafeHtmlPipe,
       AboutUsComponent,
       ContactUsComponent,
-      UpdateCaptionComponent
+      UpdateCaptionComponent,
+      BlockedComponent
    ],
    imports: [
       HttpClientModule,
@@ -175,7 +177,8 @@ export function tokenGetter() {
       GroupMessageThreadResolver,
       GroupManagerResolver,
       NotificationsResolver,
-      AdminService
+      AdminService,
+      BlockedResolver
    ],
    bootstrap: [
       AppComponent

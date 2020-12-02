@@ -84,6 +84,18 @@ export class UserService {
     return this.http.post(`${this.baseUrl}/${userId}/report`, {});
   }
 
+  blockUser(userId: number, recipientId: number) {
+    return this.http.post(`${this.baseUrl}/${userId}/block/${recipientId}`, {});
+  }
+
+  unblockUser(userId: number, recipientId: number) {
+    return this.http.post(`${this.baseUrl}/${userId}/unblock/${recipientId}`, {});
+  }
+
+  getBlockedUsers(userId:number) {
+    return this.http.get(`${this.baseUrl}/blocked/${userId}`);
+  }
+
   getLikers(postId, userId) {
     return this.http.get(`${this.baseUrl}/${userId}/likers/${postId}`);
   }
