@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.1",
-    "signature": "c8e66ae20b15e2cb1eabcd60aaf849c7610337eb"
+    "signature": "5d526b35ad9148d9a7fc4c8a6a8e13dd2de1cd30"
   },
   "compilationOptions": {
     "defines": [
@@ -24,6 +24,7 @@
     ".NETCoreApp,Version=v2.1": {
       "MemeApp.API/1.0.0": {
         "dependencies": {
+          "AWSSDK.S3": "3.5.6",
           "AutoMapper.Extensions.Microsoft.DependencyInjection": "7.0.0",
           "CloudinaryDotNet": "1.8.0",
           "ExponentServerSdk": "1.1.1",
@@ -71,6 +72,34 @@
           "lib/netstandard2.0/AutoMapper.Extensions.Microsoft.DependencyInjection.dll": {}
         }
       },
+      "AWSSDK.Core/3.5.1.44": {
+        "dependencies": {
+          "Microsoft.Bcl.AsyncInterfaces": "1.1.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/AWSSDK.Core.dll": {
+            "assemblyVersion": "3.3.0.0",
+            "fileVersion": "3.5.1.44"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/AWSSDK.Core.dll": {}
+        }
+      },
+      "AWSSDK.S3/3.5.6": {
+        "dependencies": {
+          "AWSSDK.Core": "3.5.1.44"
+        },
+        "runtime": {
+          "lib/netstandard2.0/AWSSDK.S3.dll": {
+            "assemblyVersion": "3.3.0.0",
+            "fileVersion": "3.5.6.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/AWSSDK.S3.dll": {}
+        }
+      },
       "CloudinaryDotNet/1.8.0": {
         "dependencies": {
           "Newtonsoft.Json": "11.0.2"
@@ -98,6 +127,17 @@
         },
         "compile": {
           "lib/netcoreapp2.1/ExponentServerSdk.dll": {}
+        }
+      },
+      "Microsoft.Bcl.AsyncInterfaces/1.1.0": {
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.Bcl.AsyncInterfaces.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "4.700.19.56404"
+          }
+        },
+        "compile": {
+          "ref/netstandard2.0/Microsoft.Bcl.AsyncInterfaces.dll": {}
         }
       },
       "Microsoft.Data.Sqlite.Core/2.1.0": {
@@ -3564,6 +3604,20 @@
       "path": "automapper.extensions.microsoft.dependencyinjection/7.0.0",
       "hashPath": "automapper.extensions.microsoft.dependencyinjection.7.0.0.nupkg.sha512"
     },
+    "AWSSDK.Core/3.5.1.44": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-UjyWqZuidpWej5oCdsN6hIcXjqE5y8e8ltndzKgCA9WvFgp0d4tz13m86l1HgBCxXWnpuCkPJQbjmNDGE8Nfhw==",
+      "path": "awssdk.core/3.5.1.44",
+      "hashPath": "awssdk.core.3.5.1.44.nupkg.sha512"
+    },
+    "AWSSDK.S3/3.5.6": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-F6Ln9frL5whQYOWkgkH0a8l7DRaCv2fgoeYu5jcsjdCk8zTXDHz8WpRzP2xZo2usDH+wyKI0PPg+rDymBEjx4w==",
+      "path": "awssdk.s3/3.5.6",
+      "hashPath": "awssdk.s3.3.5.6.nupkg.sha512"
+    },
     "CloudinaryDotNet/1.8.0": {
       "type": "package",
       "serviceable": true,
@@ -3577,6 +3631,13 @@
       "sha512": "sha512-3zEZ/1NFo8isPKhCdFee7zXKIP7S3yNfrdJweoItT4FqiOlB24BUkZ8tjPIB4+3ShWn937hWkZyp3BVfzVZt2Q==",
       "path": "exponentserversdk/1.1.1",
       "hashPath": "exponentserversdk.1.1.1.nupkg.sha512"
+    },
+    "Microsoft.Bcl.AsyncInterfaces/1.1.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-1Am6l4Vpn3/K32daEqZI+FFr96OlZkgwK2LcT3pZ2zWubR5zTPW3/FkO1Rat9kb7oQOa4rxgl9LJHc5tspCWfg==",
+      "path": "microsoft.bcl.asyncinterfaces/1.1.0",
+      "hashPath": "microsoft.bcl.asyncinterfaces.1.1.0.nupkg.sha512"
     },
     "Microsoft.Data.Sqlite.Core/2.1.0": {
       "type": "package",
