@@ -67,7 +67,7 @@ const Joust = ({
 
     return (
         <ScrollView style={{flex: 1}} refreshControl={
-            <RefreshControl refreshing={refreshing} colors={EStyleSheet.value('$textColor')} tintColor={EStyleSheet.value('$textColor')} onRefresh={onRefresh} />
+            <RefreshControl refreshing={refreshing} colors={[EStyleSheet.value('$textColor')]} tintColor={EStyleSheet.value('$textColor')} onRefresh={onRefresh} />
         }>
             {posts.length > 0 ?<View style={{marginTop: '35%'}}>
                 <View style={styles.containerView}>

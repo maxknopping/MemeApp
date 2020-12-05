@@ -122,7 +122,7 @@ const EditProfile = ({
         {user ? 
             <View>
                 <View style={[styles.listContainer, {alignItems: 'center'}]}>
-                    <Image style={styles.image} source={user.photoUrl ? {uri: user.photoUrl} : 
+                    <Image style={styles.image} key={Date.now()} source={user.photoUrl ? {uri: user.photoUrl} : 
                         require('./../../assets/user.png')}/>
                     <TouchableOpacity onPress={() => setPictureOverlay(true)}>
                         <Text style={styles.profilePictureText}>

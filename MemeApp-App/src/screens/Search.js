@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { Text, View, SafeAreaView, ScrollView, TouchableOpacity, TextInput, Image } from 'react-native';
+import { Text, View, SafeAreaView, ScrollView, TouchableOpacity, TextInput, Image, Platform } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import userService from './../apis/user';
 import { Context } from '../context/AuthContext';
@@ -73,7 +73,8 @@ const Search = ({
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style={styles.searchView}>
+            <View style={[styles.searchView, Platform.OS == "android" ? {marginTop: EStyleSheet.value('2rem')} :
+                {marginTop: EStyleSheet.value('.5rem')}]}>
                 <Feather name="search" style={styles.searchIcon}/>
                 <TextInput value={inputValue} onChangeText={(text) => {
                     setInputValue(text);
@@ -160,7 +161,6 @@ const styles = EStyleSheet.create({
         borderRadius: '2rem',
         padding: '.75rem',
         marginHorizontal: '.5rem',
-        marginTop: '.5rem'
     },
     searchIcon: {
         fontSize: '1.7rem'

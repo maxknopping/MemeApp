@@ -383,7 +383,7 @@ const styles = EStyleSheet.create({
     },
     input: {
         fontSize: '1rem',
-        borderWidth: '.03rem',
+        borderWidth: 1,
         borderColor: '$textColor',
         paddingVertical: '.5rem',
         paddingHorizontal: '1rem',

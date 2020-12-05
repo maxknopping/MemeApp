@@ -122,6 +122,11 @@ const Feed = ({
                     'com.apple.UIKit.activity.AirDrop'
                 ]
             });
+        } else {
+            const baseUrl = 'https://apps.apple.com/us/app/memeclub/id1529161180'
+            Share.share({
+                message: `${baseUrl}`
+            });
         }
     };
 
@@ -136,7 +141,7 @@ const Feed = ({
             </View>
             {posts.length === 0 && !doneLoading && !refreshing ? <ScrollView refreshControl={
                 <RefreshControl onRefresh={onRefresh}
-                refreshing={refreshing} colors={EStyleSheet.value('$textColor')} tintColor={EStyleSheet.value('$textColor')}/>
+                refreshing={refreshing} tintColor={EStyleSheet.value('$textColor')}/>
             } style={{flex: 1, alignItems: 'center', marginTop: 10}}>
                     <Text style={styles.text}>When you follow other users, their posts will appear here.</Text>
                 </ScrollView>: 
@@ -160,9 +165,10 @@ const Feed = ({
             ref={flatList}
             refreshControl={
                 <RefreshControl onRefresh={onRefresh}
-                refreshing={refreshing} colors={EStyleSheet.value('$textColor')} tintColor={EStyleSheet.value('$textColor')}/>
+                refreshing={refreshing} tintColor={EStyleSheet.value('$textColor')}/>
             }
-            ListFooterComponent={() => loadingMore ? <ActivityIndicator animating size="small" /> : null}
+            ListFooterComponent={() => loadingMore ? <ActivityIndicator animating color={EStyleSheet.value('$crimson')} 
+                size="small" /> : null}
             />
             }
         </>);

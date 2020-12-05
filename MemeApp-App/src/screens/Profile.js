@@ -152,7 +152,7 @@ const Profile = ({
                 <TouchableOpacity key={index} onPress={() => navigation.push('SinglePost', {postId: post.id})}>
                 <View style={[ {width: width / 3} , {height: width/3}, {marginBottom: EStyleSheet.value('.1rem')}, index % 3 !== 0 ? 
                     {paddingLeft: EStyleSheet.value('.1rem')} : {paddingLeft: 0}]} >
-                        <ProgressImage style={{flex: 1, width: undefined, height: undefined}} source={{uri: post.url}}/>
+                        <ProgressImage indicatorProps={{color: EStyleSheet.value('$crimson')}} style={{flex: 1, width: undefined, height: undefined}} source={{uri: post.url}}/>
                 </View>
                 </TouchableOpacity>
             );
@@ -239,7 +239,7 @@ const Profile = ({
         style={{flex: 1}}
         ref={flatList} 
         refreshControl={
-            <RefreshControl refreshing={refreshing} colors={EStyleSheet.value('$textColor')} tintColor={EStyleSheet.value('$textColor')} onRefresh={onRefresh} />
+            <RefreshControl refreshing={refreshing} colors={[EStyleSheet.value('$textColor')]} tintColor={EStyleSheet.value('$textColor')} onRefresh={onRefresh} />
         }
         ListHeaderComponentStyle={{flex: 1}}
         ListHeaderComponent={(
@@ -260,7 +260,7 @@ const Profile = ({
                         </Overlay>
             <View style={styles.headerView}>
                     {user ? (
-                        <Image rounded style={styles.profilePicture} source={user.photoUrl ? {uri: user.photoUrl} : 
+                        <Image rounded style={styles.profilePicture} key={Date.now()} source={user.photoUrl ? {uri: user.photoUrl} : 
                         require('./../../assets/user.png')}/>
                         ) : null}
                     <View style={styles.infoView}>
@@ -312,14 +312,15 @@ const Profile = ({
                 <View style={styles.bioView}>
                     {user ? <Text style={styles.bioText}>{user.bio}</Text> : null}
                 </View>
-                <View style={{flexDirection: 'row', flex: 1}}>
-                {followButton === 'Follow' ? <Button containerStyle={{width: '90%'}} buttonStyle={{backgroundColor: EStyleSheet.value('$crimson'), 
+                <View style={{flexDirection: 'row', flex: 1, justifyContent: 'center', alignItems: 'center', marginHorizontal: '5%'}}>
+                {followButton === 'Follow' ? <Button containerStyle={{width: '90%', 
+                    marginTop: '5%', marginBottom: '5%', marginRight: '5%'}} buttonStyle={{backgroundColor: EStyleSheet.value('$crimson'), 
                     borderRadius: EStyleSheet.value('.8rem')}} style={styles.followButton} title={followButton} onPress={follow}/> :
                     followButton === 'Edit Profile' ? <Button buttonStyle={{backgroundColor: EStyleSheet.value('$crimson'), 
-                    borderRadius: EStyleSheet.value('.8rem')}} containerStyle={{width: '100%'}} style={styles.followButton} title={followButton} onPress={() => {
+                    borderRadius: EStyleSheet.value('.8rem')}} containerStyle={{width: '100%', marginTop: '5%', marginBottom: '5%'}} style={styles.followButton} title={followButton} onPress={() => {
                         navigation.navigate('EditProfile', {username: state.username});
                     }}/> :
-                    <Button containerStyle={{width: '90%'}} buttonStyle={{backgroundColor: 'gray', borderColor: 'black', borderWidth: EStyleSheet.value('.05rem'), 
+                    <Button containerStyle={{width: '90%', marginTop: '5%', marginBottom: '5%', marginRight: '5%'}} buttonStyle={{backgroundColor: 'gray', borderColor: 'black', borderWidth: EStyleSheet.value('.05rem'), 
                     borderRadius: EStyleSheet.value('.8rem')}}
                     style={styles.followButton} title={followButton} onPress={() => unfollow()}/>
                 }
@@ -428,8 +429,6 @@ const styles = EStyleSheet.create({
         color: '$textColor'
     },
     followButton: {
-        marginHorizontal: '5%',
-        marginVertical: '5%'
     },
     tabView: {
         flexDirection: 'row',
@@ -459,7 +458,7 @@ const styles = EStyleSheet.create({
     ellipsis: {
         fontSize: '1rem',
         marginRight: '1rem',
-        marginTop: '2rem',
+        marginLeft: '0.1rem',
         fontWeight: 'bold',
         color: '$textColor',
         alignSelf: 'center'

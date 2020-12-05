@@ -35,7 +35,7 @@ const SinglePost = ({
 
     return (
         <ScrollView style={{flex: 1}}>
-            {post ? <PostCard post={post} navigation={navigation}/> : <ActivityIndicator size="small" animating/>}
+            {post ? <PostCard post={post} navigation={navigation}/> : <ActivityIndicator color={EStyleSheet.value('$crimson')} size="small" animating/>}
         </ScrollView>
     
     );

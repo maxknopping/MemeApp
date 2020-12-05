@@ -339,7 +339,7 @@ const MessageList = ({
                          </View>
                      )}
                 </ScrollView>
-            : <ActivityIndicator animating size="small" />
+            : <ActivityIndicator color={EStyleSheet.value('$crimson')} animating size="small" />
             }
         </>
     );

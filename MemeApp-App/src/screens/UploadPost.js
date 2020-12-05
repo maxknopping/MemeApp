@@ -3,7 +3,7 @@ import * as Permissions from 'expo-permissions';
 import * as ImagePicker from 'expo-image-picker';
 import React, { Component, useEffect, useState } from 'react';
 import ImageEditor from '@react-native-community/image-editor';
-import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, FlatList, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, FlatList, Dimensions, Platform } from 'react-native';
 import getPermissions from './../helpers/getPermissions';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import * as FileSystem from 'expo-file-system';
@@ -77,7 +77,7 @@ const UploadPost = ({
       };
 
 
-      renderOverlay = () => {
+      const renderOverlay = () => {
         return (
           <View style={styles.overlay}>
             <Image
@@ -92,7 +92,7 @@ const UploadPost = ({
 
     return (
         <SafeAreaView style={styles.container}>
-          <View>
+          <View style={[Platform.OS == "android" ? {marginTop: EStyleSheet.value('1.5rem')} : null]}>
             <Text style={styles.text}>
               Popular Meme Templates
             </Text>
@@ -112,7 +112,7 @@ const UploadPost = ({
               <TouchableOpacity key={index} onPress={() => navigation.navigate('MemeMaker', {url: item.url})}>
                 <View style={[ {width: width/3} , {height: width/3}, {marginBottom: EStyleSheet.value('.1rem')}, index % 3 !== 0 ? 
                     {paddingLeft: EStyleSheet.value('.1rem')} : {paddingLeft: 0}]} >
-                        <Image style={{flex: 1, width: undefined, height: undefined}} source={{uri: item.url}}/>
+                        <Image indicatorProps={{color: EStyleSheet.value('$crimson')}} style={{flex: 1, width: undefined, height: undefined}} source={{uri: item.url}}/>
                 </View>
                 </TouchableOpacity>);
             }}/>

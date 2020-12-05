@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "537604362525",
+    "firebase_url": "https://memeclub-8ad37.firebaseio.com",
+    "project_id": "memeclub-8ad37",
+    "storage_bucket": "memeclub-8ad37.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:537604362525:android:c7885c98ac7644d09591f4",
+        "android_client_info": {
+          "package_name": "co.memeclub"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "537604362525-f6mp0kf1dh8pb1m5oj31usvia545qjq9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDrVowSTlIXfcCgVP5Y-L74kFROUJl8N3g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "537604362525-f6mp0kf1dh8pb1m5oj31usvia545qjq9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "537604362525-9j1ur1eodvs94660pomq459l7p7ekgke.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "co.memeclub"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -101,6 +101,11 @@ const Featured = ({
                     'com.apple.UIKit.activity.AirDrop'
                 ]
             });
+        } else {
+            const baseUrl = 'https://apps.apple.com/us/app/memeclub/id1529161180'
+            Share.share({
+                message: `${baseUrl}`
+            });
         }
     };
 
@@ -131,9 +136,9 @@ const Featured = ({
             ref={flatList}
             refreshControl={
                 <RefreshControl onRefresh={onRefresh}
-                refreshing={refreshing} colors={EStyleSheet.value('$textColor')} tintColor={EStyleSheet.value('$textColor')}/>
+                refreshing={refreshing} colors={[EStyleSheet.value('$textColor')]} tintColor={EStyleSheet.value('$textColor')}/>
             }
-            ListFooterComponent={() => loadingMore ? <ActivityIndicator animating size="small" /> : null}
+            ListFooterComponent={() => loadingMore ? <ActivityIndicator color={EStyleSheet.value('$crimson')} animating size="small" /> : null}
         />
         </>);
 };

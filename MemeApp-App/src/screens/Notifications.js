@@ -62,12 +62,7 @@ const Notifications = ({
         console.log(`Date without offset: ${newDate}`);
         var offset = date.getTimezoneOffset() / 60;
         var hours = date.getHours();
-    
         newDate.setHours(hours - offset - 24);
-        console.log('Date of server');
-        console.log(date);
-        console.log('Date of client');
-        console.log(newDate);
         return newDate;   
     }
 
@@ -104,7 +99,7 @@ const Notifications = ({
                 
                 
                 />
-            )) : <ActivityIndicator size="small" animating/>}
+            )) : <ActivityIndicator color={EStyleSheet.value('$crimson')} size="small" animating/>}
         </ScrollView>);
 };
 

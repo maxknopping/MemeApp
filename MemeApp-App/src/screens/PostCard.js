@@ -150,7 +150,7 @@ const PostCard = ({
     };
 
     const reportPost = () => {
-        userService.post(`/${state.id}/report/${post.id}`, {}, {
+        userService.post(`/${state.id}/posts/report/${post.id}`, {}, {
             headers: {
                 'Authorization': `Bearer ${state.token}`
             }
@@ -270,14 +270,18 @@ const PostCard = ({
       }
 
     const onShare = async () => {
+        const baseUrl = 'https://memeclub.co/post';
         if (Platform.OS === 'ios') {
-            const baseUrl = 'https://memeclub.co/post'
             Share.share({
-                message: `${baseUrl}/${postState.id}`
+                url: `${baseUrl}/${postState.id}`
             }, {
                 excludedActivityTypes: [
                     'com.apple.UIKit.activity.AirDrop'
                 ]
+            });
+        } else {
+            Share.share({
+                message: `${baseUrl}/${postState.id}`
             });
         }
     };
@@ -377,12 +381,16 @@ const PostCard = ({
                 </View>
                 <TouchableWithoutFeedback onPress={() => handleDoubleTap()}>
                     <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                        <Image indicator={Progress.Bar} indicatorProps={{color: EStyleSheet.value('$crimson')}} style={[{width: width, height: width}, postState.isReported ? {backgroundColor: 'rgba(0, 0,0, 0.5)'}: null]}
-                        blurRadius={postState.isReported ? 30: 0} source={{uri: postState.url}}/>
+                        <Image indicator={Progress.Bar} indicatorProps={{color: EStyleSheet.value('$crimson')}} style={[{width: width, height: width}]}
+                        blurRadius={postState.isReported ? 30: 0} source={{uri: postState.url}}>
+                            <View style={postState.isReported ? {backgroundColor: 'rgba(0,0,0,0.7)', flex: 1}: null}>
+
+                            </View>
+                        </Image>
                         {renderOverlay()}
                         {postState.isReported ? <View style={{position: 'absolute', justifyContent: 'center', alignItems: 'center'}}>
                             <Text style={{color: 'white', fontSize: EStyleSheet.value('1rem'), textAlign: 'center'}}>This post may contain offensive content and is under review.</Text>
-                            <TouchableOpacity style={{borderColor: 'white', borderWidth: '1', borderRadius: '10px', padding: 7, marginTop: 10}} onPress={() => {
+                            <TouchableOpacity style={{borderColor: 'white', borderWidth: 1, borderRadius: 10, padding: 7, marginTop: 10}} onPress={() => {
                                 //let newPost = postState;
                                 //console.log(postState);
                                 //newPost.isReported = false;

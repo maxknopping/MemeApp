@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState, useRef} from 'react';
 import { Text, View, ScrollView, ActivityIndicator,
-        FlatList, Dimensions, RefreshControl, SafeAreaView, TouchableOpacity, Modal, Animated } from 'react-native';
+        FlatList, Dimensions, RefreshControl, SafeAreaView, TouchableOpacity, Modal, Animated, Platform } from 'react-native';
 import {Button, Overlay} from 'react-native-elements';
 import {Button as NativeButton} from 'native-base';
 import {Context} from './../context/AuthContext';
@@ -27,7 +27,7 @@ const JoustHome = ({
     const index = useRef(0);
     Font.loadAsync({Tinder: require('./../../assets/fonts/ChaletNewYorkNineteenSeventy.ttf')});
     Font.loadAsync({Montserrat: require('./../../assets/fonts/Montserrat-Black.ttf')});
-
+    Font.loadAsync({Arial: './../../assets/fonts/ArialUnicodeMS.ttf'})
     const segmentClicked = (index) => {
         setActiveIndex(index);
     };
@@ -113,7 +113,7 @@ const JoustHome = ({
         style={{flex: 1}} 
         ref={flatList}
         refreshControl={
-            <RefreshControl refreshing={refreshing} colors={EStyleSheet.value('$textColor')} tintColor={EStyleSheet.value('$textColor')} onRefresh={onRefresh} />
+            <RefreshControl refreshing={refreshing} colors={[EStyleSheet.value('$textColor')]} tintColor={EStyleSheet.value('$textColor')} onRefresh={onRefresh} />
         }
         ListHeaderComponentStyle={{flex: 1}}
         ListHeaderComponent={(
@@ -128,10 +128,9 @@ const JoustHome = ({
                         }}
                         buttonStyle={{borderRadius: EStyleSheet.value('.8rem'), padding: 30}} 
                         titleStyle={{color: 'black'}}
-                        containerStyle={{width:'50%'}}
-                        style={[styles.followButton, {marginTop: '15%', marginRight: 15}]} 
+                        containerStyle={[{marginLeft: '15%'}, styles.followButton]} 
                         title="Joust"
-                        titleStyle={{fontFamily: Font.isLoaded('Tinder') ? 'Tinder': 'Arial', fontSize: 30, color: 'black'}}
+                        titleStyle={{fontFamily: Font.isLoaded('Tinder') ? 'Tinder': Platform.OS === 'android' ? 'sans-serif' : 'Arial', fontSize: 30, color: 'black'}}
                         onPress={() => {
                             navigation.navigate('Joust');
                         }}
@@ -143,9 +142,8 @@ const JoustHome = ({
                             end: { x: 1, y: 1 },
 
                         }}
-                        containerStyle={{width:'50%'}}
+                        containerStyle={[{marginRight: '15%', marginLeft: '3%'}, styles.followButton]}
                         buttonStyle={{borderRadius: EStyleSheet.value('.8rem'), padding: 30}} 
-                        style={[styles.followButton, {marginTop: '15%', marginLeft: 15}]} 
                         title="Swipe"
                         titleStyle={{fontFamily: Font.isLoaded('Tinder') ? 'Tinder': 'Arial', fontSize: 30}}
                         onPress={() => {
@@ -174,7 +172,7 @@ const JoustHome = ({
                     <TouchableOpacity onPress={() => navigation.navigate('SinglePost', {postId: item.id})}>
                         <View style={[ {width: width / 3} , {height: width/3}, {marginBottom: EStyleSheet.value('.1rem')}, index % 3 !== 0 ? 
                             {paddingLeft: EStyleSheet.value('.1rem')} : {paddingLeft: 0}]} >
-                                <Image style={{flex: 1, width: undefined, height: undefined}} source={{uri: item.url}}/>
+                                <Image indicatorProps={{color: EStyleSheet.value('$crimson')}} style={{flex: 1, width: undefined, height: undefined}} source={{uri: item.url}}/>
                         </View>
                     </TouchableOpacity>
                 )
@@ -255,8 +253,8 @@ const styles = EStyleSheet.create({
         color: '$textColor'
     },
     followButton: {
-        marginHorizontal: '5%',
-        marginBottom: '5%'
+        width: '45%',
+        marginVertical: '5%'
     },
     tabView: {
         flexDirection: 'row',

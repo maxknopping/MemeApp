@@ -4,7 +4,7 @@ import * as ImagePicker from 'expo-image-picker';
 import React, { Component, useEffect, useState, useRef } from 'react';
 import ImageEditor from '@react-native-community/image-editor';
 import {Overlay} from 'react-native-elements';
-import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Image, FlatList, Dimensions, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, TextInput } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Image, FlatList, Dimensions, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, TextInput, Platform } from 'react-native';
 import getPermissions from './../helpers/getPermissions';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import * as FileSystem from 'expo-file-system';
@@ -33,6 +33,8 @@ const MemeMaker = ({
     Font.loadAsync({Roboto: require('./../../assets/fonts/Roboto-Black.ttf')});
     Font.loadAsync({RobotoBold: require('./../../assets/fonts/Roboto-Bold.ttf')});
     Font.loadAsync({SpecialElite: require('./../../assets/fonts/SpecialElite-Regular.ttf')});
+    Font.loadAsync({Arial: require('./../../assets/fonts/ArialUnicodeMS.ttf')});
+    Font.loadAsync({ArialBold: require('./../../assets/fonts/ARIALBD.ttf')});
     const [fontValue, setFontValue] = useState('Arial');
     const [currentColor, setCurrentColor] = useState('#000000');
     const [fontSize, setFontSize] = useState(14);
@@ -60,8 +62,9 @@ const MemeMaker = ({
         if (id.current != null) {
 
             var newData = currentBoxes.map(el => {
-                if(el.id == id.current)
+                if(el.id == id.current) {
                    return Object.assign({}, el, {font: fontValue, color: currentColor, fontSize: fontSize, isBold: isBold, text: newText});
+                }
                 return el
             });
             setBoxes(newData);
@@ -122,6 +125,12 @@ const MemeMaker = ({
             case 'Roboto':
                 setFontValue('RobotoBold');
                 break;
+            case 'Arial':
+                setFontValue('ArialBold');
+                break;
+            case 'ArialBold':
+                    setFontValue('Arial');
+                    break;
         }
         setIsBold(!isBold);
 
@@ -182,7 +191,7 @@ const MemeMaker = ({
 
 
 
-            <Overlay isVisible={modalVisible} height={'auto'} onBackdropPress={() => setModalVisible(false)} animationType={'fade'} 
+            <Overlay isVisible={modalVisible} fullScreen={Platform.OS == 'android' ? true : false} height={'auto'} animationType={'fade'} 
                 overlayStyle={{borderRadius: 30, width: '100%'}}
                 children={
                 <View>
@@ -208,7 +217,7 @@ const MemeMaker = ({
                                 containerStyle={{height: 50, width: 150}}
                                 onChangeItem={item => setFontValue(item.value)}
                                 items={[
-                                    {label: 'Arial', value: 'Arial'},
+                                    {label: '', value: isBold ? 'ArialBold' : 'Arial', icon: () => <Text style={{fontFamily: isBold ? 'ArialBold' : 'Arial', fontSize:  20}}>Arial</Text>},
                                     {label: '', value: 'Impact', icon: () => <Text style={{fontFamily: 'Impact', fontSize:  20}}>Impact</Text>},
                                     {label: '', value: isBold ? 'Montserrat' : 'MontBold', icon: () => <Text style={{fontFamily: isBold ? 'Montserrat' : 'MontBold' , fontSize:  20}}>Montserrat</Text>},
                                     {label: '', value: 'LuckiestGuy', icon: () => <Text style={{fontFamily: 'LuckiestGuy', fontSize:  20}}>Luckiest Guy</Text>},
@@ -222,8 +231,8 @@ const MemeMaker = ({
                             </DropDownPicker>
                             <DropDownPicker
                                 defaultValue={currentColor}
-                                containerStyle={{height: 50, width: 60, borderWidth: 0, zIndex: 1000}}
-                                dropDownStyle={{zIndex: 99999999}}
+                                containerStyle={{height: 50, width: 60}}
+                                dropDownStyle={{zIndex: 99999999, height: 400}}
                                 onChangeItem={item => setCurrentColor(item.value)}
                                 style={{zIndex: 9999999}}
                                 items={[
@@ -242,7 +251,7 @@ const MemeMaker = ({
                             </DropDownPicker>
                             <DropDownPicker
                                 defaultValue={fontSize}
-                                containerStyle={{height: 50, width: 100, borderWidth: 0}}
+                                containerStyle={{height: 50, width: 100}}
                                 onChangeItem={item => setFontSize(item.value)}
                                 dropDownStyle={{height: 400}}
                                 items={[

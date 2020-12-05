@@ -7,9 +7,10 @@
     "userInterfaceStyle": "automatic",
     "platforms": [
       "ios",
-      "web"
+      "web",
+      "android"
     ],
-    "version": "1.1.1",
+    "version": "1.1.3",
     "orientation": "portrait",
     "icon": "/Users/maxknopping/Desktop/MemeApp/MemeApp-App/assets/meme_club_logo.png",
     "splash": {
@@ -28,7 +29,7 @@
       "googleServicesFile": "./GoogleService-Info.plist",
       "supportsTablet": false,
       "bundleIdentifier": "co.memeclub",
-      "buildNumber": "2.1.1",
+      "buildNumber": "2.1.3",
       "infoPlist": {
         "NSAppTransportSecurity": {
           "NSAllowsLocalNetworking": true,
@@ -36,11 +37,11 @@
             "http://192.168.0.4:5000": {
               "NSTemporaryExceptionAllowsInsecureHTTPLoads": true
             }
-          },
-          "NSCameraUsageDescription": "MemeClub uses the camera to allow users to take a photo to post on the app.",
-          "NSPhotoLibraryAddUsageDescription": "MemeClub users need to be able to save memes to their camera roll.",
-          "NSPhotoLibraryUsageDescription": "MemeClub uses the camera roll to allow users to post memes currently saved on their camera roll."
-        }
+          }
+        },
+        "NSCameraUsageDescription": "MemeClub uses the camera to allow users to take a photo to post on the app.",
+        "NSPhotoLibraryAddUsageDescription": "MemeClub users need to be able to save memes to their camera roll.",
+        "NSPhotoLibraryUsageDescription": "MemeClub uses the camera roll to allow users to post memes currently saved on their camera roll."
       },
       "config": {
         "usesNonExemptEncryption": false
@@ -59,6 +60,12 @@
           "measurementId": "G-QK77Y6ZSTL"
         }
       }
+    },
+    "android": {
+      "package": "co.memeclub",
+      "googleServicesFile": "./google-services.json",
+      "versionCode": 3,
+      "permissions": []
     }
   }
 }

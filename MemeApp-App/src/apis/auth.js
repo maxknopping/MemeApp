@@ -8,3 +8,4 @@ export default auth = axios.create({
 });
 
 //https://memeclub.co/api/auth
+//http://localhost:5000/api/auth

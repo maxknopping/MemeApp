@@ -15,6 +15,9 @@ using MemeApp.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Amazon;
+using Amazon.S3;
+using Amazon.S3.Transfer;
 
 namespace MemeApp.API.Controllers
 {
@@ -27,6 +30,10 @@ namespace MemeApp.API.Controllers
         private readonly IMapper mapper;
         private readonly IOptions<CloudinarySettings> cloudinaryConfig;
         private Cloudinary cloudinary;
+
+        private IAmazonS3 s3Client;
+
+        private static readonly RegionEndpoint bucketRegion = RegionEndpoint.USEast1;
 
         public PostsController(IMemeClubRepository repo,
                               IMapper mapper,
@@ -43,6 +50,8 @@ namespace MemeApp.API.Controllers
             );
 
             cloudinary = new Cloudinary(acc);
+
+            s3Client = new AmazonS3Client(bucketRegion);
         }
 
         [HttpGet("{id}", Name = "GetPost")]
@@ -193,6 +202,7 @@ namespace MemeApp.API.Controllers
         }
 
 
+        /* DEPRECATED
         [HttpPost("profilePicture")]
         public async Task<IActionResult> AddProfilePictureForUser(int userId, [FromForm]PostForCreationDto postForCreation) {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
@@ -229,7 +239,48 @@ namespace MemeApp.API.Controllers
 
             return BadRequest("Could not add the photo");
         }
+        */
 
+        [HttpPost("profilePicture")]
+        public async Task<IActionResult> AddProfilePictureForUserS3(int userId, [FromForm]PostForCreationDto postForCreation) {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
+                return Unauthorized();
+            }
+
+            var userFromRepo = await repo.GetUser(userId);
+
+            var file = postForCreation.File;
+
+            var fileTransferUtility =
+                    new TransferUtility(s3Client);
+            var bucketName = "memeclub.co";
+            var keyName = $"{userFromRepo.Id}/profilePicture";
+
+            try {
+                if (file.Length > 0) {
+                    using (var fileToUpload = file.OpenReadStream())
+                    {
+                        await fileTransferUtility.UploadAsync(fileToUpload, bucketName, keyName);
+                    }
+                }
+            } catch (Exception e) {
+                Console.WriteLine(e);
+            }
+
+            userFromRepo.PhotoUrl = $"https://s3.amazonaws.com/memeclub.co/{keyName}";
+
+            foreach (var group in userFromRepo.UserGroups) {
+                group.UserPhotoUrl = userFromRepo.PhotoUrl;
+            }
+
+            if (await repo.SaveAll()) {
+                return CreatedAtRoute("GetUser", new {id = userFromRepo.Id}, userFromRepo);
+            }
+
+            return BadRequest("Could not add the photo");
+        }
+
+        /* DEPRECATED
         [HttpPost("profilePicture/ios")]
         public async Task<IActionResult> AddProfilePictureForUserIos(int userId, PostForCreationIosDto postForCreation) {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
@@ -258,7 +309,41 @@ namespace MemeApp.API.Controllers
 
             return BadRequest("Could not add the photo");
         }
+        */
 
+        [HttpPost("profilePicture/ios")]
+        public async Task<IActionResult> AddProfilePictureForUserIosS3(int userId, PostForCreationIosDto postForCreation) {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
+                return Unauthorized();
+            }
+
+            var userFromRepo = await repo.GetUser(userId);
+            byte[] data = System.Convert.FromBase64String(postForCreation.File);
+            var stream = new MemoryStream(data);
+            var fileTransferUtility =
+                    new TransferUtility(s3Client);
+            var bucketName = "memeclub.co";
+            var keyName = $"{userFromRepo.Id}/profilePicture";
+
+            try {
+                if (data.Length > 0) {
+                        await fileTransferUtility.UploadAsync(stream, bucketName, keyName);
+                }
+            } catch (Exception e) {
+                Console.WriteLine(e);
+            }
+
+            userFromRepo.PhotoUrl = $"https://s3.amazonaws.com/memeclub.co/{keyName}";
+
+            if (await repo.SaveAll()) {
+                return CreatedAtRoute("GetPost", new {id = userFromRepo.Id}, userFromRepo);
+            }
+
+            return BadRequest("Could not add the photo");
+        }
+
+        /* DEPRECATED
+        
         [HttpPost("ios")]
         public async Task<IActionResult> AddPostForUserIos(int userId, PostForCreationIosDto postForCreation) {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
@@ -297,9 +382,50 @@ namespace MemeApp.API.Controllers
             }
 
             return BadRequest("Could not add the photo");
+        }*/
+
+        [HttpPost("ios")]
+        public async Task<IActionResult> AddPostForUserIosS3(int userId, PostForCreationIosDto postForCreation) {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
+                return Unauthorized();
+            }
+
+            var userFromRepo = await repo.GetUser(userId);
+            var fileTransferUtility =
+                    new TransferUtility(s3Client);
+            var bucketName = "memeclub.co";
+            var keyName = $"{userFromRepo.Id}/{userFromRepo.Posts.Count}";
+            byte[] data = System.Convert.FromBase64String(postForCreation.File);
+            var stream = new MemoryStream(data);
+
+            try {
+                if (data.Length > 0) {
+                        await fileTransferUtility.UploadAsync(stream, bucketName, keyName);
+                }
+            } catch (Exception e) {
+                Console.WriteLine(e);
+            }
+
+            var postTemp = new PostForCreationDto();
+            postTemp.Url = $"https://s3.amazonaws.com/memeclub.co/{keyName}";
+            postTemp.Caption = postForCreation.Caption;
+            postTemp.InJoust = postForCreation.InJoust;
+            postTemp.JoustRating = 1000;
+
+
+            var post = mapper.Map<Post>(postTemp);
+            post.Created = DateTime.Now;
+            userFromRepo.Posts.Add(post);
+
+            if (await repo.SaveAll()) {
+                var postToReturn = mapper.Map<PostForDetailedDto>(post);
+                return CreatedAtRoute("GetPost", new {id = post.Id}, postToReturn);
+            }
+
+            return BadRequest("Could not add the photo");
         }
 
-        [HttpPost]
+        /*[HttpPost] DEPRECATED
         public async Task<IActionResult> AddPostForUser(int userId, [FromForm]PostForCreationDto postForCreation) {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
                 return Unauthorized();
@@ -321,8 +447,49 @@ namespace MemeApp.API.Controllers
                 }
             }
 
+
             postForCreation.Url = uploadResult.Uri.ToString().Replace("http", "https");
             postForCreation.PublicId = uploadResult.PublicId;
+
+            var post = mapper.Map<Post>(postForCreation);
+            post.Created = DateTime.Now;
+            userFromRepo.Posts.Add(post);
+
+            if (await repo.SaveAll()) {
+                var postToReturn = mapper.Map<PostForDetailedDto>(post);
+                return CreatedAtRoute("GetPost", new {id = post.Id}, postToReturn);
+            }
+
+            return BadRequest("Could not add the photo");
+        }
+        */
+
+        [HttpPost]
+        public async Task<IActionResult> AddPostForUserS3(int userId, [FromForm]PostForCreationDto postForCreation) {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) {
+                return Unauthorized();
+            }
+
+            var fileTransferUtility =
+                    new TransferUtility(s3Client);
+            var bucketName = "memeclub.co";
+            var userFromRepo = await repo.GetUser(userId);
+            var file = postForCreation.File;
+            var keyName = $"{userFromRepo.Id}/{userFromRepo.Posts.Count}";
+
+            try {
+                if (file.Length > 0) {
+                    using (var fileToUpload = file.OpenReadStream())
+                    {
+                        await fileTransferUtility.UploadAsync(fileToUpload, bucketName, keyName);
+                    }
+                }
+            } catch (Exception e) {
+                Console.WriteLine(e);
+            }
+
+            postForCreation.Url = $"https://s3.amazonaws.com/memeclub.co/{keyName}";
+            //postForCreation.PublicId = uploadResult.PublicId;
 
             var post = mapper.Map<Post>(postForCreation);
             post.Created = DateTime.Now;
