@@ -200,7 +200,7 @@ namespace MemeApp.API.Controllers
                 EnableSsl = true,
                 DeliveryMethod = SmtpDeliveryMethod.Network,
                 UseDefaultCredentials = false,
-                Credentials = new System.Net.NetworkCredential("no-reply@memeclub.co", "memeclub6969")
+                Credentials = new System.Net.NetworkCredential("no-reply@memeclub.co", "**REDACTED**")
 
             };
 
